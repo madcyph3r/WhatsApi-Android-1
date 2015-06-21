@@ -4,30 +4,23 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Security;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WhatsMediaUploader {
+import android.util.Log;
 
-	private static final Logger log = LoggerFactory.getLogger(WhatsMediaUploader.class);
+public class WhatsMediaUploader {
 
 	public static JSONObject pushFile(ProtocolNode uploadResponseNode,
 			Map<String, Object> messageContainer, File mediaFile, String selfJID) throws NoSuchAlgorithmException, IOException {
@@ -91,16 +84,16 @@ public class WhatsMediaUploader {
 				(SSLSocket)factory.createSocket(host, 443);
 
 		OutputStream out = socket.getOutputStream();
-		log.debug("Writing post: "+post);
+		Log.d("DEBUG", "Writing post: "+post);
 		out.write(post.getBytes());
-		log.debug("Writing head: "+head);
+		Log.d("DEBUG", "Writing head: "+head);
 		out.write(head.getBytes());
 
 		//write file data
 		FileInputStream fileInputStream = new FileInputStream(mediaFile);
 
 		if(startFrom > 0) {
-			log.debug("Skipping to "+startFrom);
+			Log.d("DEBUG", "Skipping to "+startFrom);
 			fileInputStream.skip(startFrom-1);
 		}
 		// Copy the contents of the file to the output stream
@@ -141,20 +134,20 @@ public class WhatsMediaUploader {
 					return json;
 				}
 			} catch (JSONException e) {
-				log.warn("Invalid json returned from upload: "+parts[1],e);
+				Log.w("WARNING", "Invalid json returned from upload: "+parts[1],e);
 			}
 		} else {
-			log.info("No JSON body found in response"+data.toString());
+			Log.i("INFO", "No JSON body found in response"+data.toString());
 			if(data.contains("{")) {
 				String substring = data.substring(data.indexOf("{"));
 				try {
-					log.debug("Trying with substring: "+substring);
+					Log.d("DEBUG", "Trying with substring: "+substring);
 					JSONObject json = new JSONObject(substring);
 					if(json != null) {
 						return json;
 					}
 				} catch (JSONException e) {
-					log.warn("Invalid json returned from upload: "+substring,e);
+					Log.w("WARNING", "Invalid json returned from upload: "+substring,e);
 				}
 			}
 		}
@@ -175,7 +168,7 @@ public class WhatsMediaUploader {
 				contentType = "audio/mpeg";
 			}
 		}
-		log.debug("Got content type "+contentType+" for: "+mediaFile.getPath());
+		Log.d("DEBUG", "Got content type "+contentType+" for: "+mediaFile.getPath());
 		return contentType;
 	}
 
