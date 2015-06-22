@@ -5,6 +5,8 @@ import nl.giovanniterlingen.whatsapp.events.EventType;
 import nl.giovanniterlingen.whatsapp.message.*;
 import nl.giovanniterlingen.whatsapp.tools.BinHex;
 import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.util.Base64;
 import android.util.Log;
 
@@ -78,8 +80,9 @@ public class WhatsApi {
     private MessagePoller poller;
     private String lastSendMsgId;
     private Proxy proxy;
+    protected Context context;
 
-    public WhatsApi(String username, String identity, String nickname) throws NoSuchAlgorithmException, WhatsAppException {
+    public WhatsApi(String username, String identity, String nickname) throws NoSuchAlgorithmException, WhatsAppException, IOException {
         writer = new BinTreeNodeWriter();
         reader = new BinTreeNodeReader();
         this.name = nickname;
@@ -1374,9 +1377,10 @@ public class WhatsApi {
         }
     }
 
-    private List<Country> readCountries() throws WhatsAppException {
+    private List<Country> readCountries() throws WhatsAppException, IOException {
         List<Country> result = new LinkedList<Country>();
-        InputStream is = this.getClass().getResourceAsStream("/countries.csv");
+        AssetManager mngr = context.getAssets();
+        InputStream is = mngr.open("countries.csv");
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
