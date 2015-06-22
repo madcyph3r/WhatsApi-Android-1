@@ -8,13 +8,16 @@ import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.*;
@@ -2728,8 +2731,11 @@ public class WhatsApi {
 
 
     private JSONObject getResponse(String host, Map<String, String> query) throws JSONException {
-        Client client = ClientBuilder.newClient();
 
+        /**
+         * Just a quick test, maybe it will work! Cross fingers!
+         */
+    	
         StringBuilder url = new StringBuilder();
         url.append(host);
         String delimiter = "?";
@@ -2741,11 +2747,26 @@ public class WhatsApi {
             delimiter = "&";
         }
 
-        Log.d("DEBUG", "Request: " + url.toString());
+        
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpProtocolParams.setUserAgent(httpClient.getParams(), WHATSAPP_USER_AGENT);
+        HttpPost httpPost = new HttpPost(url.toString());
 
-        WebTarget target = client.target(url.toString());
-        String resp = target.request(MediaType.APPLICATION_JSON).header("User-Agent", WHATSAPP_USER_AGENT).get(String.class);
-        return new JSONObject(resp);
+            HttpResponse response;
+			try {
+				response = httpClient.execute(httpPost);
+	            Log.d("Response", response.toString());
+	            String result = EntityUtils.toString(response.getEntity()); 
+	            return new JSONObject(result);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				return null; // What should I do?
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null; // What should I do?
+			}
+       
+		
     }
 
 
