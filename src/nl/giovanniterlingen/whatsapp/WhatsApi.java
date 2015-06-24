@@ -13,9 +13,12 @@ import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,9 +83,8 @@ public class WhatsApi {
     private MessagePoller poller;
     private String lastSendMsgId;
     private Proxy proxy;
-    protected Context context;
 
-    public WhatsApi(String username, String identity, String nickname) throws NoSuchAlgorithmException, WhatsAppException, IOException {
+    public WhatsApi(String username, String identity, String nickname) throws NoSuchAlgorithmException, WhatsAppException, ClientProtocolException, IOException {
         writer = new BinTreeNodeWriter();
         reader = new BinTreeNodeReader();
         this.name = nickname;
@@ -97,7 +99,7 @@ public class WhatsApi {
             throw new WhatsAppException(e);
         }
         this.loginStatus = LoginStatus.DISCONNECTED_STATUS;
-        countries = readCountries();
+        countries = readCountries(null);
     }
 
     /**
@@ -1377,10 +1379,11 @@ public class WhatsApi {
         }
     }
 
-    private List<Country> readCountries() throws WhatsAppException, IOException {
+    public final List<Country> readCountries(Context context) throws WhatsAppException, ClientProtocolException, IOException {
         List<Country> result = new LinkedList<Country>();
-        AssetManager mngr = context.getAssets();
-        InputStream is = mngr.open("countries.csv");
+        AssetManager assetManager = context.getAssets();
+        
+        InputStream is = assetManager.open("countries.csv");
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
