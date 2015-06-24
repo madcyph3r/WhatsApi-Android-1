@@ -82,10 +82,11 @@ public class WhatsApi {
     private Proxy proxy;
     private Context mContext;
 
-    public WhatsApi(String username, String identity, String nickname) throws NoSuchAlgorithmException, WhatsAppException, ClientProtocolException, IOException {
+    public WhatsApi(Context context, String username, String identity, String nickname) throws NoSuchAlgorithmException, WhatsAppException, ClientProtocolException, IOException {
         writer = new BinTreeNodeWriter();
         reader = new BinTreeNodeReader();
         this.name = nickname;
+        this.mContext = context;
         this.phoneNumber = username;
         try {
             if (!checkIdentity(identity)) {

@@ -1,35 +1,35 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.io.UnsupportedEncodingException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 public class MainActivity extends ActionBarActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+		WhatsApi wa = null;
+		try {
+			wa = new WhatsApi(null, "username", "identity", "nickname");
+			sendRequest(wa);
+		} catch (Exception e) {
+			System.out.println("Caught exception: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	private static void sendRequest(WhatsApi wa) throws WhatsAppException,
+			JSONException, UnsupportedEncodingException {
+		JSONObject resp = wa.codeRequest("sms", null, null);
+		System.out.println("Registration sent: " + resp.toString(2));
+	}
 }
