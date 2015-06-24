@@ -13,12 +13,9 @@ import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +80,7 @@ public class WhatsApi {
     private MessagePoller poller;
     private String lastSendMsgId;
     private Proxy proxy;
+    private Context mContext;
 
     public WhatsApi(String username, String identity, String nickname) throws NoSuchAlgorithmException, WhatsAppException, ClientProtocolException, IOException {
         writer = new BinTreeNodeWriter();
@@ -99,7 +97,7 @@ public class WhatsApi {
             throw new WhatsAppException(e);
         }
         this.loginStatus = LoginStatus.DISCONNECTED_STATUS;
-        countries = readCountries(null);
+        countries = readCountries();
     }
 
     /**
@@ -808,7 +806,8 @@ public class WhatsApi {
     }
 
     private String base64_encode(byte[] data) {
-        byte[] enc = Base64.encode(data, 0); /** I could be wrong here */
+        byte[] enc = Base64.encode(data, (Integer) null); 
+        /** I could be wrong here with that integer */
         return new String(enc);
     }
 
@@ -1379,9 +1378,9 @@ public class WhatsApi {
         }
     }
 
-    public final List<Country> readCountries(Context context) throws WhatsAppException, ClientProtocolException, IOException {
+    public final List<Country> readCountries() throws WhatsAppException, ClientProtocolException, IOException {
         List<Country> result = new LinkedList<Country>();
-        AssetManager assetManager = context.getAssets();
+        AssetManager assetManager = mContext.getAssets();
         
         InputStream is = assetManager.open("countries.csv");
         BufferedReader br = null;
@@ -1611,7 +1610,8 @@ public class WhatsApi {
     }
 
     byte[] base64_decode(String pwd) {
-        return android.util.Base64.decode(pwd.getBytes(), 0); /** Should I add that zero here? */
+        return android.util.Base64.decode(pwd.getBytes(), (Integer) null); 
+        /** Should I add that integer here? */
 
     }
 
