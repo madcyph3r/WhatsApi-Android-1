@@ -2745,9 +2745,6 @@ public class WhatsApi {
          * Something is wrong here
          */
     	
-    	HttpClient httpClient = new DefaultHttpClient();
-        HttpProtocolParams.setUserAgent(httpClient.getParams(), WHATSAPP_USER_AGENT);
-     	
     	StringBuilder url = new StringBuilder();
         url.append(host);
         String delimiter = "?";
@@ -2759,21 +2756,22 @@ public class WhatsApi {
             delimiter = "&";
         }
         
-       
-        HttpGet httpGet = new HttpGet(url.toString());
+    	HttpClient httpClient = new DefaultHttpClient();
+        HttpProtocolParams.setUserAgent(httpClient.getParams(), WHATSAPP_USER_AGENT);
+        HttpPost httpPost = new HttpPost(url.toString());
         HttpResponse response;
 			try {
-				response = httpClient.execute(httpGet);
+				response = httpClient.execute(httpPost);
 	            Log.d("Response", response.toString());
 	            String result = EntityUtils.toString(response.getEntity()); 
 	            return new JSONObject(result);
 	            
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				return null; // What should I do?
+				return null;
 			} catch (IOException e) {
 				e.printStackTrace();
-				return null; // What should I do?
+				return null;
 			}
        
 		
