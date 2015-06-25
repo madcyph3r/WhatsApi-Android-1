@@ -13,6 +13,7 @@ import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
@@ -2741,10 +2742,13 @@ public class WhatsApi {
     private JSONObject getResponse(String host, Map<String, String> query) throws JSONException {
 
         /**
-         * Just a quick test, maybe it will work! Cross fingers!
+         * Something is wrong here
          */
     	
-        StringBuilder url = new StringBuilder();
+    	HttpClient httpClient = new DefaultHttpClient();
+        HttpProtocolParams.setUserAgent(httpClient.getParams(), WHATSAPP_USER_AGENT);
+     	
+    	StringBuilder url = new StringBuilder();
         url.append(host);
         String delimiter = "?";
         for (String key : query.keySet()) {
@@ -2754,18 +2758,16 @@ public class WhatsApi {
             url.append(query.get(key));
             delimiter = "&";
         }
-
         
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpProtocolParams.setUserAgent(httpClient.getParams(), WHATSAPP_USER_AGENT);
-        HttpPost httpPost = new HttpPost(url.toString());
-
-            HttpResponse response;
+       
+        HttpGet httpGet = new HttpGet(url.toString());
+        HttpResponse response;
 			try {
-				response = httpClient.execute(httpPost);
+				response = httpClient.execute(httpGet);
 	            Log.d("Response", response.toString());
 	            String result = EntityUtils.toString(response.getEntity()); 
 	            return new JSONObject(result);
+	            
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 				return null; // What should I do?

@@ -19,7 +19,7 @@ public class MainActivity extends ActionBarActivity {
 
 		WhatsApi wa = null;
 		try {
-			wa = new WhatsApi(MainActivity.this, "username", "identity", "nickname");
+			wa = new WhatsApi(MainActivity.this, "358401122333", "358401122333", "358401122333");
 			sendRequest(wa);
 		} catch (Exception e) {
 			System.out.println("Caught exception: " + e.getMessage());
