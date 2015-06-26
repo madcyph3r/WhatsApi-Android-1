@@ -10,9 +10,16 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
+	Button   mButton;
+	EditText mEdit;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,19 +28,29 @@ public class MainActivity extends ActionBarActivity {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         
+        mButton = (Button)findViewById(R.id.verify_button);
+        mEdit   = (EditText)findViewById(R.id.number_text);
+        
+        mButton.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    public void onClick(View view)
+                    {
 		WhatsApi wa = null;
 		try {
-			wa = new WhatsApi(MainActivity.this, "358401122333", "358401122333", "358401122333");
+			wa = new WhatsApi(MainActivity.this, mEdit.getText().toString(), null, null);
 			sendRequest(wa);
 		} catch (Exception e) {
-			System.out.println("Caught exception: " + e.getMessage());
-			e.printStackTrace();
+			Toast.makeText(MainActivity.this, "Caught exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
+                    
+    });
+}
 
-	private static void sendRequest(WhatsApi wa) throws WhatsAppException,
+	private void sendRequest(WhatsApi wa) throws WhatsAppException,
 			JSONException, UnsupportedEncodingException {
 		JSONObject resp = wa.codeRequest("sms", null, null);
-		System.out.println("Registration sent: " + resp.toString(2));
+		Toast.makeText(MainActivity.this, "Registration sent: " + resp.toString(2), Toast.LENGTH_SHORT).show();
 	}
 }
