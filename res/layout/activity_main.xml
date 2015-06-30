@@ -1,24 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative_layout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-    <Button
-        android:id="@+id/verify_button"
-        android:text="Verify"
+    android:orientation="vertical" >
+    
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        />
-    <EditText
-        android:id="@+id/number_text"
-        android:layout_toLeftOf="@+id/verify_button"
-        android:layout_width="fill_parent"
+        android:paddingTop="15dp"
+        android:text="Enter here your registration details" />
+    
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+
+        <EditText
+            android:id="@+id/number_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="31612345678" />
+    
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+
+        <Button
+            android:id="@+id/verify_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Verify" />
+        
+
+        <EditText
+            android:id="@+id/user_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/verify_button"
+            android:hint="User Name" >
+        
+        </EditText>
+    
+    </RelativeLayout>
+    
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="31612345678"
-        android:inputType="text"
-        android:maxLines="1"
-        />
-</RelativeLayout>
+        android:paddingTop="15dp"
+        android:text="After that, enter the code received by sms" />
+    
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Register" />
+        
+
+        <EditText
+            android:id="@+id/verficationcode_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/register_button"
+            android:hint="6-digit verification code" >
+        
+        </EditText>
+    
+    </RelativeLayout>
+
+</LinearLayout>
