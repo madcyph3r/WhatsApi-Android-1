@@ -27,6 +27,7 @@ public class Main extends Activity {
 		String pw = preferences.getString("pw", "");
 		if (pw.length() == 0) {
 			Intent intent = new Intent(Main.this, RegisterActivity.class);
+			Main.this.finish();
 			startActivity(intent);
 		} else if (pw != null) {
 
@@ -55,10 +56,13 @@ public class Main extends Activity {
 				wa.loginWithPassword(pw);
 
 				Intent intent = new Intent(Main.this, Conversations.class);
+				Main.this.finish();
 				startActivity(intent);
+				
 			} catch (WhatsAppException e) {
 
 				Intent intent = new Intent(Main.this, RegisterActivity.class);
+				Main.this.finish();
 				startActivity(intent);
 
 			}

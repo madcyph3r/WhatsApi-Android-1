@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.ClipboardManager;
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -124,9 +124,9 @@ public class RegisterActivity extends ActionBarActivity {
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 		clipboard.setText(password);
 		
-		Toast.makeText(RegisterActivity.this,		
-				"Password has been copied to your clipboard", Toast.LENGTH_SHORT)
-				.show();
+		Intent intent = new Intent(RegisterActivity.this, Conversations.class);
+		RegisterActivity.this.finish();
+		startActivity(intent);
 				
 	}
 }
