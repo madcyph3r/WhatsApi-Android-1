@@ -62,6 +62,8 @@ public class RegisterActivity extends ActionBarActivity {
 				WhatsApi wa = null;
 
 				try {
+					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
+							.toString(), "WhatsApi", mUser.getText().toString());
 					sendRegister(wa);
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this, e.getMessage(),
@@ -109,7 +111,7 @@ public class RegisterActivity extends ActionBarActivity {
 		Toast.makeText(this, "Password copied to clipboard!",
 				Toast.LENGTH_SHORT).show();
 
-		Intent intent = new Intent(this, Conversations.class);
+		Intent intent = new Intent(this, Main.class);
 		startActivity(intent);
 		finish();
 		return;

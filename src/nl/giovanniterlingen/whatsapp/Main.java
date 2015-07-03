@@ -59,13 +59,15 @@ public class Main extends Activity {
 
 				Intent intent = new Intent(this, Conversations.class);
 				startActivity(intent);
+				super.onCreate(savedInstanceState);
 				finish();
 				return;
 
-			} catch (WhatsAppException e) {
+			} catch (WhatsAppException e) { //It keeps going here, what am I doing wrong?
 
 				Intent intent = new Intent(this, RegisterActivity.class);
 				startActivity(intent);
+				super.onCreate(savedInstanceState);
 				finish();
 				return;
 			}
