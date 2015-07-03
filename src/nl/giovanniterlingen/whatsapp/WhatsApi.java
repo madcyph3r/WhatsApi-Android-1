@@ -2694,12 +2694,6 @@ public class WhatsApi {
         for (Country country : countries) {
             if (phoneNumber.startsWith(country.getCountryCode())) {
                 ret.put("country", country.getName());
-                
-                if (country.getCountryCode().startsWith("1"))
-                {
-                	ret.put("cc", "1");
-                }
-                
                 ret.put("cc", country.getCountryCode());
                 ret.put("phone", phoneNumber.substring(country.getCountryCode().length()));
                 ret.put("mcc", country.getMcc());
