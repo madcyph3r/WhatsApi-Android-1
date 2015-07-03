@@ -107,9 +107,7 @@ public class RegisterActivity extends ActionBarActivity {
 				"Registration was succesfull!", Toast.LENGTH_SHORT)
 				.show();
 		
-		JSONArray array = new JSONArray(res);
-		JSONObject jObj = array.getJSONObject(0);
-		String password = jObj.getString("pw");
+		String password = res.getString("pw"); //second try!
 		
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = preferences.edit();
@@ -123,6 +121,10 @@ public class RegisterActivity extends ActionBarActivity {
 		    
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 		clipboard.setText(password);
+		
+		Toast.makeText(RegisterActivity.this,
+				"Password copied to clipboard!", Toast.LENGTH_SHORT)
+				.show();
 		
 		Intent intent = new Intent(RegisterActivity.this, Conversations.class);
 		RegisterActivity.this.finish();
