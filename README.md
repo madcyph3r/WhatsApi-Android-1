@@ -1,13 +1,11 @@
 WhatsApi-Android
 ================
 
-This is an API written in java. It's a fork from WhatsApi4J, which is based on WhatsAPI.
-The goal of this fork is to make WhatsApi working on Android and let ourselves understand how the WhatsApp protocol works.
+This is a WhatsApp client written in Java. It's a fork from WhatsApi4J, which is based on Chat-API.
+The goal of this fork is to make a totally new WhatsApp client for Android and let ourselves understand how the WhatsApp protocol works.
 
-(At this moment it's unstable I need to find out how to implement Client in Android!)
+(At this moment you can only request and obtain your password, more features are in development.)
 
 ## Documentation
-* FunXMPP Protocol - https://github.com/mgp25/WhatsAPI-Official/wiki/FunXMPP-Protocol
-
-## Protocol
-More info in WhatsAPI Official repo wiki https://github.com/mgp25/WhatsAPI-Official
+* FunXMPP Protocol - https://github.com/WHAnonymous/Chat-API/wiki/FunXMPP-Protocol
+* Official WhatsAPI Github - https://github.com/WHAnonymous/Chat-API
