@@ -18,18 +18,20 @@ import android.preference.PreferenceManager;
 
 public class Main extends Activity {
 
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String pw = preferences.getString("pw", "");
 		if (pw.length() == 0) {
-			Intent intent = new Intent(Main.this, RegisterActivity.class);
-			Main.this.finish();
+
+			Intent intent = new Intent(this, RegisterActivity.class);
 			startActivity(intent);
-		} else if (pw != null) {
+			super.onCreate(savedInstanceState);
+			finish();
+			return;
+
+		} else {
 
 			String number = preferences.getString("number", "");
 			String username = preferences.getString("username", "");
@@ -37,7 +39,7 @@ public class Main extends Activity {
 			WhatsApi wa = null;
 
 			try {
-				wa = new WhatsApi(Main.this, number, "WhatsApi", username);
+				wa = new WhatsApi(this, number, "WhatsApi", username);
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -55,16 +57,17 @@ public class Main extends Activity {
 			try {
 				wa.loginWithPassword(pw);
 
-				Intent intent = new Intent(Main.this, Conversations.class);
-				Main.this.finish();
+				Intent intent = new Intent(this, Conversations.class);
 				startActivity(intent);
-				
+				finish();
+				return;
+
 			} catch (WhatsAppException e) {
 
-				Intent intent = new Intent(Main.this, RegisterActivity.class);
-				Main.this.finish();
+				Intent intent = new Intent(this, RegisterActivity.class);
 				startActivity(intent);
-
+				finish();
+				return;
 			}
 		}
 

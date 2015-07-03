@@ -25,10 +25,7 @@ public class RegisterActivity extends ActionBarActivity {
 	EditText mEdit;
 	EditText mUser;
 	EditText mVerify;
-	
-	
-	
-	@Override
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registeractivity);
@@ -48,8 +45,7 @@ public class RegisterActivity extends ActionBarActivity {
 				WhatsApi wa = null;
 				try {
 					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
-							.toString(), "WhatsApi", mUser.getText()
-							.toString());
+							.toString(), "WhatsApi", mUser.getText().toString());
 					sendRequest(wa);
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this,
@@ -59,76 +55,64 @@ public class RegisterActivity extends ActionBarActivity {
 			}
 
 		});
-		
-		
+
 		rButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				
-			WhatsApi wa = null;
-				
-			
-			try {
-				wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
-						.toString(), "WhatsApi", mUser.getText()
-						.toString());
-				sendRegister(wa);
-			} catch (Exception e) {
-				Toast.makeText(RegisterActivity.this,
-						"Caught exception: " + e.getMessage(),
-						Toast.LENGTH_SHORT).show();
+
+				WhatsApi wa = null;
+
+				try {
+					sendRegister(wa);
+				} catch (Exception e) {
+					Toast.makeText(RegisterActivity.this, e.getMessage(),
+							Toast.LENGTH_SHORT).show();
+				}
+
 			}
-				
-			}
-			});
-		
+		});
+
 	}
 
 	private void sendRequest(WhatsApi wa) throws WhatsAppException,
 			JSONException, UnsupportedEncodingException {
 		JSONObject resp = wa.codeRequest("sms", null, null);
-		Toast.makeText(RegisterActivity.this,
-				"Registration sent: " + resp.toString(2), Toast.LENGTH_SHORT)
-				.show();
+		Toast.makeText(this, "Registration sent: " + resp.toString(2),
+				Toast.LENGTH_SHORT).show();
 	}
-	
-	
-	
-	private void sendRegister(WhatsApi wa) throws JSONException, WhatsAppException {
-		String code = mVerify.getText()
-				.toString();
-		if(code == null || code.length() == 0) {
-			Toast.makeText(RegisterActivity.this,
-					"No verification code was entered", Toast.LENGTH_SHORT)
-					.show();
+
+	private void sendRegister(WhatsApi wa) throws JSONException,
+			WhatsAppException {
+		String code = mVerify.getText().toString();
+		if (code == null || code.length() == 0) {
+			Toast.makeText(this, "No verification code was entered",
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 		JSONObject res = wa.codeRegister(code);
-		Toast.makeText(RegisterActivity.this,
-				"Registration was succesfull!", Toast.LENGTH_SHORT)
+		Toast.makeText(this, "Registration was succesfull!", Toast.LENGTH_SHORT)
 				.show();
-		
-		String password = res.getString("pw"); //second try!
-		
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+		String password = res.getString("pw"); // second try!
+
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString("pw", password);
-		editor.putString("number", mEdit.getText()
-				.toString());
-		editor.putString("username", mUser.getText()
-				.toString());
-		
+		editor.putString("number", mEdit.getText().toString());
+		editor.putString("username", mUser.getText().toString());
+
 		editor.apply();
-		    
+
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 		clipboard.setText(password);
-		
-		Toast.makeText(RegisterActivity.this,
-				"Password copied to clipboard!", Toast.LENGTH_SHORT)
-				.show();
-		
-		Intent intent = new Intent(RegisterActivity.this, Conversations.class);
-		RegisterActivity.this.finish();
+
+		Toast.makeText(this, "Password copied to clipboard!",
+				Toast.LENGTH_SHORT).show();
+
+		Intent intent = new Intent(this, Conversations.class);
 		startActivity(intent);
-				
+		finish();
+		return;
+
 	}
 }
