@@ -2694,11 +2694,25 @@ public class WhatsApi {
         for (Country country : countries) {
             if (phoneNumber.startsWith(country.getCountryCode())) {
                 ret.put("country", country.getName());
+                
+                if (country.getCountryCode().startsWith("1"))
+                {
+                	ret.put("cc", "1");
+                }
+                
                 ret.put("cc", country.getCountryCode());
                 ret.put("phone", phoneNumber.substring(country.getCountryCode().length()));
                 ret.put("mcc", country.getMcc());
                 ret.put("ISO3166", country.getIso3166());
                 ret.put("ISO639", country.getIso639());
+                
+                if(country.getMcc().contains("|"))
+                {
+                String[] parts = country.getMcc().split("\\|");
+                String mcc = parts[0];
+                ret.put("mcc", mcc);
+                }
+                
                 return ret;
             }
         }
