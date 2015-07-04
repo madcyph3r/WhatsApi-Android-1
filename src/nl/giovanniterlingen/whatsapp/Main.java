@@ -22,8 +22,8 @@ public class Main extends Activity {
 
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		String pw = preferences.getString("pw", "");
-		if (pw.length() == 0) {
+		String password = preferences.getString("pw", "");
+		if (password.length() == 0) {
 
 			Intent intent = new Intent(this, RegisterActivity.class);
 			startActivity(intent);
@@ -33,44 +33,11 @@ public class Main extends Activity {
 
 		} else {
 
-			String number = preferences.getString("number", "");
-			String username = preferences.getString("username", "");
-
-			WhatsApi wa = null;
-
-			try {
-				wa = new WhatsApi(this, number, "WhatsApi", username);
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (WhatsAppException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				wa.loginWithPassword(pw);
-
-				Intent intent = new Intent(this, Conversations.class);
-				startActivity(intent);
-				super.onCreate(savedInstanceState);
-				finish();
-				return;
-
-			} catch (WhatsAppException e) { //It keeps going here, what am I doing wrong?
-
-				Intent intent = new Intent(this, RegisterActivity.class);
-				startActivity(intent);
-				super.onCreate(savedInstanceState);
-				finish();
-				return;
-			}
+			Intent intent = new Intent(this, Conversations.class);
+			startActivity(intent);
+			super.onCreate(savedInstanceState);
+			finish();
+			return;
 		}
 
 	}
