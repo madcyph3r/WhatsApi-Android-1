@@ -1,10 +1,5 @@
 package nl.giovanniterlingen.whatsapp;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-
-import org.apache.http.client.ClientProtocolException;
-
 import android.support.v7.app.ActionBarActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,22 +14,20 @@ public class Conversations extends ActionBarActivity {
 
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
-
+		WhatsApi wa = null;
 		try {
-			WhatsApi wa = new WhatsApi(Conversations.this,
-					preferences.getString("number", ""), "WhatsApi",
-					preferences.getString("username", ""));
+			wa = new WhatsApi(Conversations.this, preferences.getString(
+					"number", ""), "WhatsApi", preferences.getString(
+					"username", ""));
 			wa.loginWithPassword(preferences.getString("pw", ""));
-		} catch (NoSuchAlgorithmException e) {
-			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-		} catch (WhatsAppException e) {
-			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-		} catch (IOException e) {
-			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-		}
 
+		} catch (Exception e) {
+			Toast.makeText(this, "Caught exception: " + e.getMessage(),
+					Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+			if (wa != null) {
+				wa.disconnect();
+			}
+		}
 	}
 }
