@@ -47,10 +47,12 @@ public class RegisterActivity extends ActionBarActivity {
 					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
 							.toString(), "WhatsApi", mUser.getText().toString());
 					sendRequest(wa);
+					return;
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this,
 							"Caught exception: " + e.getMessage(),
 							Toast.LENGTH_SHORT).show();
+					return;
 				}
 			}
 
@@ -65,9 +67,11 @@ public class RegisterActivity extends ActionBarActivity {
 					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
 							.toString(), "WhatsApi", mUser.getText().toString());
 					sendRegister(wa);
+					return;
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this, e.getMessage(),
 							Toast.LENGTH_SHORT).show();
+					return;
 				}
 
 			}
@@ -76,10 +80,34 @@ public class RegisterActivity extends ActionBarActivity {
 	}
 
 	private void sendRequest(WhatsApi wa) throws WhatsAppException,
-			JSONException, UnsupportedEncodingException {
+		JSONException, UnsupportedEncodingException {
 		JSONObject resp = wa.codeRequest("sms", null, null);
+		
+		if (resp.toString().contains("existing")) {
+			
+			String password = resp.getString("pw");
+			SharedPreferences preferences = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			SharedPreferences.Editor editor = preferences.edit();
+			editor.putString("pw", password);
+			editor.putString("number", mEdit.getText().toString());
+			editor.putString("username", mUser.getText().toString());
+
+			editor.apply();
+			
+			Intent intent = new Intent(this, Main.class);
+			startActivity(intent);
+			finish();
+			
+		return;
+		}
+		else {
+			
 		Toast.makeText(this, "Registration sent: " + resp.toString(2),
 				Toast.LENGTH_SHORT).show();
+		
+		return;
+		}
 	}
 
 	private void sendRegister(WhatsApi wa) throws JSONException,
