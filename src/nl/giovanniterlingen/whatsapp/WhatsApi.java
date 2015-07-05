@@ -808,8 +808,7 @@ public class WhatsApi {
     }
 
     private String base64_encode(byte[] data) {
-        byte[] enc = Base64.encode(data, (Integer) null); 
-        /** I could be wrong here with that integer */
+        byte[] enc = Base64.encode(data, Base64.DEFAULT);
         return new String(enc);
     }
 
@@ -1612,9 +1611,7 @@ public class WhatsApi {
     }
 
     byte[] base64_decode(String pwd) {
-        return android.util.Base64.decode(pwd.getBytes(), (Integer) null); 
-        /** Should I add that integer here? */
-
+        return Base64.decode(pwd.getBytes(), Base64.DEFAULT); 
     }
 
     private void processInboundData(byte[] readData) throws IncompleteMessageException, InvalidMessageException, InvalidTokenException, IOException, WhatsAppException, JSONException, NoSuchAlgorithmException, InvalidKeyException, DecodeException {
