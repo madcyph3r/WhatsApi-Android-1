@@ -19,6 +19,7 @@ public class Conversations extends ActionBarActivity {
 			wa = new WhatsApi(Conversations.this, preferences.getString(
 					"number", ""), "WhatsApi", preferences.getString(
 					"username", ""));
+			wa.connect(); //Maybe I was forgotten this one
 			wa.loginWithPassword(preferences.getString("pw", ""));
 
 		} catch (Exception e) {
