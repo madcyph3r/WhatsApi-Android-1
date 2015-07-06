@@ -5,43 +5,60 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class Conversations extends ActionBarActivity {
 
+	Button sButton;
+	EditText nEdit;
+	EditText mEdit;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.conversations);
 
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		setContentView(R.layout.conversations);
+		sButton = (Button) findViewById(R.id.send_button);
+		mEdit = (EditText) findViewById(R.id.message_text);
+		nEdit = (EditText) findViewById(R.id.contact_text);
 
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		WhatsApi wa = null;
-		try {
-			wa = new WhatsApi(Conversations.this, preferences.getString(
-					"number", ""), "WhatsApi", preferences.getString(
-					"username", ""));
-			wa.connect();
-			wa.loginWithPassword(preferences.getString("pw", ""));
+		sButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
 
-			sendTextMessage(wa);
-			return;
+				SharedPreferences preferences = PreferenceManager
+						.getDefaultSharedPreferences(Conversations.this);
+				WhatsApi wa = null;
 
-		} catch (Exception e) {
-			Toast.makeText(this, "Caught exception: " + e.getMessage(),
-					Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-			return;
-		}
+				try {
+					wa = new WhatsApi(Conversations.this, preferences
+							.getString("number", ""), "WhatsApi", preferences
+							.getString("username", ""));
+					wa.connect();
+					wa.loginWithPassword(preferences.getString("pw", ""));
+					sendTextMessage(wa);
+					return;
+					
+				} catch (Exception e) {
+					Toast.makeText(Conversations.this,
+							"Caught exception: " + e.getMessage(),
+							Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+					return;
+				}
+			}
+
+		});
 	}
 
-	private static void sendTextMessage(WhatsApi wa) throws WhatsAppException {
-		String to = "31612345678";
-		String message = "Test message from Giovanni's WhatsApp client";
+	private void sendTextMessage(WhatsApi wa) throws WhatsAppException {
+		String to = nEdit.getText().toString();
+		String message = mEdit.getText().toString();
 		wa.sendMessage(to, message);
 		return;
 	}
