@@ -25,15 +25,17 @@ public class Conversations extends ActionBarActivity {
 			wa = new WhatsApi(Conversations.this, preferences.getString(
 					"number", ""), "WhatsApi", preferences.getString(
 					"username", ""));
-			wa.connect(); // Maybe I was forgotten this one
+			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
 
 			sendTextMessage(wa);
+			return;
 
 		} catch (Exception e) {
 			Toast.makeText(this, "Caught exception: " + e.getMessage(),
 					Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
+			return;
 		}
 	}
 
@@ -41,5 +43,6 @@ public class Conversations extends ActionBarActivity {
 		String to = "31612345678";
 		String message = "Test message from Giovanni's WhatsApp client";
 		wa.sendMessage(to, message);
+		return;
 	}
 }
