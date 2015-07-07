@@ -12,19 +12,31 @@
         android:text="Enter here a message to send" />
     
 
-    <LinearLayout
+   <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         
 
+        <Button
+            android:id="@+id/contact_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Select Contact" />
+        
+
         <EditText
             android:id="@+id/contact_text"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="31612345678" />
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/contact_button"
+            android:hint="316123456" >
+        
+        </EditText>
     
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

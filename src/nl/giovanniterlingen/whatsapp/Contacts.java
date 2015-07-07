@@ -1,43 +1,42 @@
 package nl.giovanniterlingen.whatsapp;
 
-import android.app.ListActivity;
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Contacts.People;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.SimpleCursorAdapter;
-import android.widget.AdapterView.OnItemClickListener;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
-@SuppressWarnings("deprecation")
-public class Contacts extends ListActivity implements OnItemClickListener {
+public class Contacts extends FragmentActivity implements
+		OnContactSelectedListener {
+	public static final String SELECTED_CONTACT_ID = "contact_id";
+	public static final String KEY_PHONE_NUMBER = "phone_number";
+	public static final String KEY_CONTACT_NAME = "contact_name";
 
-	/**
-	 * A quick try for obtaining a contacts list
-	 */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_contacts);
 
-		String[] projection = new String[] { People._ID, People.NAME };
-		Cursor cursor = managedQuery(People.CONTENT_URI, projection, null,
-				null, People.NAME + " ASC");
+		FragmentManager fragmentManager = this.getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
+		ContactsListFragment fragment = new ContactsListFragment();
 
-		ListAdapter adapter = new SimpleCursorAdapter(this,
-				android.R.layout.two_line_list_item, cursor,
-				new String[] { People.NAME }, new int[] { android.R.id.text1 });
-		setListAdapter(adapter);
-
-		getListView().setOnItemClickListener(this);
-
+		fragmentTransaction.add(R.id.fragment_container, fragment);
+		fragmentTransaction.commit();
 	}
 
-	public void onItemClick(AdapterView<?> adapterView, View view,
-			int position, long id) {
+	@Override
+	public void onContactNameSelected(long contactId) {
+		// TODO AUTO GENERATED
+	}
 
-		// TODO add intent
+	@Override
+	public void onContactNumberSelected(String contactNumber, String contactName) {
+		String number = contactNumber;
+		Intent i = new Intent(this, Conversations.class);
+		i.putExtra("numberpass", number);
+		startActivity(i);
 
 	}
 

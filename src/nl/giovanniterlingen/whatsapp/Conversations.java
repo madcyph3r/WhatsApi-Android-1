@@ -1,6 +1,7 @@
 package nl.giovanniterlingen.whatsapp;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 public class Conversations extends ActionBarActivity {
 
 	Button sButton;
+	Button cButton;
 	EditText nEdit;
 	EditText mEdit;
 
@@ -25,8 +27,25 @@ public class Conversations extends ActionBarActivity {
 		StrictMode.setThreadPolicy(policy);
 
 		sButton = (Button) findViewById(R.id.send_button);
+		cButton = (Button) findViewById(R.id.contact_button);
 		mEdit = (EditText) findViewById(R.id.message_text);
 		nEdit = (EditText) findViewById(R.id.contact_text);
+
+		Intent intent = getIntent();
+		if (intent.hasExtra("numberpass")) {
+			String number = intent.getExtras().getString("numberpass");
+			nEdit.setText(number);
+		}
+
+		cButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+
+				Intent intent = new Intent(Conversations.this, Contacts.class);
+				startActivity(intent);
+				finish();
+
+			}
+		});
 
 		sButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
@@ -43,7 +62,7 @@ public class Conversations extends ActionBarActivity {
 					wa.loginWithPassword(preferences.getString("pw", ""));
 					sendTextMessage(wa);
 					return;
-					
+
 				} catch (Exception e) {
 					Toast.makeText(Conversations.this,
 							"Caught exception: " + e.getMessage(),
@@ -58,8 +77,9 @@ public class Conversations extends ActionBarActivity {
 
 	private void sendTextMessage(WhatsApi wa) throws WhatsAppException {
 		String to = nEdit.getText().toString();
+		String str = to.replaceAll("\\D+", "");
 		String message = mEdit.getText().toString();
-		wa.sendMessage(to, message);
+		wa.sendMessage(str, message);
 		return;
 	}
 }
