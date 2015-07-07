@@ -42,6 +42,7 @@ public class Conversations extends ActionBarActivity {
 
 				Intent intent = new Intent(Conversations.this, Contacts.class);
 				startActivity(intent);
+				finish();
 
 			}
 		});

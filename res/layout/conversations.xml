@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/contact_button"
-            android:hint="316123456" >
+            android:hint="31612345678" >
         
         </EditText>
     

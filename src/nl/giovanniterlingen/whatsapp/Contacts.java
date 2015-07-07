@@ -40,4 +40,11 @@ public class Contacts extends FragmentActivity implements
 
 	}
 
+	public void onBackPressed() {
+		Intent intent = new Intent(this, Main.class);
+		startActivity(intent);
+		finish();
+		return;
+	}
+
 }
