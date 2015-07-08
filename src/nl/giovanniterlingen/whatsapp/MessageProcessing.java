@@ -21,10 +21,18 @@ public class MessageProcessing implements MessageProcessor {
 			String participant = message.getAttribute("participant");
 			if (participant != null && !participant.isEmpty()) {
 				// Group message
-				Toast.makeText(context, participant + "(" + from + ") ::: " + hex, Toast.LENGTH_SHORT).show();
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, participant + "(" + from + ") ::: " + hex, Toast.LENGTH_SHORT).show();
+  					}
+				});
 			} else {
 				// Private message
-				Toast.makeText(context, from + " ::: " + hex, Toast.LENGTH_SHORT).show();
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, from + " ::: " + hex, Toast.LENGTH_SHORT).show();
+  					}
+				});
 			}
 		}
 	}
@@ -36,12 +44,20 @@ public class MessageProcessing implements MessageProcessor {
 			TextMessage msg = (TextMessage) message;
 			if (msg.getGroupId() != null && !msg.getGroupId().isEmpty()) {
 				// Group message
-				Toast.makeText(context, msg.getDate() + " :: " + msg.getFrom() + "("
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, msg.getDate() + " :: " + msg.getFrom() + "("
 						+ msg.getGroupId() + "): " + msg.getText(), Toast.LENGTH_SHORT).show();
+  					}
+				});
 			} else {
 				// Private message
-				Toast.makeText(context, msg.getDate() + " :: " + msg.getFrom()
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, msg.getDate() + " :: " + msg.getFrom()
 						+ " : " + msg.getText(), Toast.LENGTH_SHORT).show();
+  					}
+				});
 			}
 			break;
 		default:
