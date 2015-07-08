@@ -6,6 +6,12 @@ import nl.giovanniterlingen.whatsapp.message.Message;
 import nl.giovanniterlingen.whatsapp.message.TextMessage;
 
 public class MessageProcessing implements MessageProcessor {
+	
+	private Context context;
+	
+	public MessageProcessing(Context context){
+		this.context = context;
+	}
 
 	public void processMessage(ProtocolNode message) {
 		String from = message.getAttribute("from");
@@ -15,10 +21,18 @@ public class MessageProcessing implements MessageProcessor {
 			String participant = message.getAttribute("participant");
 			if (participant != null && !participant.isEmpty()) {
 				// Group message
-				System.out.println(participant + "(" + from + ") ::: " + hex);
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, participant + "(" + from + ") ::: " + hex, Toast.LENGTH_SHORT).show();
+  					}
+				});
 			} else {
 				// Private message
-				System.out.println(from + " ::: " + hex);
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, from + " ::: " + hex, Toast.LENGTH_SHORT).show();
+  					}
+				});
 			}
 		}
 	}
@@ -30,12 +44,20 @@ public class MessageProcessing implements MessageProcessor {
 			TextMessage msg = (TextMessage) message;
 			if (msg.getGroupId() != null && !msg.getGroupId().isEmpty()) {
 				// Group message
-				System.out.println(msg.getDate() + " :: " + msg.getFrom() + "("
-						+ msg.getGroupId() + "): " + msg.getText());
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, msg.getDate() + " :: " + msg.getFrom() + "("
+						+ msg.getGroupId() + "): " + msg.getText(), Toast.LENGTH_SHORT).show();
+  					}
+				});
 			} else {
 				// Private message
-				System.out.println(msg.getDate() + " :: " + msg.getFrom()
-						+ " : " + msg.getText());
+				((Activity)context).runOnUiThread(new Runnable() {
+  					public void run() {
+						Toast.makeText(context, msg.getDate() + " :: " + msg.getFrom()
+						+ " : " + msg.getText(), Toast.LENGTH_SHORT).show();
+  					}
+				});
 			}
 			break;
 		default:

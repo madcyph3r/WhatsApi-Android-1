@@ -59,7 +59,7 @@ public class Conversations extends ActionBarActivity {
 							.getString("number", ""), "WhatsApi", preferences
 							.getString("username", ""));
 					
-					MessageProcessor mp = new MessageProcessing();
+					MessageProcessor mp = new MessageProcessing(Conversations.this);
 					wa.setNewMessageBind(mp);
 					
 					wa.connect();
