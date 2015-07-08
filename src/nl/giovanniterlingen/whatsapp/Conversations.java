@@ -72,6 +72,7 @@ public class Conversations extends ActionBarActivity {
 							"Caught exception: " + e.getMessage(),
 							Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
+					wa.disconnect();
 					return;
 				}
 			}
