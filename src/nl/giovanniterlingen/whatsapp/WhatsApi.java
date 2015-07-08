@@ -43,7 +43,7 @@ public class WhatsApi {
 	private static final String RELEASE_TOKEN_CONST = "PdA2DJyKoUrwLw1Bg6EIhzh502dF9noR9uFCllGk";
 	private static final String RELEASE_TIME = "1435097139726";
 	private final int PORT = 443; // The port of the WhatsApp server.
-	private final int TIMEOUT_SEC = 2; // The timeout for the connection with
+	private final int TIMEOUT_SEC = 10; // The timeout for the connection with
 										// the WhatsApp servers.
 	private final String WHATSAPP_CHECK_HOST = "v.whatsapp.net/v2/exist"; // The
 																			// check
