@@ -29,10 +29,8 @@ public class MessageService extends Service {
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
 
-			//Error here
-			MessageProcessor mp = new MessageProcessing();
+			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
-			//What to do?
 
 		} catch (Exception e) {
 			Toast.makeText(MessageService.this,

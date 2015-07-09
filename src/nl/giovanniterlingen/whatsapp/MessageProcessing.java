@@ -1,11 +1,20 @@
 package nl.giovanniterlingen.whatsapp;
 
-import nl.giovanniterlingen.whatsapp.MessageProcessor;
-import nl.giovanniterlingen.whatsapp.ProtocolNode;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
+
 import nl.giovanniterlingen.whatsapp.message.Message;
 import nl.giovanniterlingen.whatsapp.message.TextMessage;
 
 public class MessageProcessing implements MessageProcessor {
+
+	private Context context;
+
+	public MessageProcessing(Context context) {
+		this.context = context;
+	}
 
 	public void processMessage(ProtocolNode message) {
 		String from = message.getAttribute("from");
@@ -30,11 +39,28 @@ public class MessageProcessing implements MessageProcessor {
 			final TextMessage msg = (TextMessage) message;
 			if (msg.getGroupId() != null && !msg.getGroupId().isEmpty()) {
 				// Group message
-				System.out.println(msg.getFrom() + "(" + msg.getGroupId()
-						+ "): " + msg.getText());
+				Handler handler = new Handler(Looper.getMainLooper());
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								context,
+								msg.getFrom() + "(" + msg.getGroupId() + "): "
+										+ msg.getText(), Toast.LENGTH_LONG)
+								.show();
+					}
+				});
 			} else {
 				// Private message
-				System.out.println(msg.getFrom() + " : " + msg.getText());
+				Handler handler = new Handler(Looper.getMainLooper());
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(context,
+								msg.getFrom() + " : " + msg.getText(),
+								Toast.LENGTH_LONG).show();
+					}
+				});
 			}
 			break;
 		default:
