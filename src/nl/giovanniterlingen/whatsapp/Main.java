@@ -33,6 +33,9 @@ public class Main extends Activity {
 
 		} else {
 
+			Intent service = new Intent(this, MessageService.class);
+			this.startService(service);
+			
 			Intent intent = new Intent(this, Conversations.class);
 			startActivity(intent);
 			super.onCreate(savedInstanceState);

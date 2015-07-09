@@ -58,12 +58,10 @@ public class Conversations extends ActionBarActivity {
 					wa = new WhatsApi(Conversations.this, preferences
 							.getString("number", ""), "WhatsApi", preferences
 							.getString("username", ""));
-					
-					MessageProcessor mp = new MessageProcessing(Conversations.this);
-					wa.setNewMessageBind(mp);
-					
+
 					wa.connect();
 					wa.loginWithPassword(preferences.getString("pw", ""));
+
 					sendTextMessage(wa);
 					return;
 
