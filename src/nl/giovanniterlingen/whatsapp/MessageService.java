@@ -30,7 +30,7 @@ public class MessageService extends Service {
 			wa.loginWithPassword(preferences.getString("pw", ""));
 
 			//Error here
-			MessageProcessor mp = new MessageProcessing(MessageService.this);
+			MessageProcessor mp = new MessageProcessing();
 			wa.setNewMessageBind(mp);
 			//What to do?
 
