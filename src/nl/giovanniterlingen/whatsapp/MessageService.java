@@ -66,6 +66,7 @@ public class MessageService extends Service {
 					"Caught exception: " + e.getMessage(), Toast.LENGTH_SHORT)
 					.show();
 			e.printStackTrace();
+			wa.disconnect();
 			return;
 		}
 	}
