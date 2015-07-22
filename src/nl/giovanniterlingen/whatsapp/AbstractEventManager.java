@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public abstract class AbstractEventManager implements EventManager {
 
 	public static final String EVENT_MESSAGE_RECEIVED_SERVER = "message_received_server";

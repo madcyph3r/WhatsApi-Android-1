@@ -1,5 +1,11 @@
 package nl.giovanniterlingen.whatsapp;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

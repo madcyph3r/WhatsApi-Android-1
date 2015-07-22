@@ -13,6 +13,12 @@ import android.util.Log;
 
 import nl.giovanniterlingen.whatsapp.tools.BinHex;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class BinTreeNodeReader {
 
 	private KeyStream key;

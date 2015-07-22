@@ -8,6 +8,12 @@ import android.widget.Toast;
 import nl.giovanniterlingen.whatsapp.message.Message;
 import nl.giovanniterlingen.whatsapp.message.TextMessage;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class MessageProcessing implements MessageProcessor {
 
 	private Context context;

@@ -4,6 +4,12 @@ import java.net.SocketTimeoutException;
 
 import android.util.Log;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class MessagePoller extends Thread {
 	private boolean running = true;
 	private final WhatsApi wa;

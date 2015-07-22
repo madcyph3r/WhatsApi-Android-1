@@ -1,5 +1,11 @@
 package nl.giovanniterlingen.whatsapp;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public enum ProtocolTag {
 	START("start"),CHALLENGE("challenge"),
 	ACK("ack"),RECEIPT("receipt"),

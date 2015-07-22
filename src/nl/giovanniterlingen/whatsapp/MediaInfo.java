@@ -2,6 +2,12 @@ package nl.giovanniterlingen.whatsapp;
 
 import java.io.File;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class MediaInfo {
 	private File mediaFile;
 	private File previewFile;

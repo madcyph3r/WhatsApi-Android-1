@@ -6,6 +6,12 @@ import android.util.Log;
 
 import java.util.Date;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class BasicMessage implements Message {
 
     private final MessageType type;

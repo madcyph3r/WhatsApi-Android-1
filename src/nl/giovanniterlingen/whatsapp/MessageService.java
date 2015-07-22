@@ -11,6 +11,12 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class MessageService extends Service {
 
 	public static final String ACTION_SEND_MSG = "send_msg";

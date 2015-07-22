@@ -1,5 +1,11 @@
 package nl.giovanniterlingen.whatsapp.tools;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class BinHex {
 	public static byte[] hex2bin(String challenge) {
 		byte[] bytes = null;

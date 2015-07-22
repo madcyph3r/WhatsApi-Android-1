@@ -6,6 +6,12 @@ import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class ProtocolNode {
 
     private Map<String, String> attributes;

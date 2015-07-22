@@ -3,6 +3,12 @@ package nl.giovanniterlingen.whatsapp;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class SyncResult {
 
 	private String index;

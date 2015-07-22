@@ -2,6 +2,12 @@ package nl.giovanniterlingen.whatsapp.tools;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class CharsetUtils {
 
 	public static final String DEFAULT_CHARSET = "UTF-8";
