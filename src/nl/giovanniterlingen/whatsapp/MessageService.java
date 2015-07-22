@@ -54,6 +54,8 @@ public class MessageService extends Service {
 					"number", ""), "WhatsApi", preferences.getString(
 					"username", ""));
 
+			EventManager eventManager = new HandleEventManager();
+			wa.setEventManager(eventManager );
 			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
 
