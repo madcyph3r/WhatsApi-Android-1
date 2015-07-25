@@ -1,12 +1,17 @@
 package nl.giovanniterlingen.whatsapp;
 
+import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
 import nl.giovanniterlingen.whatsapp.events.Event;
 import nl.giovanniterlingen.whatsapp.events.EventType;
 import nl.giovanniterlingen.whatsapp.message.*;
 import nl.giovanniterlingen.whatsapp.tools.BinHex;
 import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
@@ -1444,6 +1449,22 @@ public class WhatsApi {
 		ProtocolNode bodyNode = new ProtocolNode("body", null, null,
 				CharsetUtils.toBytes(message));
 		try {
+			DatabaseHelper mDbHelper = new DatabaseHelper(mContext);
+
+			SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+			String query = "INSERT INTO " + DbEntries.TABLE_NAME + " ("
+					+ DbEntries.COLUMN_NAME_FROM + ", "
+					+ DbEntries.COLUMN_NAME_TO + ", "
+					+ DbEntries.COLUMN_NAME_MESSAGE + ", "
+					+ DbEntries.COLUMN_NAME_ID + ", "
+					+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('me', '" + to
+					+ "', '" + message + "', '" + id + "', '" + time() + "')";
+
+			db.execSQL(query);
+
+			db.close();
+			
 			return sendMessageNode(to, bodyNode, id);
 		} catch (Exception e) {
 			throw new WhatsAppException("Failed to send message", e);
