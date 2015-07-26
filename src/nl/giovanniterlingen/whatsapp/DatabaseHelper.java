@@ -1,6 +1,10 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -22,6 +26,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE messages (`from` TEXT, `to` TEXT, message TEXT, id TEXT, t TEXT);");
+	}
+
+	public List<String> getContacts(SQLiteDatabase db) {
+		List<String> List = new ArrayList<String>();
+		// Select All Query
+		String selectQuery = "SELECT DISTINCT `from`, `to` FROM messages";
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				List.add(cursor.getString(0));
+				List.add(cursor.getString(1));
+			} while (cursor.moveToNext());
+		}
+		return List;
+	}
+	
+	public List<String> getMessages(SQLiteDatabase db, String number) {
+		List<String> List = new ArrayList<String>();
+		// Select All Query
+		String selectQuery = "SELECT `from`,`to`, message FROM messages WHERE `from` LIKE '%" + number + "%' OR `to` LIKE '%" + number + "%'";
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				List.add(cursor.getString(2));
+			} while (cursor.moveToNext());
+		}
+		return List;
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

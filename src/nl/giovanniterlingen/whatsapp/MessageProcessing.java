@@ -26,6 +26,7 @@ public class MessageProcessing implements MessageProcessor {
 
 	public void processMessage(ProtocolNode message, String textmessage) {
 		String from = message.getAttribute("from");
+		String trim = from.replaceAll("\\D+", "");
 		if (message.getAttribute("type").equals("text")) {
 			String participant = message.getAttribute("participant");
 			String id = message.getAttribute("id");
@@ -42,7 +43,7 @@ public class MessageProcessing implements MessageProcessor {
 						+ DbEntries.COLUMN_NAME_TO + ", "
 						+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 						+ DbEntries.COLUMN_NAME_ID + ", "
-						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + from + "', " + "'me'"
+						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim + "', " + "'me'"
 						+ ", '" + textmessage + "', '" + id + "', '" + t + "')";
 
 				db.execSQL(query);
@@ -60,7 +61,7 @@ public class MessageProcessing implements MessageProcessor {
 						+ DbEntries.COLUMN_NAME_TO + ", "
 						+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 						+ DbEntries.COLUMN_NAME_ID + ", "
-						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + from + "', " + "'me'"
+						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim + "', " + "'me'"
 						+ ", '" + textmessage + "', '" + id + "', '" + t + "')";
 
 				

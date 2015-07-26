@@ -1,54 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
     
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:text="Enter here a message to send" />
-    
-
-   <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
         
-
-        <Button
-            android:id="@+id/contact_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="Select Contact" />
-        
-
-        <EditText
-            android:id="@+id/contact_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/contact_button"
-            android:hint="31612345678" >
-        
-        </EditText>
-    
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        
-
         <Button
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:text="Send" />
         
 
@@ -56,12 +18,21 @@
             android:id="@+id/message_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/send_button"
             android:hint="Message" >
         
         </EditText>
     
-    </RelativeLayout>
 
-</LinearLayout>
+   	<ListView
+        android:id="@+id/listview"
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:layout_above="@id/message_text"
+    	android:layout_marginBottom="5dp" 
+    	android:stackFromBottom="true"
+		android:transcriptMode="alwaysScroll" >
+    </ListView>
+    
+</RelativeLayout>
