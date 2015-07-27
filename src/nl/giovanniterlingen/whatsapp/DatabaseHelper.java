@@ -39,6 +39,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			do {
 				List.add(cursor.getString(0));
 				List.add(cursor.getString(1));
+				List.remove("me"); //Remove me from conversations list
+				List.remove(""); //Remove empty listitem
 			} while (cursor.moveToNext());
 		}
 		return List;
