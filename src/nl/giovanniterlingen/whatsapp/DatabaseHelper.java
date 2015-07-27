@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<String> getContacts(SQLiteDatabase db) {
 		List<String> List = new ArrayList<String>();
 		// Select All Query
-		String selectQuery = "SELECT DISTINCT `from` FROM messages DESC";
+		String selectQuery = "SELECT DISTINCT `from`, `to` FROM messages DESC";
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		// looping through all rows and adding to list
