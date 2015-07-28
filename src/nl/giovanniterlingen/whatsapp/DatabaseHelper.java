@@ -43,6 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				List.remove(""); //Remove empty listitem
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return List;
 	}
 	
@@ -58,6 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				List.add(cursor.getString(0)+": "+cursor.getString(2));
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return List;
 	}
 

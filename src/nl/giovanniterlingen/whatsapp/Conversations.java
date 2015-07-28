@@ -39,28 +39,8 @@ public class Conversations extends ActionBarActivity {
 			nEdit = number;
 		}
 
+		getMessages();
 		setTitle(nEdit);
-
-		DatabaseHelper dbHelper = new DatabaseHelper(
-				this.getApplicationContext());
-
-		newDB = dbHelper.getWritableDatabase();
-
-		List<String> messages = dbHelper.getMessages(newDB, nEdit);
-
-		if (messages.size() > 0) // check if list contains items.
-		{
-
-			ListView lv = (ListView) findViewById(R.id.listview);
-
-			// Convert ArrayList to array
-			lv.setAdapter(new ArrayAdapter<String>(Conversations.this,
-					android.R.layout.simple_list_item_1, messages));
-
-		} else {
-			Toast.makeText(Conversations.this, "No items to display", 1000)
-					.show();
-		}
 
 		sButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
@@ -78,9 +58,29 @@ public class Conversations extends ActionBarActivity {
 					i.putExtra("to", str);
 					i.putExtra("msg", message);
 					sendBroadcast(i);
+					getMessages();
 					mEdit.setText("");
 				}
 			}
 		});
 	}
+
+	public void getMessages() {
+
+		DatabaseHelper dbHelper = new DatabaseHelper(
+				this.getApplicationContext());
+		newDB = dbHelper.getWritableDatabase();
+
+		List<String> messages = dbHelper.getMessages(newDB, nEdit);
+
+		ListView lv = (ListView) findViewById(R.id.listview);
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				Conversations.this, android.R.layout.simple_list_item_1,
+				messages);
+
+		lv.setAdapter(adapter);
+
+	}
+
 }
