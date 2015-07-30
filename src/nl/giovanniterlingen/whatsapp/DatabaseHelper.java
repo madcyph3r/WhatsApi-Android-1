@@ -50,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<String> getMessages(SQLiteDatabase db, String number) {
 		List<String> List = new ArrayList<String>();
 		// Select All Query
-		String selectQuery = "SELECT `from`,`to`, message FROM messages WHERE `from` LIKE '%" + number + "%' OR `to` LIKE '%" + number + "%'";
+		String selectQuery = "SELECT `from`,`to`, message FROM messages WHERE `from` = " + number + " OR `to` = " + number;
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		// looping through all rows and adding to list

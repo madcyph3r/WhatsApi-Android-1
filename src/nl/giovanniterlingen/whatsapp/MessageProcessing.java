@@ -26,7 +26,8 @@ public class MessageProcessing implements MessageProcessor {
 
 	public void processMessage(ProtocolNode message, String textmessage) {
 		String from = message.getAttribute("from");
-		String trim = from.replaceAll("\\D+", "");
+		String extract = from.replaceAll("^[^-]*-", "");
+		String trim = extract.replaceAll("@g.us", "");
 		if (message.getAttribute("type").equals("text")) {
 			String participant = message.getAttribute("participant");
 			String id = message.getAttribute("id");
