@@ -2,14 +2,16 @@ package nl.giovanniterlingen.whatsapp;
 
 import java.util.List;
 
-import android.app.ListActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -17,14 +19,29 @@ import android.widget.Toast;
  * 
  * @author Giovanni Terlingen
  */
-public class ConversationsList extends ListActivity {
+public class ConversationsList extends ActionBarActivity {
 
+	Button cButton;
 	private SQLiteDatabase newDB;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.conversationslist);
+
+		cButton = (Button) findViewById(R.id.contacts_button);
+
+		cButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+
+				Intent intent = new Intent(ConversationsList.this,
+						Contacts.class);
+				startActivity(intent);
+				finish();
+
+			}
+		});
 
 		DatabaseHelper dbHelper = new DatabaseHelper(
 				this.getApplicationContext());
@@ -32,25 +49,34 @@ public class ConversationsList extends ListActivity {
 		newDB = dbHelper.getWritableDatabase();
 
 		List<String> all = dbHelper.getContacts(newDB);
-		if (all.size() > 0) // check if list contains items.
-		{
 
-			setListAdapter(new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, all));
+		ListView lv = (ListView) findViewById(R.id.conversationslist);
 
-		} else {
-			Toast.makeText(ConversationsList.this, "No items to display", 1000)
-					.show();
-		}
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				ConversationsList.this, android.R.layout.simple_list_item_1,
+				all);
 
-	}
-	public void onListItemClick(ListView l, View v, int position, long id) {
+		lv.setAdapter(adapter);
 
-		String number = (String) getListAdapter().getItem(position);
-		Intent i = new Intent(this, Conversations.class);
-		i.putExtra("numberpass", number);
-		startActivity(i);
+		OnItemClickListener listener = new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				String number = (String) parent.getItemAtPosition(position);
+				Intent i = new Intent(ConversationsList.this,
+						Conversations.class);
+				i.putExtra("numberpass", number);
+				startActivity(i);
+
+			}
+
+		};
+		
+		lv.setOnItemClickListener(listener);
+		
+		lv.setItemsCanFocus(true);
 		
 	}
 

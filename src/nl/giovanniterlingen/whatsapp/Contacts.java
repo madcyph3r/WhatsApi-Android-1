@@ -39,7 +39,7 @@ public class Contacts extends FragmentActivity implements
 
 	@Override
 	public void onContactNumberSelected(String contactNumber, String contactName) {
-		String number = contactNumber;
+		String number = contactNumber.replaceAll("\\D+", "");
 		Intent i = new Intent(this, Conversations.class);
 		i.putExtra("numberpass", number);
 		startActivity(i);

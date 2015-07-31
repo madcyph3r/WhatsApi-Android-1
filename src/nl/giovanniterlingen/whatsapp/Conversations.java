@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
