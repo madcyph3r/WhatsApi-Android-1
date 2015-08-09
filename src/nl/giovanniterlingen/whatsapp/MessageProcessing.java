@@ -100,7 +100,11 @@ public class MessageProcessing implements MessageProcessor {
 								context)
 								.setSmallIcon(R.drawable.ic_launcher)
 								.setContentTitle(
-										"Groupmessage from " + msg.getGroupId())
+										"Groupmessage from "
+												+ ContactsHelper
+														.getContactName(
+																context,
+																msg.getFrom()))
 								.setContentText(msg.getText())
 								.setPriority(Notification.PRIORITY_HIGH)
 								.setDefaults(Notification.DEFAULT_VIBRATE);
@@ -139,7 +143,11 @@ public class MessageProcessing implements MessageProcessor {
 								context)
 								.setSmallIcon(R.drawable.ic_launcher)
 								.setContentTitle(
-										"Message from " + msg.getFrom())
+										"Message from "
+												+ ContactsHelper
+														.getContactName(
+																context,
+																msg.getFrom()))
 								.setContentText(msg.getText())
 								.setPriority(Notification.PRIORITY_HIGH)
 								.setDefaults(Notification.DEFAULT_VIBRATE);
