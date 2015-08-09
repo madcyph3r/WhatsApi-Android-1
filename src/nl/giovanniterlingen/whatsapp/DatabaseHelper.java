@@ -1,7 +1,9 @@
 package nl.giovanniterlingen.whatsapp;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -41,6 +43,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				List.add(cursor.getString(1));
 				List.remove("me"); //Remove me from conversations list
 				List.remove(""); //Remove empty listitem
+				Set<String> hs = new HashSet<>();
+				hs.addAll(List);
+				List.clear();
+				List.addAll(hs);			
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
