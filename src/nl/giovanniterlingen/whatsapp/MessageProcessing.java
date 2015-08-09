@@ -10,8 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
-
 import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
 import nl.giovanniterlingen.whatsapp.message.Message;
 import nl.giovanniterlingen.whatsapp.message.TextMessage;
@@ -98,7 +96,7 @@ public class MessageProcessing implements MessageProcessor {
 
 						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 								context)
-								.setSmallIcon(R.drawable.ic_launcher)
+								.setSmallIcon(R.drawable.notifybar)
 								.setContentTitle(
 										"Groupmessage from "
 												+ ContactsHelper
@@ -141,7 +139,7 @@ public class MessageProcessing implements MessageProcessor {
 
 						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 								context)
-								.setSmallIcon(R.drawable.ic_launcher)
+								.setSmallIcon(R.drawable.notifybar)
 								.setContentTitle(
 										"Message from "
 												+ ContactsHelper
