@@ -105,7 +105,8 @@ public class MessageProcessing implements MessageProcessor {
 																msg.getFrom()))
 								.setContentText(msg.getText())
 								.setPriority(Notification.PRIORITY_HIGH)
-								.setDefaults(Notification.DEFAULT_VIBRATE);
+								.setDefaults(Notification.DEFAULT_VIBRATE)
+								.setAutoCancel(true);
 
 						String number = msg.getFrom();
 						Intent resultIntent = new Intent(context,
@@ -148,7 +149,8 @@ public class MessageProcessing implements MessageProcessor {
 																msg.getFrom()))
 								.setContentText(msg.getText())
 								.setPriority(Notification.PRIORITY_HIGH)
-								.setDefaults(Notification.DEFAULT_VIBRATE);
+								.setDefaults(Notification.DEFAULT_VIBRATE)
+								.setAutoCancel(true);
 
 						String number = msg.getFrom();
 						Intent resultIntent = new Intent(context,

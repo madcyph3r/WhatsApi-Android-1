@@ -84,5 +84,12 @@ public class Conversations extends ActionBarActivity {
 		lv.setAdapter(adapter);
 
 	}
+	
+	public void onBackPressed() {
+		Intent intent = new Intent(this, Main.class);
+		startActivity(intent);
+		finish();
+		return;
+	}
 
 }
