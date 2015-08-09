@@ -102,6 +102,7 @@ public class MessageService extends Service {
 
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
+			wa.sendOfflineStatus();
 			return;
 
 		} catch (Exception e) {
