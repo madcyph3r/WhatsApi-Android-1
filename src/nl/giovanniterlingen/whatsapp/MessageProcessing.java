@@ -1,9 +1,15 @@
 package nl.giovanniterlingen.whatsapp;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
@@ -35,7 +41,7 @@ public class MessageProcessing implements MessageProcessor {
 			String t = message.getAttribute("t");
 			if (participant != null && !participant.isEmpty()) {
 				// Group message
-				
+
 				DatabaseHelper mDbHelper = new DatabaseHelper(context);
 
 				SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -45,15 +51,16 @@ public class MessageProcessing implements MessageProcessor {
 						+ DbEntries.COLUMN_NAME_TO + ", "
 						+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 						+ DbEntries.COLUMN_NAME_ID + ", "
-						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim + "', " + "'me'"
-						+ ", '" + textmessage + "', '" + id + "', '" + t + "')";
+						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim
+						+ "', " + "'me'" + ", '" + textmessage + "', '" + id
+						+ "', '" + t + "')";
 
 				db.execSQL(query);
-				
-				db.close();				
+
+				db.close();
 			} else {
 				// Private message
-				
+
 				DatabaseHelper mDbHelper = new DatabaseHelper(context);
 
 				SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -63,12 +70,12 @@ public class MessageProcessing implements MessageProcessor {
 						+ DbEntries.COLUMN_NAME_TO + ", "
 						+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 						+ DbEntries.COLUMN_NAME_ID + ", "
-						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim + "', " + "'me'"
-						+ ", '" + textmessage + "', '" + id + "', '" + t + "')";
+						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim
+						+ "', " + "'me'" + ", '" + textmessage + "', '" + id
+						+ "', '" + t + "')";
 
-				
 				db.execSQL(query);
-				
+
 				db.close();
 			}
 		}
@@ -79,20 +86,45 @@ public class MessageProcessing implements MessageProcessor {
 		switch (message.getType()) {
 		case TEXT:
 			final TextMessage msg = (TextMessage) message;
-			
+
 			String textmessage = msg.getText();
-			
+
 			if (msg.getGroupId() != null && !msg.getGroupId().isEmpty()) {
 				// Group message
 				Handler handler = new Handler(Looper.getMainLooper());
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(
-								context,
-								msg.getFrom() + "(" + msg.getGroupId() + "): "
-										+ msg.getText(), Toast.LENGTH_LONG)
-								.show();
+
+						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+								context)
+								.setSmallIcon(R.drawable.ic_launcher)
+								.setContentTitle(
+										"Groupmessage from " + msg.getGroupId())
+								.setContentText(msg.getText())
+								.setPriority(Notification.PRIORITY_HIGH)
+								.setDefaults(Notification.DEFAULT_VIBRATE);
+
+						String number = msg.getFrom();
+						Intent resultIntent = new Intent(context,
+								Conversations.class);
+						resultIntent.putExtra("numberpass", number);
+
+						TaskStackBuilder stackBuilder = TaskStackBuilder
+								.create(context);
+
+						stackBuilder.addParentStack(Main.class);
+
+						stackBuilder.addNextIntent(resultIntent);
+						PendingIntent resultPendingIntent = stackBuilder
+								.getPendingIntent(0,
+										PendingIntent.FLAG_UPDATE_CURRENT);
+						mBuilder.setContentIntent(resultPendingIntent);
+						NotificationManager mNotificationManager = (NotificationManager) context
+								.getSystemService(Context.NOTIFICATION_SERVICE);
+
+						mNotificationManager.notify(0, mBuilder.build());
+
 					}
 				});
 				processMessage(message.getProtocolNode(), textmessage);
@@ -102,9 +134,36 @@ public class MessageProcessing implements MessageProcessor {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(context,
-								msg.getFrom() + " : " + msg.getText(),
-								Toast.LENGTH_LONG).show();
+
+						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+								context)
+								.setSmallIcon(R.drawable.ic_launcher)
+								.setContentTitle(
+										"Message from " + msg.getFrom())
+								.setContentText(msg.getText())
+								.setPriority(Notification.PRIORITY_HIGH)
+								.setDefaults(Notification.DEFAULT_VIBRATE);
+
+						String number = msg.getFrom();
+						Intent resultIntent = new Intent(context,
+								Conversations.class);
+						resultIntent.putExtra("numberpass", number);
+
+						TaskStackBuilder stackBuilder = TaskStackBuilder
+								.create(context);
+
+						stackBuilder.addParentStack(Main.class);
+
+						stackBuilder.addNextIntent(resultIntent);
+						PendingIntent resultPendingIntent = stackBuilder
+								.getPendingIntent(0,
+										PendingIntent.FLAG_UPDATE_CURRENT);
+						mBuilder.setContentIntent(resultPendingIntent);
+						NotificationManager mNotificationManager = (NotificationManager) context
+								.getSystemService(Context.NOTIFICATION_SERVICE);
+
+						mNotificationManager.notify(0, mBuilder.build());
+
 					}
 				});
 				processMessage(message.getProtocolNode(), textmessage);
