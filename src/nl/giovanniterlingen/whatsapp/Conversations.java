@@ -135,6 +135,20 @@ public class Conversations extends ActionBarActivity {
 		lv.setAdapter(adapter);
 
 	}
+	
+	protected void onResume() {
+		super.onResume();
+		Intent i = new Intent();
+		i.setAction(MessageService.ACTION_SHOW_ONLINE);
+		sendBroadcast(i);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		Intent i = new Intent();
+		i.setAction(MessageService.ACTION_SHOW_OFFLINE);
+		sendBroadcast(i);
+	}
 
 	public void onBackPressed() {
 		Intent intent = new Intent(this, Main.class);

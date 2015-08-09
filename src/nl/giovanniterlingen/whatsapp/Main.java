@@ -41,7 +41,7 @@ public class Main extends Activity {
 
 			Intent service = new Intent(this, MessageService.class);
 			this.startService(service);
-			
+
 			Intent intent = new Intent(this, ConversationsList.class);
 			startActivity(intent);
 			super.onCreate(savedInstanceState);
@@ -49,6 +49,20 @@ public class Main extends Activity {
 			return;
 		}
 
+	}
+
+	protected void onResume() {
+		super.onResume();
+		Intent i = new Intent();
+		i.setAction(MessageService.ACTION_SHOW_ONLINE);
+		sendBroadcast(i);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		Intent i = new Intent();
+		i.setAction(MessageService.ACTION_SHOW_OFFLINE);
+		sendBroadcast(i);
 	}
 
 }

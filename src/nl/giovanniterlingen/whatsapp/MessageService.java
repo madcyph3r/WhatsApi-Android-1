@@ -22,6 +22,8 @@ public class MessageService extends Service {
 	public static final String ACTION_SEND_MSG = "send_msg";
 	public static final String ACTION_START_COMPOSING = "start_composing";
 	public static final String ACTION_STOP_COMPOSING = "stop_composing";
+	public static final String ACTION_SHOW_ONLINE = "show_online";
+	public static final String ACTION_SHOW_OFFLINE = "show_offline";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -53,6 +55,20 @@ public class MessageService extends Service {
 					e.printStackTrace();
 				}
 			}
+			if (intent.getAction() == ACTION_SHOW_ONLINE) {
+				try {
+					wa.sendActiveStatus();
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
+			if (intent.getAction() == ACTION_SHOW_OFFLINE) {
+				try {
+					wa.sendOfflineStatus();
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	};
 
@@ -61,6 +77,8 @@ public class MessageService extends Service {
 		filter.addAction(ACTION_SEND_MSG);
 		filter.addAction(ACTION_START_COMPOSING);
 		filter.addAction(ACTION_STOP_COMPOSING);
+		filter.addAction(ACTION_SHOW_ONLINE);
+		filter.addAction(ACTION_SHOW_OFFLINE);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;
@@ -79,8 +97,6 @@ public class MessageService extends Service {
 					"number", ""), "WhatsApi", preferences.getString(
 					"username", ""));
 
-			EventManager eventManager = new HandleEventManager();
-			wa.setEventManager(eventManager);
 			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
 
