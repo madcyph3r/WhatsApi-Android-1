@@ -20,6 +20,8 @@ import android.widget.Toast;
 public class MessageService extends Service {
 
 	public static final String ACTION_SEND_MSG = "send_msg";
+	public static final String ACTION_START_COMPOSING = "start_composing";
+	public static final String ACTION_STOP_COMPOSING = "stop_composing";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -36,12 +38,29 @@ public class MessageService extends Service {
 					e.printStackTrace();
 				}
 			}
+
+			if (intent.getAction() == ACTION_START_COMPOSING) {
+				try {
+					wa.sendMessageComposing(intent.getStringExtra("to"));
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
+			if (intent.getAction() == ACTION_STOP_COMPOSING) {
+				try {
+					wa.sendMessagePaused(intent.getStringExtra("to"));
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	};
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_SEND_MSG);
+		filter.addAction(ACTION_START_COMPOSING);
+		filter.addAction(ACTION_STOP_COMPOSING);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;
@@ -61,7 +80,7 @@ public class MessageService extends Service {
 					"username", ""));
 
 			EventManager eventManager = new HandleEventManager();
-			wa.setEventManager(eventManager );
+			wa.setEventManager(eventManager);
 			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
 
