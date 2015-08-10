@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -1459,7 +1460,7 @@ public class WhatsApi {
 					+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 					+ DbEntries.COLUMN_NAME_ID + ", "
 					+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('me', '" + to
-					+ "', '" + message + "', '" + id + "', '" + time() + "')";
+					+ "', " + DatabaseUtils.sqlEscapeString(message) + ", '" + id + "', '" + time() + "')";
 
 			db.execSQL(query);
 
