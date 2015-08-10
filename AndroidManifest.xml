@@ -5,11 +5,12 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="14"
         android:targetSdkVersion="22" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -30,10 +31,12 @@
         </activity>
         <activity
             android:name="RegisterActivity"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:theme="@style/LoginTheme" >
         </activity>
         <activity
             android:name="Contacts"
+            android:label="Select Contacts"
             android:launchMode="singleTask" >
         </activity>
         <activity
@@ -42,8 +45,13 @@
         </activity>
         <activity
             android:name="ConversationsList"
+            android:theme="@style/AppBaseTheme"
             android:launchMode="singleTask" >
         </activity>
+        <activity
+            android:name=".InfoActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/LoginTheme"/>
 
         <service android:name="MessageService" />
         

@@ -2,20 +2,19 @@ package nl.giovanniterlingen.whatsapp;
 
 import java.io.UnsupportedEncodingException;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.support.v7.app.ActionBarActivity;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 /**
@@ -24,10 +23,10 @@ import android.widget.Toast;
  * 
  * @author Giovanni Terlingen
  */
-public class RegisterActivity extends ActionBarActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-	Button mButton;
-	Button rButton;
+	ImageButton mButton;
+	ImageButton rButton;
 	EditText mEdit;
 	EditText mUser;
 	EditText mVerify;
@@ -40,8 +39,8 @@ public class RegisterActivity extends ActionBarActivity {
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		mButton = (Button) findViewById(R.id.verify_button);
-		rButton = (Button) findViewById(R.id.register_button);
+		mButton = (ImageButton) findViewById(R.id.verify_button);
+		rButton = (ImageButton) findViewById(R.id.register_button);
 		mEdit = (EditText) findViewById(R.id.number_text);
 		mUser = (EditText) findViewById(R.id.user_text);
 		mVerify = (EditText) findViewById(R.id.verficationcode_text);
@@ -53,12 +52,10 @@ public class RegisterActivity extends ActionBarActivity {
 					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
 							.toString(), "WhatsApi", mUser.getText().toString());
 					sendRequest(wa);
-					return;
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this,
 							"Caught exception: " + e.getMessage(),
 							Toast.LENGTH_SHORT).show();
-					return;
 				}
 			}
 
@@ -73,11 +70,9 @@ public class RegisterActivity extends ActionBarActivity {
 					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
 							.toString(), "WhatsApi", mUser.getText().toString());
 					sendRegister(wa);
-					return;
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this, e.getMessage(),
 							Toast.LENGTH_SHORT).show();
-					return;
 				}
 
 			}
@@ -104,15 +99,13 @@ public class RegisterActivity extends ActionBarActivity {
 			Intent intent = new Intent(this, Main.class);
 			startActivity(intent);
 			finish();
-			
-		return;
+
 		}
 		else {
 			
 		Toast.makeText(this, "Registration sent: " + resp.toString(2),
 				Toast.LENGTH_SHORT).show();
-		
-		return;
+
 		}
 	}
 
@@ -148,7 +141,6 @@ public class RegisterActivity extends ActionBarActivity {
 		Intent intent = new Intent(this, Main.class);
 		startActivity(intent);
 		finish();
-		return;
 
 	}
 }

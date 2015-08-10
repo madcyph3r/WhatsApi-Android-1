@@ -1,15 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:orientation="horizontal" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="84dp"
+    android:padding="8dp">
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:id="@+id/account_photo"
+        android:layout_width="@dimen/account_photo_dim"
+        android:layout_height="@dimen/account_photo_dim"
+        android:src="@drawable/contact_photo_sample" />
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:id="@+id/contact_name_and_status"
+        android:layout_toRightOf="@id/account_photo"
+        android:layout_toEndOf="@id/account_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/display_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/username"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/display_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="*Status*"
+            android:textSize="14sp" />
+    </LinearLayout>
+
 
     <TextView
-        android:id="@+id/display_name"
-        android:layout_width="fill_parent"
+        android:layout_centerVertical="true"
+        android:id="@+id/display_number"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textSize="14sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:paddingTop="12dp"
+        android:text="390000000000"/>
 
-</LinearLayout>
+</RelativeLayout>

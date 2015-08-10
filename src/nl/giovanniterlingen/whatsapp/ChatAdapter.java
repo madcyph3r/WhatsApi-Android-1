@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ChatAdapter extends ArrayAdapter<String> {
@@ -25,28 +26,29 @@ public class ChatAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = view = mInflater.inflate(R.layout.chat_item, null);
+		View view = mInflater.inflate(R.layout.chat_item, null);
 
-		Resources res = getContext().getResources();
-		Drawable bubblesChat = res.getDrawable(R.drawable.balloon_incoming_normal);
-		Drawable bubblesResponse = res.getDrawable(R.drawable.balloon_outgoing_normal);
 		TextView left = (TextView) view.findViewById(R.id.lefttext);
+		LinearLayout leftBubble = (LinearLayout) view.findViewById(R.id.left_bubble);
+		TextView leftDate = (TextView) view.findViewById(R.id.leftdate);
 		TextView right = (TextView) view.findViewById(R.id.righttext);
+		LinearLayout rightBubble = (LinearLayout) view.findViewById(R.id.right_bubble);
+		TextView rightDate = (TextView) view.findViewById(R.id.rightdate);
 
 		String txt = values[position];
 		if (txt.startsWith("me: ")) {
 			
 			String message = getItem(position).replaceAll("me: ", "");
 			right.setText(message);
-			right.setBackgroundDrawable(bubblesResponse);
 			left.setText("");
-			left.setBackgroundDrawable(null);
+			leftBubble.setBackgroundDrawable(null);
+			leftDate.setVisibility(View.GONE);
 		} else {
 			String message = getItem(position).replaceAll(nEdit + ": ", "");
 			left.setText(message);
-			left.setBackgroundDrawable(bubblesChat);
 			right.setText("");
-			right.setBackgroundDrawable(null);
+			rightBubble.setBackgroundDrawable(null);
+			rightDate.setVisibility(View.GONE);
 		}
 		return view;
 	}
