@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 /**
@@ -22,10 +23,10 @@ import android.widget.ListView;
  * 
  * @author Giovanni Terlingen
  */
-public class Conversations extends ActionBarActivity {
+public class Conversations extends AppCompatActivity {
 
 	private SQLiteDatabase newDB;
-	Button sButton;
+	ImageButton sButton;
 	String nEdit;
 	EditText mEdit;
 
@@ -33,7 +34,12 @@ public class Conversations extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.conversations);
 
-		sButton = (Button) findViewById(R.id.send_button);
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
+
+		sButton = (ImageButton) findViewById(R.id.send_button);
 		mEdit = (EditText) findViewById(R.id.message_text);
 
 		Intent intent = getIntent();
@@ -137,6 +143,19 @@ public class Conversations extends ActionBarActivity {
 		lv.setAdapter(adapter);
 
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				// app icon in action bar clicked; goto parent activity.
+				this.finish();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+
+	}
 	
 	protected void onResume() {
 		super.onResume();
@@ -156,7 +175,6 @@ public class Conversations extends ActionBarActivity {
 		Intent intent = new Intent(this, Main.class);
 		startActivity(intent);
 		finish();
-		return;
 	}
 
 }
