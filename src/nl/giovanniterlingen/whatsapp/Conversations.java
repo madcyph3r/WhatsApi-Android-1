@@ -10,12 +10,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -34,6 +36,11 @@ public class Conversations extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.conversations);
 
+		RelativeLayout relativelayout = (RelativeLayout) findViewById (R.id.relativelayout);
+		Drawable drawable = getResources().getDrawable(R.drawable.background);
+
+		relativelayout.setBackground(drawable);
+		
 		final ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
