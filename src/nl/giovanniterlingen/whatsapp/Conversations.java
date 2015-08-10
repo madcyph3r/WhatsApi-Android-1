@@ -105,20 +105,11 @@ public class Conversations extends AppCompatActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				
-				timer.cancel();
-				timer = new Timer();
-				timer.schedule(new TimerTask() {
-					@Override
-					public void run() {
 
-						Intent i = new Intent();
-						i.setAction(MessageService.ACTION_STOP_COMPOSING);
-						i.putExtra("to", str);
-						sendBroadcast(i);
-					}
-
-				}, DELAY);
+				Intent i = new Intent();
+				i.setAction(MessageService.ACTION_STOP_COMPOSING);
+				i.putExtra("to", str);
+				sendBroadcast(i);
 			}
 
 		});
