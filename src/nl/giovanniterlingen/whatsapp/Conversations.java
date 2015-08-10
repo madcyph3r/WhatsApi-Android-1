@@ -126,12 +126,14 @@ public class Conversations extends ActionBarActivity {
 
 		List<String> messages = dbHelper.getMessages(newDB, nEdit);
 
+		String[] array = messages.toArray(new String[messages.size()]);
+		
 		ListView lv = (ListView) findViewById(R.id.listview);
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				Conversations.this, android.R.layout.simple_list_item_1,
-				messages);
-
+		
+		lv.setDivider(null);
+		
+		ChatAdapter adapter = new ChatAdapter(Conversations.this, array, nEdit);
+		 
 		lv.setAdapter(adapter);
 
 	}
