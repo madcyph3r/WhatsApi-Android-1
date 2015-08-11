@@ -40,7 +40,6 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
-            android:text="15:10"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -79,7 +78,6 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
-            android:text="15:10"
             android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>

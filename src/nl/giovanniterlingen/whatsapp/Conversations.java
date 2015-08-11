@@ -2,8 +2,6 @@ package nl.giovanniterlingen.whatsapp;
 
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
-
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -89,9 +87,6 @@ public class Conversations extends AppCompatActivity {
 			String to = nEdit.toString();
 			String str = to.replaceAll("\\D+", "");
 
-			private Timer timer = new Timer();
-			private final long DELAY = 2000;
-
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
@@ -136,7 +131,7 @@ public class Conversations extends AppCompatActivity {
 		
 		lv.setDivider(null);
 		
-		ChatAdapter adapter = new ChatAdapter(Conversations.this, array, nEdit);
+		ChatAdapter adapter = new ChatAdapter(Conversations.this, array);
 		 
 		lv.setAdapter(adapter);
 

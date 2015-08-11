@@ -56,13 +56,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<String> getMessages(SQLiteDatabase db, String number) {
 		List<String> List = new ArrayList<String>();
 		// Select All Query
-		String selectQuery = "SELECT `from`,`to`, message FROM messages WHERE `from` = " + number + " OR `to` = " + number;
+		String selectQuery = "SELECT `from`,`to`, message, t FROM messages WHERE `from` = " + number + " OR `to` = " + number;
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
-				List.add(cursor.getString(0)+": "+cursor.getString(2));
+				List.add(cursor.getString(0)+ ";" + cursor.getString(3) + ": " + cursor.getString(2));
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
