@@ -40,16 +40,4 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-
-    <TextView
-        android:layout_centerVertical="true"
-        android:id="@+id/display_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:paddingTop="12dp"
-        android:text="390000000000"/>
-
 </RelativeLayout>
