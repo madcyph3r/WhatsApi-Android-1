@@ -38,13 +38,13 @@ public class ChatAdapter extends ArrayAdapter<String> {
 		String txt = values[position];
 		if (txt.startsWith("me: ")) {
 			
-			String message = getItem(position).replaceAll("me: ", "");
+			String message = getItem(position).replaceAll("[^: ]*: ", "");
 			right.setText(message);
 			left.setText("");
 			leftBubble.setBackgroundDrawable(null);
 			leftDate.setVisibility(View.GONE);
 		} else {
-			String message = getItem(position).replaceAll(nEdit + ": ", "");
+			String message = getItem(position).replaceAll("[^: ]*: ", "");
 			left.setText(message);
 			right.setText("");
 			rightBubble.setBackgroundDrawable(null);
