@@ -191,6 +191,12 @@ public class ConversationsList extends AppCompatActivity {
 							finish();
 							return true;
 						}
+						if (id == R.id.change_status) {
+							Intent intent = new Intent(ConversationsList.this, StatusActivity.class);
+							startActivity(intent);
+							finish();
+							return true;
+						}
 						return true;
 					}
 				});

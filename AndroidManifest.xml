@@ -52,6 +52,11 @@
             android:name=".InfoActivity"
             android:launchMode="singleTask"
             android:theme="@style/LoginTheme"/>
+        <activity
+            android:name=".StatusActivity"
+            android:label="Status"
+            android:launchMode="singleTask"
+            android:theme="@style/LoginTheme"/>
 
         <service android:name="MessageService" />
         
