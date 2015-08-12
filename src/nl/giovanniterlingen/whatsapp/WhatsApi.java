@@ -651,9 +651,22 @@ public class WhatsApi {
 
 	/**
 	 * Request to retrieve the last online time of specific user.
+	 * @throws WhatsAppException 
 	 */
-	public void sendGetRequestLastSeen(String to) {
-		// TODO implement this
+	public void sendGetRequestLastSeen(String to) throws WhatsAppException {
+
+		String msgId = createMsgId("getlastseen");
+		ProtocolNode queryNode = new ProtocolNode("query", null, null, null);
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("id", msgId);
+		params.put("xmlns", "jabber:iq:last");
+		params.put("type", "get");
+		params.put("to", getJID(to));
+
+		ProtocolNode node = new ProtocolNode("iq", params,
+				Arrays.asList(queryNode), null);
+		sendNode(node);
 	}
 
 	/**
