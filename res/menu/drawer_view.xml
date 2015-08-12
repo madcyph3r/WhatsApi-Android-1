@@ -19,6 +19,7 @@
     <item android:title="Account">
         <menu>
             <item
+                android:id="@+id/change_status"
                 android:icon="@drawable/ic_status"
                 android:title="Change status" />
             <item

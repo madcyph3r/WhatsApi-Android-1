@@ -24,6 +24,7 @@ public class MessageService extends Service {
 	public static final String ACTION_STOP_COMPOSING = "stop_composing";
 	public static final String ACTION_SHOW_ONLINE = "show_online";
 	public static final String ACTION_SHOW_OFFLINE = "show_offline";
+	public static final String ACTION_SET_STATUS = "set_status";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -69,6 +70,13 @@ public class MessageService extends Service {
 					e.printStackTrace();
 				}
 			}
+			if (intent.getAction() == ACTION_SET_STATUS) {
+				try {
+					wa.sendStatusUpdate(intent.getStringExtra("status"));
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	};
 
@@ -79,6 +87,7 @@ public class MessageService extends Service {
 		filter.addAction(ACTION_STOP_COMPOSING);
 		filter.addAction(ACTION_SHOW_ONLINE);
 		filter.addAction(ACTION_SHOW_OFFLINE);
+		filter.addAction(ACTION_SET_STATUS);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;

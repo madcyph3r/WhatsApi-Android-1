@@ -26,7 +26,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingStart="8dp"
-        android:maxLength="140" />
+        android:maxLength="139" />
     <LinearLayout
         android:layout_alignBottom="@+id/status_text"
         android:layout_alignParentRight="true"
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="/140"/>
+            android:text="/139"/>
     </LinearLayout>
 
     <Button
@@ -60,7 +60,7 @@
 
     <Button
         android:id="@+id/save_status_button"
-        android:background="@drawable/send_button_enabled"
+        android:background="@drawable/circular_btn"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
