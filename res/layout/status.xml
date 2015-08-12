@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:orientation="vertical"
+    android:padding="@dimen/default_margin">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share your current status"
+        android:textColor="@color/white"
+        android:padding="8dp"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/status_text"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
+        android:background="@android:color/transparent"
+        android:hint="Type a status here"
+        android:inputType="textCapSentences"
+        android:paddingEnd="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingStart="8dp"
+        android:maxLength="140" />
+    <LinearLayout
+        android:layout_alignBottom="@+id/status_text"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/status_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="0"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="/140"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@null"
+        android:textColor="@color/white"
+        android:text="Back" />
+
+    <Button
+        android:id="@+id/save_status_button"
+        android:background="@drawable/send_button_enabled"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/white"
+        android:text="Save" />
+
+</RelativeLayout>
