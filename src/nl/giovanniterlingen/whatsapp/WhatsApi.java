@@ -7,6 +7,7 @@ import nl.giovanniterlingen.whatsapp.message.*;
 import nl.giovanniterlingen.whatsapp.tools.BinHex;
 import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -1444,7 +1445,7 @@ public class WhatsApi {
 	}
 
 	public String sendMessage(String to, String message)
-			throws WhatsAppException {
+			throws WhatsAppException, InvalidKeyException, NoSuchAlgorithmException, IOException, IncompleteMessageException, InvalidMessageException, InvalidTokenException, JSONException, DecodeException {
 		return sendMessage(to, message, null);
 	}
 
@@ -1452,12 +1453,26 @@ public class WhatsApi {
 	 * Send a text message to the user/group.
 	 * 
 	 * @return String
+	 * @throws DecodeException 
+	 * @throws JSONException 
+	 * @throws InvalidTokenException 
+	 * @throws InvalidMessageException 
+	 * @throws IncompleteMessageException 
+	 * @throws IOException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws InvalidKeyException 
 	 */
 	public String sendMessage(String to, String message, String id)
-			throws WhatsAppException {
+			throws WhatsAppException, InvalidKeyException,
+			NoSuchAlgorithmException, IOException, IncompleteMessageException,
+			InvalidMessageException, InvalidTokenException, JSONException,
+			DecodeException {
 		message = parseMessageForEmojis(message);
+
 		ProtocolNode bodyNode = new ProtocolNode("body", null, null,
 				CharsetUtils.toBytes(message));
+		id = sendMessageNode(to, bodyNode, id);
+
 		try {
 			DatabaseHelper mDbHelper = new DatabaseHelper(mContext);
 
@@ -1468,14 +1483,20 @@ public class WhatsApi {
 					+ DbEntries.COLUMN_NAME_TO + ", "
 					+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 					+ DbEntries.COLUMN_NAME_ID + ", "
-					+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('me', '" + to
-					+ "', " + DatabaseUtils.sqlEscapeString(message) + ", '" + id + "', '" + time() + "')";
+					+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('me', "
+					+ DatabaseUtils.sqlEscapeString(to) + ", "
+					+ DatabaseUtils.sqlEscapeString(message) + ", "
+					+ DatabaseUtils.sqlEscapeString(id) + ", "
+					+ DatabaseUtils.sqlEscapeString(time()) + ")";
 
 			db.execSQL(query);
 
 			db.close();
 			
-			return sendMessageNode(to, bodyNode, id);
+			Intent intent = new Intent(Conversations.SET_NOTIFY);
+			mContext.sendBroadcast(intent);
+
+			return id;
 		} catch (Exception e) {
 			throw new WhatsAppException("Failed to send message", e);
 		}

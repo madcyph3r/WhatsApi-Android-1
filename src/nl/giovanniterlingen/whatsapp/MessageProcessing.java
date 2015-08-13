@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,13 +50,18 @@ public class MessageProcessing implements MessageProcessor {
 						+ DbEntries.COLUMN_NAME_TO + ", "
 						+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 						+ DbEntries.COLUMN_NAME_ID + ", "
-						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim
-						+ "', " + "'me'" + ", '" + textmessage + "', '" + id
-						+ "', '" + t + "')";
+						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ("
+						+ DatabaseUtils.sqlEscapeString(trim) + ", " + "'me'"
+						+ ", " + DatabaseUtils.sqlEscapeString(textmessage)
+						+ ", " + DatabaseUtils.sqlEscapeString(id) + ", "
+						+ DatabaseUtils.sqlEscapeString(t) + ")";
 
 				db.execSQL(query);
 
 				db.close();
+				
+				Intent intent = new Intent(Conversations.SET_NOTIFY);
+				context.sendBroadcast(intent);
 			} else {
 				// Private message
 
@@ -68,13 +74,18 @@ public class MessageProcessing implements MessageProcessor {
 						+ DbEntries.COLUMN_NAME_TO + ", "
 						+ DbEntries.COLUMN_NAME_MESSAGE + ", "
 						+ DbEntries.COLUMN_NAME_ID + ", "
-						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ('" + trim
-						+ "', " + "'me'" + ", '" + textmessage + "', '" + id
-						+ "', '" + t + "')";
+						+ DbEntries.COLUMN_NAME_TIME + ") VALUES ("
+						+ DatabaseUtils.sqlEscapeString(trim) + ", " + "'me'"
+						+ ", " + DatabaseUtils.sqlEscapeString(textmessage)
+						+ ", " + DatabaseUtils.sqlEscapeString(id) + ", "
+						+ DatabaseUtils.sqlEscapeString(t) + ")";
 
 				db.execSQL(query);
 
 				db.close();
+				
+				Intent intent = new Intent(Conversations.SET_NOTIFY);
+				context.sendBroadcast(intent);
 			}
 		}
 	}

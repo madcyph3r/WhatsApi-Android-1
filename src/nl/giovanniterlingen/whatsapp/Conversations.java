@@ -6,7 +6,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,6 +28,10 @@ import android.widget.RelativeLayout;
  */
 public class Conversations extends AppCompatActivity {
 
+	public static final String SET_NOTIFY = "set_notify";
+	public static final IntentFilter INTENT_FILTER = createIntentFilter();
+
+	private setNotifyReceiver setNotifyReceiver = new nl.giovanniterlingen.whatsapp.Conversations.setNotifyReceiver();
 	private SQLiteDatabase newDB;
 	ImageButton sButton;
 	String nEdit;
@@ -34,7 +41,7 @@ public class Conversations extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.conversations);
 
-		RelativeLayout relativelayout = (RelativeLayout) findViewById (R.id.relativelayout);
+		RelativeLayout relativelayout = (RelativeLayout) findViewById(R.id.relativelayout);
 		Drawable drawable = getResources().getDrawable(R.drawable.background);
 
 		relativelayout.setBackground(drawable);
@@ -53,12 +60,12 @@ public class Conversations extends AppCompatActivity {
 			nEdit = number;
 		}
 
-		getMessages();
-
 		String contactname = ContactsHelper.getContactName(Conversations.this,
 				nEdit);
 
 		setTitle(contactname);
+
+		getMessages();
 
 		sButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
@@ -76,7 +83,6 @@ public class Conversations extends AppCompatActivity {
 					i.putExtra("to", str);
 					i.putExtra("msg", message);
 					sendBroadcast(i);
-					getMessages();
 					mEdit.setText("");
 				}
 			}
@@ -117,6 +123,19 @@ public class Conversations extends AppCompatActivity {
 		});
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// app icon in action bar clicked; goto parent activity.
+			this.finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
+	}
+	
 	public void getMessages() {
 
 		DatabaseHelper dbHelper = new DatabaseHelper(
@@ -137,21 +156,33 @@ public class Conversations extends AppCompatActivity {
 
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				// app icon in action bar clicked; goto parent activity.
-				this.finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-
+	private static IntentFilter createIntentFilter() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(SET_NOTIFY);
+		return filter;
 	}
-	
+
+	protected void registerSetTitleReceiver() {
+		registerReceiver(setNotifyReceiver, INTENT_FILTER);
+	}
+
+	protected void unRegisterSetTitleReceiver() {
+		unregisterReceiver(setNotifyReceiver);
+	}
+
+	public class setNotifyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(SET_NOTIFY)) {
+				getMessages();
+			}
+		}
+	}
+
 	protected void onResume() {
 		super.onResume();
+		registerSetTitleReceiver();
 		Intent i = new Intent();
 		i.setAction(MessageService.ACTION_SHOW_ONLINE);
 		sendBroadcast(i);
@@ -159,6 +190,7 @@ public class Conversations extends AppCompatActivity {
 
 	protected void onPause() {
 		super.onPause();
+		unRegisterSetTitleReceiver();
 		Intent i = new Intent();
 		i.setAction(MessageService.ACTION_SHOW_OFFLINE);
 		sendBroadcast(i);
