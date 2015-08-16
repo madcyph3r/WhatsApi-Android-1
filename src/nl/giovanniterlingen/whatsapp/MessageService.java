@@ -118,6 +118,9 @@ public class MessageService extends Service {
 
 			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
+			
+			EventManager eventManager = new EventProcessor();
+			wa.setEventManager(eventManager );
 
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
