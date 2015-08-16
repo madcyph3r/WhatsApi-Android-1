@@ -5,18 +5,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Map;
 
-import android.content.Context;
 import android.os.Environment;
 import nl.giovanniterlingen.whatsapp.AbstractEventManager;
 import nl.giovanniterlingen.whatsapp.events.Event;
 
+/**
+ * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
+ * ://github.com/WHAnonymous/Chat-API/}
+ * 
+ * @author Giovanni Terlingen
+ */
 public class EventProcessor extends AbstractEventManager {
 
 	@Override
@@ -54,8 +56,9 @@ public class EventProcessor extends AbstractEventManager {
 				try {
 					out = new FileOutputStream(file);
 					if (out != null) {
-						byte[] content = toByteArray(eventData.get(DATA));
-						out.write(content);
+						byte[] content = serialize(eventData.get(DATA));
+						byte[] filteredByteArray = Arrays.copyOfRange(content, 27, content.length - 0);
+						out.write(filteredByteArray);
 						out.close();
 					}
 				} catch (FileNotFoundException e) {
@@ -79,8 +82,9 @@ public class EventProcessor extends AbstractEventManager {
 				try {
 					out = new FileOutputStream(file);
 					if (out != null) {
-						byte[] content = toByteArray(eventData.get(DATA));
-						out.write(content);
+						byte[] content = serialize(eventData.get(DATA));
+						byte[] filteredByteArray = Arrays.copyOfRange(content, 27, content.length - 0);
+						out.write(filteredByteArray);
 						out.close();
 					}
 				} catch (FileNotFoundException e) {
@@ -99,25 +103,11 @@ public class EventProcessor extends AbstractEventManager {
 
 	}
 
-	public static byte[] toByteArray(Object obj) throws IOException {
-		byte[] bytes = null;
-		ByteArrayOutputStream bos = null;
-		ObjectOutputStream oos = null;
-		try {
-			bos = new ByteArrayOutputStream();
-			oos = new ObjectOutputStream(bos);
-			oos.writeObject(obj);
-			oos.flush();
-			bytes = bos.toByteArray();
-		} finally {
-			if (oos != null) {
-				oos.close();
-			}
-			if (bos != null) {
-				bos.close();
-			}
-		}
-		return bytes;
+	public static byte[] serialize(Object obj) throws IOException {
+	    ByteArrayOutputStream out = new ByteArrayOutputStream();
+	    ObjectOutputStream os = new ObjectOutputStream(out);
+	    os.writeObject(obj);
+	    return out.toByteArray();
 	}
 
 }
