@@ -31,8 +31,7 @@ public class MessageProcessing implements MessageProcessor {
 
 	public void processMessage(ProtocolNode message, String textmessage) {
 		String from = message.getAttribute("from");
-		String extract = from.replaceAll("^[^-]*-", "");
-		String group = extract.replaceAll("@g.us", "");
+		String group = from.replaceAll("@g.us", "");
 		String trim = group.replaceAll("@s.whatsapp.net", "");
 		if (message.getAttribute("type").equals("text")) {
 			String participant = message.getAttribute("participant");

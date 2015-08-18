@@ -63,15 +63,18 @@ public class Conversations extends AppCompatActivity {
 		String contactname = ContactsHelper.getContactName(Conversations.this,
 				nEdit);
 
-		setTitle(contactname);
-
+		if (contactname != null) {
+			setTitle(contactname);
+		} else {
+			setTitle(nEdit);
+		}
+		
 		getMessages();
 
 		sButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 
 				String to = nEdit.toString();
-				String str = to.replaceAll("\\D+", "");
 				String message = mEdit.getText().toString();
 
 				if (message.isEmpty()) {
@@ -80,7 +83,7 @@ public class Conversations extends AppCompatActivity {
 				} else {
 					Intent i = new Intent();
 					i.setAction(MessageService.ACTION_SEND_MSG);
-					i.putExtra("to", str);
+					i.putExtra("to", to);
 					i.putExtra("msg", message);
 					sendBroadcast(i);
 					mEdit.setText("");

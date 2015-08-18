@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE messages (`from` TEXT, `to` TEXT, message TEXT, id TEXT, t TEXT);");
+		db.execSQL("CREATE TABLE messages (_id INTEGER PRIMARY KEY AUTOINCREMENT, `from` TEXT, `to` TEXT, message TEXT, id TEXT, t TEXT);");
 	}
 
 	public List<String> getContacts(SQLiteDatabase db) {
