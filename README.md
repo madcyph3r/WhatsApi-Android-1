@@ -4,8 +4,6 @@ WhatsApi-Android
 This is a WhatsApp client written in Java. It's a ported code from the Chat-API which is written in PHP.
 The goal of this app is to make a totally new WhatsApp client for Android and let ourselves understand how the WhatsApp protocol works.
 
-(At this moment you can only request and obtain your WhatsApp password, also sending and receiving text messages. More features are in development.)
-
 ## Documentation
 * FunXMPP Protocol - https://github.com/WHAnonymous/Chat-API/wiki/FunXMPP-Protocol
 * Official WhatsAPI Github - https://github.com/WHAnonymous/Chat-API
