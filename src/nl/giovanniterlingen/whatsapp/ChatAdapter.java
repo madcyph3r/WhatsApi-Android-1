@@ -57,6 +57,7 @@ public class ChatAdapter extends CursorAdapter {
 
 			right.setText(txt);
 			left.setText("");
+			rightBubble.setBackgroundResource(R.drawable.balloon_outgoing_normal);
 			leftBubble.setBackgroundDrawable(null);
 			rightDate.setText(convert);
 			leftDate.setVisibility(View.GONE);
@@ -67,6 +68,7 @@ public class ChatAdapter extends CursorAdapter {
 
 			left.setText(txt);
 			right.setText("");
+			leftBubble.setBackgroundResource(R.drawable.balloon_incoming_normal);
 			rightBubble.setBackgroundDrawable(null);
 			leftDate.setText(convert);
 			rightDate.setVisibility(View.GONE);
