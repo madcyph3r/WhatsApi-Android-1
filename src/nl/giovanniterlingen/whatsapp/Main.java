@@ -8,11 +8,11 @@ package nl.giovanniterlingen.whatsapp;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.http.client.ClientProtocolException;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -39,8 +39,15 @@ public class Main extends Activity {
 
 		} else {
 
-			Intent service = new Intent(this, MessageService.class);
-			this.startService(service);
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Main.CONNECTIVITY_SERVICE);
+			NetworkInfo activeNetworkInfo = connectivityManager
+					.getActiveNetworkInfo();
+			if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+
+				Intent service = new Intent(this, MessageService.class);
+				this.startService(service);
+
+			}
 
 			Intent intent = new Intent(this, ConversationsList.class);
 			startActivity(intent);
