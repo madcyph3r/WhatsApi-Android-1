@@ -1,5 +1,8 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -38,9 +41,16 @@ public class ChatAdapter extends CursorAdapter {
 				.findViewById(R.id.right_bubble);
 		LinearLayout leftBubble = (LinearLayout) view
 				.findViewById(R.id.left_bubble);
+		TextView leftDate = (TextView) view.findViewById(R.id.leftdate);
+		TextView rightDate = (TextView) view.findViewById(R.id.rightdate);
 		// Extract properties from cursor
 		String from = cursor.getString(cursor.getColumnIndexOrThrow("from"));
 		String txt = cursor.getString(cursor.getColumnIndexOrThrow("message"));
+		String date = cursor.getString(cursor.getColumnIndexOrThrow("t"));
+		// Parse time
+		long datevalue = Long.valueOf(date) * 1000;
+		Date dateformat = new java.util.Date(datevalue);
+		String convert = new SimpleDateFormat("HH:mm").format(dateformat);
 
 		// Populate fields with extracted properties
 		if (from.equals("me")) {
@@ -48,13 +58,19 @@ public class ChatAdapter extends CursorAdapter {
 			right.setText(txt);
 			left.setText("");
 			leftBubble.setBackgroundDrawable(null);
+			rightDate.setText(convert);
+			leftDate.setVisibility(View.GONE);
 
 		}
 
 		else {
+
 			left.setText(txt);
 			right.setText("");
 			rightBubble.setBackgroundDrawable(null);
+			leftDate.setText(convert);
+			rightDate.setVisibility(View.GONE);
+
 		}
 	}
 
