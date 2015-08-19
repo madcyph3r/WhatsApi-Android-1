@@ -54,20 +54,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return List;
 	}
 	
-	public List<String> getMessages(SQLiteDatabase db, String number) {
+	public static Cursor getMessages(SQLiteDatabase db, String number) {
 		List<String> List = new ArrayList<String>();
 		// Select All Query
-		String selectQuery = "SELECT `from`,`to`, message, t FROM messages WHERE `from` = " + DatabaseUtils.sqlEscapeString(number) + " OR `to` = " + DatabaseUtils.sqlEscapeString(number);
+		String selectQuery = "SELECT _id, `from`,`to`, message, t FROM messages WHERE `from` = " + DatabaseUtils.sqlEscapeString(number) + " OR `to` = " + DatabaseUtils.sqlEscapeString(number);
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
-		// looping through all rows and adding to list
-		if (cursor.moveToFirst()) {
-			do {
-				List.add(cursor.getString(0)+ ";" + cursor.getString(3) + ": " + cursor.getString(2));
-			} while (cursor.moveToNext());
-		}
-		cursor.close();
-		return List;
+		return cursor;
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

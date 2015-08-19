@@ -144,17 +144,13 @@ public class Conversations extends AppCompatActivity {
 		DatabaseHelper dbHelper = new DatabaseHelper(
 				this.getApplicationContext());
 		newDB = dbHelper.getWritableDatabase();
-
-		List<String> messages = dbHelper.getMessages(newDB, nEdit);
-
-		String[] array = messages.toArray(new String[messages.size()]);
+		
+		ChatAdapter adapter = new ChatAdapter(Conversations.this, DatabaseHelper.getMessages(newDB, nEdit), 0);
 		
 		ListView lv = (ListView) findViewById(R.id.listview);
-		
+
 		lv.setDivider(null);
 		
-		ChatAdapter adapter = new ChatAdapter(Conversations.this, array);
-		 
 		lv.setAdapter(adapter);
 
 	}

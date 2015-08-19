@@ -1,15 +1,11 @@
 package nl.giovanniterlingen.whatsapp;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,74 +15,47 @@ import android.widget.TextView;
  * 
  * @author Giovanni Terlingen
  */
-public class ChatAdapter extends ArrayAdapter<String> {
-	private final Context context;
-	private final String[] values;
+public class ChatAdapter extends CursorAdapter {
 
-	public ChatAdapter(Context context, String[] values) {
-		super(context, -1, values);
-		this.context = context;
-		this.values = values;
+	public ChatAdapter(Context context, Cursor cursor, int flags) {
+		super(context, cursor, 0);
+	}
+
+	// The newView method is used to inflate a new view and return it,
+	// you don't bind any data to the view at this point.
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		return LayoutInflater.from(context).inflate(R.layout.chat_item, parent,
+				false);
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater mInflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = mInflater.inflate(R.layout.chat_item, null);
-
+	public void bindView(View view, Context context, Cursor cursor) {
+		// Find fields to populate in inflated template
 		TextView left = (TextView) view.findViewById(R.id.lefttext);
-		LinearLayout leftBubble = (LinearLayout) view
-				.findViewById(R.id.left_bubble);
-		TextView leftDate = (TextView) view.findViewById(R.id.leftdate);
 		TextView right = (TextView) view.findViewById(R.id.righttext);
 		LinearLayout rightBubble = (LinearLayout) view
 				.findViewById(R.id.right_bubble);
-		TextView rightDate = (TextView) view.findViewById(R.id.rightdate);
+		LinearLayout leftBubble = (LinearLayout) view
+				.findViewById(R.id.left_bubble);
+		// Extract properties from cursor
+		String from = cursor.getString(cursor.getColumnIndexOrThrow("from"));
+		String txt = cursor.getString(cursor.getColumnIndexOrThrow("message"));
 
-		String txt = values[position];
-		if (txt.startsWith("me;")) {
+		// Populate fields with extracted properties
+		if (from.equals("me")) {
 
-			String message = getItem(position).replaceAll("[^: ]*: ", "");
-			Pattern regex = Pattern.compile(";([^: ]*): ");
-			Matcher matcher = regex.matcher(getItem(position));
+			right.setText(txt);
+			left.setText("");
+			leftBubble.setBackgroundDrawable(null);
 
-			if (matcher.find()) {
-				String date = (matcher.group(1));
-				long datevalue = Long.valueOf(date) * 1000;
-				Date dateformat = new java.util.Date(datevalue);
-				String convert = new SimpleDateFormat("HH:mm")
-						.format(dateformat);
-
-				right.setText(message);
-				left.setText("");
-				leftBubble.setBackgroundDrawable(null);
-				rightDate.setText(convert);
-				leftDate.setVisibility(View.GONE);
-
-			}
 		}
 
 		else {
-
-			String message = getItem(position).replaceAll("[^: ]*: ", "");
-			Pattern regex = Pattern.compile(";([^: ]*): ");
-			Matcher matcher = regex.matcher(getItem(position));
-
-			if (matcher.find()) {
-				String date = (matcher.group(1));
-				long datevalue = Long.valueOf(date) * 1000;
-				Date dateformat = new java.util.Date(datevalue);
-				String convert = new SimpleDateFormat("HH:mm")
-						.format(dateformat);
-
-				left.setText(message);
-				right.setText("");
-				rightBubble.setBackgroundDrawable(null);
-				leftDate.setText(convert);
-				rightDate.setVisibility(View.GONE);
-			}
+			left.setText(txt);
+			right.setText("");
+			rightBubble.setBackgroundDrawable(null);
 		}
-		return view;
 	}
+
 }
