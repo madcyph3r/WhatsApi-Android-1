@@ -7,6 +7,7 @@ import java.util.Set;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -56,7 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<String> getMessages(SQLiteDatabase db, String number) {
 		List<String> List = new ArrayList<String>();
 		// Select All Query
-		String selectQuery = "SELECT `from`,`to`, message, t FROM messages WHERE `from` = " + number + " OR `to` = " + number;
+		String selectQuery = "SELECT `from`,`to`, message, t FROM messages WHERE `from` = " + DatabaseUtils.sqlEscapeString(number) + " OR `to` = " + DatabaseUtils.sqlEscapeString(number);
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		// looping through all rows and adding to list

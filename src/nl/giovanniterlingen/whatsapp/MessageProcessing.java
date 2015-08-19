@@ -118,7 +118,7 @@ public class MessageProcessing implements MessageProcessor {
 								.setDefaults(Notification.DEFAULT_VIBRATE)
 								.setAutoCancel(true);
 
-						String number = msg.getFrom();
+						String number = msg.getGroupId();
 						Intent resultIntent = new Intent(context,
 								Conversations.class);
 						resultIntent.putExtra("numberpass", number);
