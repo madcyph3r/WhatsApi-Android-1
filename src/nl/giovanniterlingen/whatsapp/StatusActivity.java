@@ -53,16 +53,12 @@ public class StatusActivity extends AppCompatActivity implements
 	public void onClick(View view) {
 		EditText statusText = (EditText) findViewById(R.id.status_text);
 		if (view.getId() == R.id.back_button) {
-			Intent intent = new Intent(this, Main.class);
-			startActivity(intent);
 			finish();
 		} else if (view.getId() == R.id.save_status_button) {
 			Intent i = new Intent();
 			i.setAction(MessageService.ACTION_SET_STATUS);
 			i.putExtra("status", statusText.getText().toString());
 			sendBroadcast(i);
-			Intent intent = new Intent(this, Main.class);
-			startActivity(intent);
 			finish();
 		}
 	}
@@ -83,8 +79,6 @@ public class StatusActivity extends AppCompatActivity implements
 	
 	@Override
 	public void onBackPressed() {
-		Intent intent = new Intent(this, Main.class);
-		startActivity(intent);
 		finish();
 	}
 	

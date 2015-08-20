@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="84dp"
+    android:padding="8dp">
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:id="@+id/account_photo"
+        android:layout_width="@dimen/account_photo_dim"
+        android:layout_height="@dimen/account_photo_dim"
+        android:src="@drawable/contact_photo_sample" />
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:id="@+id/contact_name_and_status"
+        android:layout_toRightOf="@id/account_photo"
+        android:layout_toEndOf="@id/account_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/display_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/display_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_centerVertical="true"
+        android:id="@+id/display_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:paddingTop="12dp"/>
+
+</RelativeLayout>

@@ -196,8 +196,6 @@ public class Conversations extends AppCompatActivity {
 	}
 
 	public void onBackPressed() {
-		Intent intent = new Intent(this, Main.class);
-		startActivity(intent);
 		finish();
 	}
 

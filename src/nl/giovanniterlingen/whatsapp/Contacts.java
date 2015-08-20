@@ -58,8 +58,6 @@ public class Contacts extends AppCompatActivity implements
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				// app icon in action bar clicked; goto parent activity.
-				Intent intent = new Intent(this, Main.class);
-				startActivity(intent);
 				finish();
 				return true;
 			default:
@@ -83,10 +81,7 @@ public class Contacts extends AppCompatActivity implements
 	}
 	
 	public void onBackPressed() {
-		Intent intent = new Intent(this, Main.class);
-		startActivity(intent);
 		finish();
-		return;
 	}
 
 }

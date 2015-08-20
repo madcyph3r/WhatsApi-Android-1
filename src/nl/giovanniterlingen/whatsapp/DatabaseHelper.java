@@ -31,27 +31,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE messages (_id INTEGER PRIMARY KEY AUTOINCREMENT, `from` TEXT, `to` TEXT, message TEXT, id TEXT, t TEXT);");
 	}
 
-	public List<String> getContacts(SQLiteDatabase db) {
+	public static Cursor getContacts(SQLiteDatabase db) {
 		List<String> List = new ArrayList<String>();
 		// Select All Query
-		String selectQuery = "SELECT DISTINCT `from`, `to` FROM messages DESC";
+		String selectQuery = "SELECT *, MAX(t) FROM messages GROUP BY MIN(`from`, `to`), MAX(`from`, `to`) ORDER BY t DESC;";
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
-		// looping through all rows and adding to list
-		if (cursor.moveToFirst()) {
-			do {
-				List.add(cursor.getString(0));
-				List.add(cursor.getString(1));
-				List.remove("me"); //Remove me from conversations list
-				List.remove(""); //Remove empty listitem
-				Set<String> hs = new HashSet<>();
-				hs.addAll(List);
-				List.clear();
-				List.addAll(hs);			
-			} while (cursor.moveToNext());
-		}
-		cursor.close();
-		return List;
+		return cursor;
 	}
 	
 	public static Cursor getMessages(SQLiteDatabase db, String number) {

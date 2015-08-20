@@ -64,11 +64,13 @@ public class ConversationsList extends AppCompatActivity {
 
 		toolbarSearchView.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
 			}
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 			}
 
 			@Override
@@ -89,10 +91,12 @@ public class ConversationsList extends AppCompatActivity {
 			setupDrawerContent(navigationView);
 		}
 
-		Cursor UsernameCursor = getApplication().getContentResolver().query(ContactsContract.Profile.CONTENT_URI, null, null, null, null);
+		Cursor UsernameCursor = getApplication().getContentResolver().query(
+				ContactsContract.Profile.CONTENT_URI, null, null, null, null);
 		UsernameCursor.moveToFirst();
 		TextView mUsername = (TextView) findViewById(R.id.username);
-		mUsername.setText(UsernameCursor.getString(UsernameCursor.getColumnIndex("display_name")));
+		mUsername.setText(UsernameCursor.getString(UsernameCursor
+				.getColumnIndex("display_name")));
 		UsernameCursor.close();
 
 		cButton = (FloatingActionButton) findViewById(R.id.contacts_button);
@@ -102,8 +106,7 @@ public class ConversationsList extends AppCompatActivity {
 
 				Intent intent = new Intent(ConversationsList.this,
 						Contacts.class);
-				startActivity(intent);
-				finish();
+				startActivity(intent);;
 
 			}
 		});
@@ -113,13 +116,10 @@ public class ConversationsList extends AppCompatActivity {
 
 		SQLiteDatabase newDB = dbHelper.getWritableDatabase();
 
-		List<String> all = dbHelper.getContacts(newDB);
+		final ConversationsAdapter adapter = new ConversationsAdapter(
+				ConversationsList.this, DatabaseHelper.getContacts(newDB), 0);
 
 		ListView lv = (ListView) findViewById(R.id.conversationslist);
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(
-				ConversationsList.this, android.R.layout.simple_list_item_1,
-				all);
 
 		lv.setAdapter(adapter);
 
@@ -127,22 +127,29 @@ public class ConversationsList extends AppCompatActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				
-				String number = (String) parent.getItemAtPosition(position);
+					int position, long arg3) {
+				Cursor cur = (Cursor) adapter.getItem(position);
+				cur.moveToPosition(position);
+				String to = cur.getString(cur.getColumnIndexOrThrow("to"));
+				String from = cur.getString(cur.getColumnIndexOrThrow("from"));
+
 				Intent i = new Intent(ConversationsList.this,
 						Conversations.class);
-				i.putExtra("numberpass", number);
+				if (to.equals("me")) {
+					i.putExtra("numberpass", from);
+				}
+				if (from.equals("me")) {
+					i.putExtra("numberpass", to);
+				}
 				startActivity(i);
-
 			}
 
 		};
-		
+
 		lv.setOnItemClickListener(listener);
-		
+
 		lv.setItemsCanFocus(true);
-		
+
 	}
 
 	@Override
@@ -160,8 +167,8 @@ public class ConversationsList extends AppCompatActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		if (id == R.id.search){
-			if (searchContainer.isShown()){
+		if (id == R.id.search) {
+			if (searchContainer.isShown()) {
 				searchContainer.setVisibility(View.GONE);
 			} else {
 				searchContainer.setVisibility(View.VISIBLE);
@@ -169,16 +176,16 @@ public class ConversationsList extends AppCompatActivity {
 		}
 
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				mDrawerLayout.openDrawer(GravityCompat.START);
-				return true;
+		case android.R.id.home:
+			mDrawerLayout.openDrawer(GravityCompat.START);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void setupDrawerContent(NavigationView navigationView) {
-		navigationView.setNavigationItemSelectedListener(
-				new NavigationView.OnNavigationItemSelectedListener() {
+		navigationView
+				.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 					@Override
 					public boolean onNavigationItemSelected(MenuItem menuItem) {
 						menuItem.setChecked(true);
@@ -186,22 +193,22 @@ public class ConversationsList extends AppCompatActivity {
 						int id = menuItem.getItemId();
 
 						if (id == R.id.action_info) {
-							Intent intent = new Intent(ConversationsList.this, InfoActivity.class);
+							Intent intent = new Intent(ConversationsList.this,
+									InfoActivity.class);
 							startActivity(intent);
-							finish();
 							return true;
 						}
 						if (id == R.id.change_status) {
-							Intent intent = new Intent(ConversationsList.this, StatusActivity.class);
+							Intent intent = new Intent(ConversationsList.this,
+									StatusActivity.class);
 							startActivity(intent);
-							finish();
 							return true;
 						}
 						return true;
 					}
 				});
 	}
-	
+
 	protected void onResume() {
 		super.onResume();
 		Intent i = new Intent();
