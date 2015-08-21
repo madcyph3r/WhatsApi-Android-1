@@ -50,10 +50,24 @@ public class ConversationsAdapter extends CursorAdapter {
 
 		// Populate fields with extracted properties
 		if (to.equals("me")) {
-			name.setText(from);
+
+			String contactname = ContactsHelper.getContactName(context, from);
+
+			if (contactname != null) {
+				name.setText(contactname);
+			} else {
+				name.setText(from);
+			}
 		}
 		if (from.equals("me")) {
-			name.setText(to);
+
+			String contactname = ContactsHelper.getContactName(context, to);
+
+			if (contactname != null) {
+				name.setText(contactname);
+			} else {
+				name.setText(to);
+			}
 		}
 		message.setText(txt);
 		date.setText(convert);

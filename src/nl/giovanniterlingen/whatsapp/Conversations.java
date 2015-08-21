@@ -94,7 +94,6 @@ public class Conversations extends AppCompatActivity {
 		mEdit.addTextChangedListener(new TextWatcher() {
 
 			String to = nEdit.toString();
-			String str = to.replaceAll("\\D+", "");
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
@@ -109,7 +108,7 @@ public class Conversations extends AppCompatActivity {
 
 				Intent i = new Intent();
 				i.setAction(MessageService.ACTION_START_COMPOSING);
-				i.putExtra("to", str);
+				i.putExtra("to", to);
 				sendBroadcast(i);
 
 			}
@@ -119,7 +118,7 @@ public class Conversations extends AppCompatActivity {
 
 				Intent i = new Intent();
 				i.setAction(MessageService.ACTION_STOP_COMPOSING);
-				i.putExtra("to", str);
+				i.putExtra("to", to);
 				sendBroadcast(i);
 			}
 
