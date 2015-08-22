@@ -2044,20 +2044,11 @@ public class WhatsApi {
 			addServerReceivedId(node.getAttribute("id"));
 
 			if (child != null) {
-				if (child.getTag().equals(ProtocolTag.QUERY.toString())) {
-					if (child.getAttribute("xmlns").equals("jabber:iq:privacy")) {
-						// ToDo: We need to get explicitly list out the children
-						// as arguments
-						// here.
-						eventManager.fireGetPrivacyBlockedList(phoneNumber,
-								child.getChild(0).getChildren());
-					}
-					if (child.getAttribute("xmlns").equals("jabber:iq:last")) {
-						eventManager.fireGetRequestLastSeen(phoneNumber,
-								node.getAttribute("from"),
-								node.getAttribute("id"),
-								child.getAttribute("seconds"));
-					}
+					// only handle last seen from now on other features will come later.
+					eventManager.fireGetRequestLastSeen(phoneNumber,
+							node.getAttribute("from"), node.getAttribute("id"),
+							node.getChild(0).getAttribute("seconds"));
+					// buggy results
 				}
 				if (child.getTag().equals(ProtocolTag.SYNC.toString())) {
 					// sync result
@@ -2174,7 +2165,6 @@ public class WhatsApi {
 			}
 		}
 
-	}
 
 	public String getLastSendMsgId() {
 		return this.lastSendMsgId;

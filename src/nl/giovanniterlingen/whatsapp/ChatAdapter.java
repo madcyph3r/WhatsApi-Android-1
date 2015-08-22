@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class ChatAdapter extends CursorAdapter {
 		String from = cursor.getString(cursor.getColumnIndexOrThrow("from"));
 		String txt = cursor.getString(cursor.getColumnIndexOrThrow("message"));
 		String date = cursor.getString(cursor.getColumnIndexOrThrow("t"));
+		String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
 		// Parse time
 		long datevalue = Long.valueOf(date) * 1000;
 		Date dateformat = new java.util.Date(datevalue);
@@ -72,6 +74,13 @@ public class ChatAdapter extends CursorAdapter {
 			rightBubble.setBackgroundDrawable(null);
 			leftDate.setText(convert);
 			rightDate.setVisibility(View.GONE);
+			
+			// send that I have read the message
+			Intent i = new Intent();
+			i.setAction(MessageService.ACTION_SEND_READ);
+			i.putExtra("to", from);
+			i.putExtra("id", id);
+			context.sendBroadcast(i);
 
 		}
 	}

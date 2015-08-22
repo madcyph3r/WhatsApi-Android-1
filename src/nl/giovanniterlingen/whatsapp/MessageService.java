@@ -35,6 +35,8 @@ public class MessageService extends Service {
 	public static final String ACTION_SHOW_ONLINE = "show_online";
 	public static final String ACTION_SHOW_OFFLINE = "show_offline";
 	public static final String ACTION_SET_STATUS = "set_status";
+	public static final String ACTION_GET_LAST_SEEN = "get_last_seen";
+	public static final String ACTION_SEND_READ = "send_read";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -87,6 +89,20 @@ public class MessageService extends Service {
 					e.printStackTrace();
 				}
 			}
+			if (intent.getAction() == ACTION_GET_LAST_SEEN) {
+				try {
+					wa.sendGetRequestLastSeen(intent.getStringExtra("to"));
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
+			if (intent.getAction() == ACTION_SEND_READ) {
+				try {
+					wa.sendMessageRead(intent.getStringExtra("to"), intent.getStringExtra("id"));
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	};
 
@@ -98,6 +114,8 @@ public class MessageService extends Service {
 		filter.addAction(ACTION_SHOW_ONLINE);
 		filter.addAction(ACTION_SHOW_OFFLINE);
 		filter.addAction(ACTION_SET_STATUS);
+		filter.addAction(ACTION_GET_LAST_SEEN);
+		filter.addAction(ACTION_SEND_READ);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;
@@ -119,7 +137,7 @@ public class MessageService extends Service {
 			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
 			
-			EventManager eventManager = new EventProcessor();
+			EventManager eventManager = new EventProcessor(MessageService.this);
 			wa.setEventManager(eventManager );
 
 			wa.connect();

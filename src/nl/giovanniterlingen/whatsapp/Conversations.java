@@ -1,7 +1,5 @@
 package nl.giovanniterlingen.whatsapp;
 
-import java.util.List;
-import java.util.Timer;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -19,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -29,6 +28,7 @@ import android.widget.RelativeLayout;
 public class Conversations extends AppCompatActivity {
 
 	public static final String SET_NOTIFY = "set_notify";
+	public static final String SET_LAST_SEEN = "set_last_seen";
 	public static final IntentFilter INTENT_FILTER = createIntentFilter();
 
 	private setNotifyReceiver setNotifyReceiver = new nl.giovanniterlingen.whatsapp.Conversations.setNotifyReceiver();
@@ -59,6 +59,12 @@ public class Conversations extends AppCompatActivity {
 			String number = intent.getExtras().getString("numberpass");
 			nEdit = number;
 		}
+		
+		// get last seen
+		Intent i = new Intent();
+		i.setAction(MessageService.ACTION_GET_LAST_SEEN);
+		i.putExtra("to", nEdit);
+		sendBroadcast(i);
 
 		String contactname = ContactsHelper.getContactName(Conversations.this,
 				nEdit);
@@ -157,6 +163,7 @@ public class Conversations extends AppCompatActivity {
 	private static IntentFilter createIntentFilter() {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(SET_NOTIFY);
+		filter.addAction(SET_LAST_SEEN);
 		return filter;
 	}
 
@@ -174,6 +181,12 @@ public class Conversations extends AppCompatActivity {
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(SET_NOTIFY)) {
 				getMessages();
+			}
+			if (intent.getAction().equals(SET_LAST_SEEN)) {
+
+				// TODO something here with the seconds
+				Toast.makeText(Conversations.this, "Last seen " + intent.getStringExtra("sec") + " seconds ago", Toast.LENGTH_SHORT).show();
+
 			}
 		}
 	}

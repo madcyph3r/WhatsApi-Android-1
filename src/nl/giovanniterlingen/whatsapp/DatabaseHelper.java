@@ -32,7 +32,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public static Cursor getContacts(SQLiteDatabase db) {
-		List<String> List = new ArrayList<String>();
 		// Select All Query
 		String selectQuery = "SELECT *, MAX(t) FROM messages GROUP BY MIN(`from`, `to`), MAX(`from`, `to`) ORDER BY t DESC;";
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -41,9 +40,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public static Cursor getMessages(SQLiteDatabase db, String number) {
-		List<String> List = new ArrayList<String>();
 		// Select All Query
-		String selectQuery = "SELECT _id, `from`,`to`, message, t FROM messages WHERE `from` = " + DatabaseUtils.sqlEscapeString(number) + " OR `to` = " + DatabaseUtils.sqlEscapeString(number);
+		String selectQuery = "SELECT _id, `from`,`to`, id, message, t FROM messages WHERE `from` = " + DatabaseUtils.sqlEscapeString(number) + " OR `to` = " + DatabaseUtils.sqlEscapeString(number);
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		return cursor;

@@ -18,6 +18,7 @@ public abstract class AbstractEventManager implements EventManager {
 	public static final String EVENT_MESSAGE_RECEIVED_CLIENT = "message_received_client";
 	public static final String EVENT_MESSAGE_COMPOSING = "message_composing";
 	public static final String EVENT_GET_PROFILE_PICTURE = "get_profile_picture";
+	public static final String EVENT_GET_LAST_SEEN = "get_last_seen";
 	// Events
 	public static final String EVENT_UNKNOWN = "UNKNOWN";
 	public static final String EVENT_GROUPS_PARTICIPANTS_ADD = "GROUPS_PARTICIPANTS_ADD";
@@ -36,6 +37,7 @@ public abstract class AbstractEventManager implements EventManager {
 	public static final String RESULT = "result";
 	public static final String TIME = "time";
 	public static final String DATA = "data";
+	public static final String SECONDS = "seconds";
 
 	public abstract void fireEvent(String event, Map<String,Object> eventData);
 
@@ -304,11 +306,11 @@ public abstract class AbstractEventManager implements EventManager {
 
 	public void fireGetRequestLastSeen(String phone, String from, String msgid,
 			String sec) {
-		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
-		eventData.put(PHONE_NUMBER, phone);
+		eventData.put(FROM, from);
+		eventData.put(SECONDS, sec);
 		
-		fireEvent(EVENT_UNKNOWN, eventData);
+		fireEvent(EVENT_GET_LAST_SEEN, eventData);
 	}
 
 	public void fireGetServerProperties(String phone, String version,

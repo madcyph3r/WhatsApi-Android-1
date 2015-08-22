@@ -9,7 +9,10 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Map;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
+import android.util.Log;
 import nl.giovanniterlingen.whatsapp.AbstractEventManager;
 import nl.giovanniterlingen.whatsapp.events.Event;
 
@@ -20,6 +23,12 @@ import nl.giovanniterlingen.whatsapp.events.Event;
  * @author Giovanni Terlingen
  */
 public class EventProcessor extends AbstractEventManager {
+
+	private Context context;
+
+	public EventProcessor(Context context) {
+		this.context = context;
+	}
 
 	@Override
 	public void fireEvent(String event, Map<String, Object> eventData) {
@@ -95,6 +104,14 @@ public class EventProcessor extends AbstractEventManager {
 					e.printStackTrace();
 				}
 			}
+		}
+		if (event.equals(AbstractEventManager.EVENT_GET_LAST_SEEN)) {
+
+			Intent i = new Intent();
+			i.setAction(Conversations.SET_LAST_SEEN);
+			i.putExtra("sec", eventData.get(SECONDS).toString());
+			context.sendBroadcast(i);
+			
 		}
 	}
 
