@@ -44,7 +44,7 @@ import java.util.*;
 public class WhatsApi {
 
 	private static final String RELEASE_TOKEN_CONST = "PdA2DJyKoUrwLw1Bg6EIhzh502dF9noR9uFCllGk";
-	private static final String RELEASE_TIME = "1435097139726";
+	private static final String RELEASE_TIME = "1439921717185";
 	private final int PORT = 443; // The port of the WhatsApp server.
 	private final int TIMEOUT_SEC = 10; // The timeout for the connection with the WhatsApp servers.
 	private final String WHATSAPP_CHECK_HOST = "v.whatsapp.net/v2/exist"; // The check credentials host.
@@ -54,8 +54,8 @@ public class WhatsApi {
 	private final String WHATSAPP_REQUEST_HOST = "v.whatsapp.net/v2/code"; // The request code host.
 	public static final String WHATSAPP_SERVER = "s.whatsapp.net"; // The  hostname used to login/send messages.
 	private final String WHATSAPP_DEVICE = "S40"; // The device name.
-	private final String WHATSAPP_VER = "2.12.88"; // The WhatsApp version.
-	private final String WHATSAPP_USER_AGENT = "WhatsApp/2.12.88 S40Version/14.26 Device/Nokia302";// User agent used in request/registration code.
+	private final String WHATSAPP_VER = "2.12.96"; // The WhatsApp version.
+	private final String WHATSAPP_USER_AGENT = "WhatsApp/2.12.96 S40Version/14.26 Device/Nokia302";// User agent used in request/registration code.
 	private final String WHATSAPP_VER_CHECKER = "https://coderus.openrepos.net/whitesoft/whatsapp_version"; // Check WhatsApp version
 
 	private String identity;
