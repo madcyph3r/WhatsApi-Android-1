@@ -192,7 +192,8 @@ public class Conversations extends AppCompatActivity {
 
 				// make sure we got the right last seen here
 				if (intent.getStringExtra("from").contains(nEdit)
-						&& !intent.getStringExtra("sec").equals("none")) {
+						&& !intent.getStringExtra("sec").equals("none")
+						&& !intent.getStringExtra("sec").equals("deny")) {
 					Calendar cal = Calendar.getInstance();
 					TimeZone tz = cal.getTimeZone();
 					SimpleDateFormat sdf = new SimpleDateFormat(
