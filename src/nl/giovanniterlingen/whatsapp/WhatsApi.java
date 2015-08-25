@@ -651,26 +651,6 @@ public class WhatsApi {
 	}
 
 	/**
-	 * Request to retrieve the last online time of specific user.
-	 * @throws WhatsAppException 
-	 */
-	public void sendGetRequestLastSeen(String to) throws WhatsAppException {
-
-		String msgId = createMsgId("getlastseen");
-		ProtocolNode queryNode = new ProtocolNode("query", null, null, null);
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("id", msgId);
-		params.put("xmlns", "jabber:iq:last");
-		params.put("type", "get");
-		params.put("to", getJID(to));
-
-		ProtocolNode node = new ProtocolNode("iq", params,
-				Arrays.asList(queryNode), null);
-		sendNode(node);
-	}
-
-	/**
 	 * Send a request to get the current server properties
 	 * 
 	 * @throws WhatsAppException
@@ -2051,13 +2031,6 @@ public class WhatsApi {
 
 			addServerReceivedId(node.getAttribute("id"));
 
-			if (child != null) {
-					// only handle last seen from now on other features will come later.
-					eventManager.fireGetRequestLastSeen(phoneNumber,
-							node.getAttribute("from"), node.getAttribute("id"),
-							node.getChild(0).getAttribute("seconds"));
-					// buggy results
-				}
 				if (child.getTag().equals(ProtocolTag.SYNC.toString())) {
 					// sync result
 					ProtocolNode sync = child;
@@ -2334,11 +2307,12 @@ public class WhatsApi {
 		}
 		String from = node.getAttribute("from");
 		String type = node.getAttribute("type");
+		String last = node.getAttribute("last");
 		if (from != null && type != null) {
 			if (from.startsWith(phoneNumber) && !from.contains("-")) {
-				eventManager.firePresence(phoneNumber, from, type);
-			}
-			if (!from.startsWith(phoneNumber) && from.contains("-")) {
+				eventManager.firePresence(phoneNumber, from);
+			} else {
+				eventManager.firePresenceUnavailable(phoneNumber, from, last);
 			}
 		}
 	}

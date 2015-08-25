@@ -91,7 +91,7 @@ public class MessageService extends Service {
 			}
 			if (intent.getAction() == ACTION_GET_LAST_SEEN) {
 				try {
-					wa.sendGetRequestLastSeen(intent.getStringExtra("to"));
+					wa.sendPresenceSubscription(intent.getStringExtra("to"));
 				} catch (WhatsAppException e) {
 					e.printStackTrace();
 				}

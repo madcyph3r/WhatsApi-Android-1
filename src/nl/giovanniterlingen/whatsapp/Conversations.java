@@ -1,5 +1,11 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+import java.util.TimeZone;
+
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -184,9 +190,22 @@ public class Conversations extends AppCompatActivity {
 			}
 			if (intent.getAction().equals(SET_LAST_SEEN)) {
 
-				// TODO something here with the seconds
-				Toast.makeText(Conversations.this, "Last seen " + intent.getStringExtra("sec") + " seconds ago", Toast.LENGTH_SHORT).show();
+				// make sure we got the right last seen here
+				if (intent.getStringExtra("from").contains(nEdit)
+						&& !intent.getStringExtra("sec").equals("none")) {
+					Calendar cal = Calendar.getInstance();
+					TimeZone tz = cal.getTimeZone();
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"HH:mm dd/MM/yyyy");
+					sdf.setTimeZone(tz);
+					long timestamp = Long.parseLong(intent
+							.getStringExtra("sec"));
+					String localTime = sdf.format(new Date(timestamp * 1000));
 
+					Toast.makeText(Conversations.this,
+							"Last seen: " + localTime, Toast.LENGTH_SHORT)
+							.show();
+				}
 			}
 		}
 	}

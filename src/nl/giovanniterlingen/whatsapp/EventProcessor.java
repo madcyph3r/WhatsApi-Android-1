@@ -105,11 +105,12 @@ public class EventProcessor extends AbstractEventManager {
 				}
 			}
 		}
-		if (event.equals(AbstractEventManager.EVENT_GET_LAST_SEEN)) {
+		if (event.equals(AbstractEventManager.EVENT_PRESENCE_UNAVAILABLE)) {
 
 			Intent i = new Intent();
 			i.setAction(Conversations.SET_LAST_SEEN);
-			i.putExtra("sec", eventData.get(SECONDS).toString());
+			i.putExtra("from", eventData.get(FROM).toString());
+			i.putExtra("sec", eventData.get(LAST).toString());
 			context.sendBroadcast(i);
 			
 		}

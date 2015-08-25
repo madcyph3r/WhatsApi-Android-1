@@ -197,13 +197,6 @@ public interface EventManager {
 			byte[] bs
 			);
 
-	public abstract void fireGetRequestLastSeen(
-			String phone, // The user phone number including the country code.
-			String from, // The sender JID.
-			String msgid, // The message id.
-			String sec // The number of seconds since the user went offline.
-			);
-
 	public abstract void fireGetServerProperties(
 			String phone, // The user phone number including the country code.
 			String version, // The version number on the server.
@@ -299,8 +292,13 @@ public interface EventManager {
 
 	public abstract void firePresence(
 			String phone, // The user phone number including the country code.
+			String from // The sender JID.
+			);
+	
+	public abstract void firePresenceUnavailable(
+			String phone, // The user phone number including the country code.
 			String from, // The sender JID.
-			String type // The presence type.
+			String last // The last seen from a user.
 			);
 
 	public abstract void fireProfilePictureChanged(

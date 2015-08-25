@@ -18,13 +18,13 @@ public abstract class AbstractEventManager implements EventManager {
 	public static final String EVENT_MESSAGE_RECEIVED_CLIENT = "message_received_client";
 	public static final String EVENT_MESSAGE_COMPOSING = "message_composing";
 	public static final String EVENT_GET_PROFILE_PICTURE = "get_profile_picture";
-	public static final String EVENT_GET_LAST_SEEN = "get_last_seen";
 	// Events
 	public static final String EVENT_UNKNOWN = "UNKNOWN";
 	public static final String EVENT_GROUPS_PARTICIPANTS_ADD = "GROUPS_PARTICIPANTS_ADD";
 	public static final String EVENT_GROUPS_PARTICIPANTS_REMOVE = "GROUPS_PARTICIPANTS_REMOVE";
 	public static final String EVENT_PONG = "PONG";
 	public static final String EVENT_PRESENCE = "PRESENCE";
+	public static final String EVENT_PRESENCE_UNAVAILABLE = "PRESENCE_UNAVAILABLE";
 
 	// Event fields
 	public static final String PHONE_NUMBER = "phoneNumber";
@@ -38,6 +38,7 @@ public abstract class AbstractEventManager implements EventManager {
 	public static final String TIME = "time";
 	public static final String DATA = "data";
 	public static final String SECONDS = "seconds";
+	public static final String LAST = "last";
 
 	public abstract void fireEvent(String event, Map<String,Object> eventData);
 
@@ -80,14 +81,21 @@ public abstract class AbstractEventManager implements EventManager {
 	/* (non-Javadoc)
 	 * @see nl.giovanniterlingen.whatsapp.EventManager#firePresence(java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void firePresence(String phone, String from,
-			String type) {
+	public void firePresence(String phone, String from) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
 		eventData.put(PHONE_NUMBER, phone);
 		eventData.put(FROM, from);
-		eventData.put(TYPE, type);
 		fireEvent(EVENT_PRESENCE, eventData);
 	}
+	
+	public void firePresenceUnavailable(String phone, String from, String last) {
+		Map<String,Object> eventData = new HashMap<String,Object>();
+		eventData.put(PHONE_NUMBER, phone);
+		eventData.put(FROM, from);
+		eventData.put(LAST, last);
+		fireEvent(EVENT_PRESENCE_UNAVAILABLE, eventData);
+	}
+
 
 	public void fireClose(String phone, String error) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -302,15 +310,6 @@ public abstract class AbstractEventManager implements EventManager {
 		eventData.put(DATA, bs);
 		
 		fireEvent(EVENT_GET_PROFILE_PICTURE, eventData);
-	}
-
-	public void fireGetRequestLastSeen(String phone, String from, String msgid,
-			String sec) {
-		Map<String,Object> eventData = new HashMap<String,Object>();
-		eventData.put(FROM, from);
-		eventData.put(SECONDS, sec);
-		
-		fireEvent(EVENT_GET_LAST_SEEN, eventData);
 	}
 
 	public void fireGetServerProperties(String phone, String version,
