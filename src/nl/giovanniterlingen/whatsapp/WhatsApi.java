@@ -1081,8 +1081,16 @@ public class WhatsApi {
 	 * @throws WhatsAppException
 	 */
 	public void sendPresenceSubscription(String to) throws WhatsAppException {
-		// TODO implement this
-		throw new WhatsAppException("Not yet implemented");
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("type", "subscribe");
+		params.put("to", getJID(to));;
+
+		ProtocolNode node = new ProtocolNode("presence", params, null,
+				null);
+
+		this.sendNode(node);
+ 
 	}
 
 	/**
