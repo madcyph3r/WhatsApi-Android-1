@@ -1,5 +1,7 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -191,23 +193,52 @@ public class Conversations extends AppCompatActivity {
 			if (intent.getAction().equals(SET_LAST_SEEN)) {
 
 				// make sure we got the right last seen here
-				if (intent.getStringExtra("from").contains(nEdit)
+				if (intent.getStringExtra("from").equals(
+						nEdit + "@s.whatsapp.net")
 						&& !intent.getStringExtra("sec").equals("none")
 						&& !intent.getStringExtra("sec").equals("deny")) {
 					Calendar cal = Calendar.getInstance();
 					TimeZone tz = cal.getTimeZone();
 					SimpleDateFormat sdf = new SimpleDateFormat(
-							"HH:mm dd/MM/yyyy");
+							"dd-MM-yyyy, HH:mm");
 					sdf.setTimeZone(tz);
 					long timestamp = Long.parseLong(intent
 							.getStringExtra("sec"));
 					String localTime = sdf.format(new Date(timestamp * 1000));
 
-					Toast.makeText(Conversations.this,
-							"Last seen: " + localTime, Toast.LENGTH_SHORT)
-							.show();
+					try {
+						Toast.makeText(Conversations.this,
+								"Last seen: " + parseSeconds(localTime),
+								Toast.LENGTH_SHORT).show();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
+		}
+	}
+
+	public static String parseSeconds(String date) throws ParseException {
+		Date dateTime = new SimpleDateFormat("dd-MM-yyyy, HH:mm")
+				.parse(date);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(dateTime);
+		Calendar today = Calendar.getInstance();
+		Calendar yesterday = Calendar.getInstance();
+		yesterday.add(Calendar.DATE, -1);
+		DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+
+		if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+				&& calendar.get(Calendar.DAY_OF_YEAR) == today
+						.get(Calendar.DAY_OF_YEAR)) {
+			return "today at " + timeFormatter.format(dateTime);
+		} else if (calendar.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR)
+				&& calendar.get(Calendar.DAY_OF_YEAR) == yesterday
+						.get(Calendar.DAY_OF_YEAR)) {
+			return "yesterday at " + timeFormatter.format(dateTime);
+		} else {
+			return date;
 		}
 	}
 
