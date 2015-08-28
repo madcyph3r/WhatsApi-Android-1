@@ -41,9 +41,13 @@ public class Conversations extends AppCompatActivity {
 
 	private setNotifyReceiver setNotifyReceiver = new nl.giovanniterlingen.whatsapp.Conversations.setNotifyReceiver();
 	private SQLiteDatabase newDB;
-	ImageButton sButton;
+	ImageButton sButton, attachmentButton, attachPhoto, 
+			attachImage, attachVideo, attachAudio, 
+			attachPosition, attachContact;
+
 	String nEdit;
 	EditText mEdit;
+	HorizontalScrollView attachmentPicker;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +65,58 @@ public class Conversations extends AppCompatActivity {
 
 		sButton = (ImageButton) findViewById(R.id.send_button);
 		mEdit = (EditText) findViewById(R.id.message_text);
+		attachmentButton = (ImageButton) findViewById(R.id.attachment_button);
+		attachmentPicker = (HorizontalScrollView) findViewById(R.id.attachment_picker);
+
+		attachPhoto = (ImageButton) findViewById(R.id.attach_photo);
+		attachPhoto.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+				startActivity(intent);
+			}
+		});
+		attachImage = (ImageButton) findViewById(R.id.attach_image);
+		attachImage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivity(intent);
+			}
+		});
+		attachVideo = (ImageButton) findViewById(R.id.attach_video);
+		attachVideo.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
+				startActivity(intent);
+			}
+		});
+		attachAudio = (ImageButton) findViewById(R.id.attach_audio);
+		attachAudio.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+
+			}
+		});
+		attachPosition = (ImageButton) findViewById(R.id.attach_position);
+		attachPosition.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?"));
+				startActivity(intent);
+			}
+		});
+		attachContact = (ImageButton) findViewById(R.id.attach_contact);
+		attachContact.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+
+			}
+		});
+
+
+
 
 		Intent intent = getIntent();
 		if (intent.hasExtra("numberpass")) {
@@ -105,6 +161,23 @@ public class Conversations extends AppCompatActivity {
 			}
 		});
 
+		attachmentButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (attachmentPicker.isShown()) {
+					attachmentButton.setImageDrawable(getDrawable(R.drawable.ic_attachment));
+					attachmentPicker.setVisibility(View.GONE);
+					sButton.setVisibility(View.VISIBLE);
+
+				} else {
+					attachmentButton.setImageDrawable(getDrawable(R.drawable.ic_close));
+					attachmentPicker.setVisibility(View.VISIBLE);
+					sButton.setVisibility(View.GONE);
+				}
+			}
+		});
+
+
 		mEdit.addTextChangedListener(new TextWatcher() {
 
 			String to = nEdit.toString();
@@ -124,6 +197,19 @@ public class Conversations extends AppCompatActivity {
 				i.setAction(MessageService.ACTION_START_COMPOSING);
 				i.putExtra("to", to);
 				sendBroadcast(i);
+if (mEdit.getText().toString().isEmpty()) {
+					sButton.setBackground(getDrawable(R.drawable.send_button_disabled));
+					sButton.setImageDrawable(getDrawable(R.drawable.ic_send_grey));
+					sButton.animate().scaleX((float) 0.75);
+					sButton.animate().scaleY((float) 0.75);
+				} else {
+					sButton.setBackground(getDrawable(R.drawable.send_button_enabled));
+					sButton.setImageDrawable(getDrawable(R.drawable.ic_send));
+					sButton.animate().scaleX(1);
+					sButton.animate().scaleY(1);
+				}
+
+
 
 			}
 
