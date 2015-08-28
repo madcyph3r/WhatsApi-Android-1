@@ -862,7 +862,7 @@ public class WhatsApi {
 	}
 
 	private String base64_encode(byte[] data) {
-		byte[] enc = Base64.encode(data, Base64.DEFAULT);
+		byte[] enc = Base64.encode(data, Base64.NO_WRAP);
 		return new String(enc);
 	}
 
