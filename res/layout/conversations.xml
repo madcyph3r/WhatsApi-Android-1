@@ -17,7 +17,7 @@
         android:id="@+id/conversation_entry"
         android:layout_alignParentBottom="true"
         layout="@layout/conversation_entry"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_width="match_parent"/>
 
 </RelativeLayout>
