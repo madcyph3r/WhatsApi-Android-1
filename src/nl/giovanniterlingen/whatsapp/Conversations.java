@@ -5,10 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +29,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -52,7 +53,6 @@ public class Conversations extends AppCompatActivity {
 	EditText mEdit;
 	HorizontalScrollView attachmentPicker;
 	private static int RESULT_LOAD_IMAGE = 1;
-	private static int RESULT_CAMERA_IMAGE = 2;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,9 +63,14 @@ public class Conversations extends AppCompatActivity {
 
 		relativelayout.setBackground(drawable);
 
+		LayoutParams layout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		View mView = getLayoutInflater().inflate(R.layout.conversation_header, null);
+
 		final ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setDisplayShowCustomEnabled(true);
+			actionBar.setCustomView(mView, layout); 
 		}
 
 		sButton = (ImageButton) findViewById(R.id.send_button);
@@ -137,11 +142,12 @@ public class Conversations extends AppCompatActivity {
 
 		String contactname = ContactsHelper.getContactName(Conversations.this,
 				nEdit);
+		TextView contact_name = (TextView)findViewById(R.id.contact_name);
 
 		if (contactname != null) {
-			setTitle(contactname);
+			contact_name.setText(contactname);
 		} else {
-			setTitle(nEdit);
+			contact_name.setText(nEdit);
 		}
 
 		getMessages();
@@ -298,9 +304,8 @@ public class Conversations extends AppCompatActivity {
 					String localTime = sdf.format(new Date(timestamp * 1000));
 
 					try {
-						Toast.makeText(Conversations.this,
-								"Last seen: " + parseSeconds(localTime),
-								Toast.LENGTH_SHORT).show();
+						TextView last_seen = (TextView)findViewById(R.id.contact_last_seen);
+						last_seen.setText("Last seen: " + parseSeconds(localTime));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
