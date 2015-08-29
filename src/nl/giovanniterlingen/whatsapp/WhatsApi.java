@@ -954,6 +954,7 @@ public class WhatsApi {
 	 * 
 	 * @throws WhatsAppException
 	 */
+	public void sendMessageLocation(List<String> to, String lat, String lng,
 			String name, String url) throws WhatsAppException,
 			InvalidKeyException, NoSuchAlgorithmException, IOException,
 			IncompleteMessageException, InvalidMessageException,
@@ -972,6 +973,7 @@ public class WhatsApi {
 		if (to.size() == 1) {
 			// only one receipt
 			String recipient = to.get(0).toString();
+			sendMessageNode(recipient, mediaNode, null);
 		} else if (to.size() > 1) {
 			// there are more
 			// TODO send broadcast
