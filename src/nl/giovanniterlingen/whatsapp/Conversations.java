@@ -16,12 +16,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -41,14 +45,14 @@ public class Conversations extends AppCompatActivity {
 
 	private setNotifyReceiver setNotifyReceiver = new nl.giovanniterlingen.whatsapp.Conversations.setNotifyReceiver();
 	private SQLiteDatabase newDB;
-	ImageButton sButton, attachmentButton, attachPhoto, 
-			attachImage, attachVideo, attachAudio, 
-			attachPosition, attachContact;
+	ImageButton sButton, attachmentButton, attachPhoto, attachImage,
+			attachVideo, attachAudio, attachPosition, attachContact;
 
 	String nEdit;
 	EditText mEdit;
 	HorizontalScrollView attachmentPicker;
 	private static int RESULT_LOAD_IMAGE = 1;
+	private static int RESULT_CAMERA_IMAGE = 2;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +62,7 @@ public class Conversations extends AppCompatActivity {
 		Drawable drawable = getResources().getDrawable(R.drawable.background);
 
 		relativelayout.setBackground(drawable);
-		
+
 		final ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
@@ -81,8 +85,10 @@ public class Conversations extends AppCompatActivity {
 		attachImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-				startActivity(intent);
+				Intent intent = new Intent(
+						Intent.ACTION_PICK,
+						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivityForResult(intent, RESULT_LOAD_IMAGE);
 			}
 		});
 		attachVideo = (ImageButton) findViewById(R.id.attach_video);
@@ -104,7 +110,8 @@ public class Conversations extends AppCompatActivity {
 		attachPosition.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?"));
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://maps.google.com/maps?"));
 				startActivity(intent);
 			}
 		});
@@ -116,15 +123,12 @@ public class Conversations extends AppCompatActivity {
 			}
 		});
 
-
-
-
 		Intent intent = getIntent();
 		if (intent.hasExtra("numberpass")) {
 			String number = intent.getExtras().getString("numberpass");
 			nEdit = number;
 		}
-		
+
 		// get last seen
 		Intent i = new Intent();
 		i.setAction(MessageService.ACTION_GET_LAST_SEEN);
@@ -139,7 +143,7 @@ public class Conversations extends AppCompatActivity {
 		} else {
 			setTitle(nEdit);
 		}
-		
+
 		getMessages();
 
 		sButton.setOnClickListener(new View.OnClickListener() {
@@ -166,18 +170,19 @@ public class Conversations extends AppCompatActivity {
 			@Override
 			public void onClick(View view) {
 				if (attachmentPicker.isShown()) {
-					attachmentButton.setImageDrawable(getDrawable(R.drawable.ic_attachment));
+					attachmentButton
+							.setImageDrawable(getDrawable(R.drawable.ic_attachment));
 					attachmentPicker.setVisibility(View.GONE);
 					sButton.setVisibility(View.VISIBLE);
 
 				} else {
-					attachmentButton.setImageDrawable(getDrawable(R.drawable.ic_close));
+					attachmentButton
+							.setImageDrawable(getDrawable(R.drawable.ic_close));
 					attachmentPicker.setVisibility(View.VISIBLE);
 					sButton.setVisibility(View.GONE);
 				}
 			}
 		});
-
 
 		mEdit.addTextChangedListener(new TextWatcher() {
 
@@ -198,7 +203,7 @@ public class Conversations extends AppCompatActivity {
 				i.setAction(MessageService.ACTION_START_COMPOSING);
 				i.putExtra("to", to);
 				sendBroadcast(i);
-if (mEdit.getText().toString().isEmpty()) {
+				if (mEdit.getText().toString().isEmpty()) {
 					sButton.setBackground(getDrawable(R.drawable.send_button_disabled));
 					sButton.setImageDrawable(getDrawable(R.drawable.ic_send_grey));
 					sButton.animate().scaleX((float) 0.75);
@@ -209,8 +214,6 @@ if (mEdit.getText().toString().isEmpty()) {
 					sButton.animate().scaleX(1);
 					sButton.animate().scaleY(1);
 				}
-
-
 
 			}
 
@@ -238,19 +241,20 @@ if (mEdit.getText().toString().isEmpty()) {
 		}
 
 	}
-	
+
 	public void getMessages() {
 
 		DatabaseHelper dbHelper = new DatabaseHelper(
 				this.getApplicationContext());
 		newDB = dbHelper.getWritableDatabase();
-		
-		ChatAdapter adapter = new ChatAdapter(Conversations.this, DatabaseHelper.getMessages(newDB, nEdit), 0);
-		
+
+		ChatAdapter adapter = new ChatAdapter(Conversations.this,
+				DatabaseHelper.getMessages(newDB, nEdit), 0);
+
 		ListView lv = (ListView) findViewById(R.id.listview);
 
 		lv.setDivider(null);
-		
+
 		lv.setAdapter(adapter);
 
 	}
@@ -307,8 +311,7 @@ if (mEdit.getText().toString().isEmpty()) {
 	}
 
 	public static String parseSeconds(String date) throws ParseException {
-		Date dateTime = new SimpleDateFormat("dd-MM-yyyy, HH:mm")
-				.parse(date);
+		Date dateTime = new SimpleDateFormat("dd-MM-yyyy, HH:mm").parse(date);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dateTime);
 		Calendar today = Calendar.getInstance();
@@ -329,26 +332,33 @@ if (mEdit.getText().toString().isEmpty()) {
 		}
 	}
 
-@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK
+				&& null != data) {
+			Uri selectedImage = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
+			Cursor cursor = getContentResolver().query(selectedImage,
+					filePathColumn, null, null, null);
+			cursor.moveToFirst();
 
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			String picturePath = cursor.getString(columnIndex);
+			cursor.close();
 
-            galleryImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-        }
-    }
+			Intent i = new Intent();
+			i.setAction(MessageService.ACTION_SEND_IMAGE);
+			i.putExtra("path", picturePath);
+			i.putExtra("to", nEdit);
+			sendBroadcast(i);
 
+			Toast.makeText(Conversations.this, "IMAGE SENT :D",
+					Toast.LENGTH_SHORT).show();
+		}
+	}
 
 	protected void onResume() {
 		super.onResume();

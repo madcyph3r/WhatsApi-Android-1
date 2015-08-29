@@ -60,7 +60,7 @@
 
     <Button
         android:id="@+id/save_status_button"
-        android:background="@drawable/circular_btn"
+        android:background="@drawable/send_button_enabled"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"

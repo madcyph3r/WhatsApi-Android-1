@@ -105,7 +105,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="center"
-            android:background="@drawable/circular_btn"
+            android:background="@drawable/send_button_enabled"
             android:src="@drawable/ic_arrow_forward" />
 
         <LinearLayout
@@ -145,7 +145,7 @@
             android:layout_height="56dp"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/default_margin"
-            android:background="@drawable/circular_btn"
+            android:background="@drawable/send_button_enabled"
             android:src="@drawable/ic_check" />
 
     </LinearLayout>

@@ -1,5 +1,6 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +38,7 @@ public class MessageService extends Service {
 	public static final String ACTION_SET_STATUS = "set_status";
 	public static final String ACTION_GET_LAST_SEEN = "get_last_seen";
 	public static final String ACTION_SEND_READ = "send_read";
+	public static final String ACTION_SEND_IMAGE = "send_image";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -103,6 +105,15 @@ public class MessageService extends Service {
 					e.printStackTrace();
 				}
 			}
+			if (intent.getAction() == ACTION_SEND_IMAGE) {
+				try {
+					File image = new File(intent.getStringExtra("path"));
+					File preview = BitmapHelper.createIcon(image.getPath(), MessageService.this);
+					wa.sendMessageImage(intent.getStringExtra("to"), image, preview, "");
+				} catch (WhatsAppException | IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	};
 
@@ -116,6 +127,7 @@ public class MessageService extends Service {
 		filter.addAction(ACTION_SET_STATUS);
 		filter.addAction(ACTION_GET_LAST_SEEN);
 		filter.addAction(ACTION_SEND_READ);
+		filter.addAction(ACTION_SEND_IMAGE);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;
