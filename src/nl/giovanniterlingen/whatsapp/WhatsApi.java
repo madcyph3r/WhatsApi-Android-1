@@ -954,10 +954,29 @@ public class WhatsApi {
 	 * 
 	 * @throws WhatsAppException
 	 */
-	public void sendMessageLocation(List<String> to, float lng, float lat,
-			String name, String url) throws WhatsAppException {
-		// TODO implement this
-		throw new WhatsAppException("Not yet implemented");
+			String name, String url) throws WhatsAppException,
+			InvalidKeyException, NoSuchAlgorithmException, IOException,
+			IncompleteMessageException, InvalidMessageException,
+			InvalidTokenException, JSONException, DecodeException {
+
+		Map<String, String> nodemap = new HashMap<String, String>();
+		nodemap.put("type", "location");
+		nodemap.put("encoding", "raw");
+		nodemap.put("latitude", lat);
+		nodemap.put("longitude", lng);
+		nodemap.put("name", name);
+		nodemap.put("url", url);
+
+		ProtocolNode mediaNode = new ProtocolNode("media", nodemap, null, null);
+
+		if (to.size() == 1) {
+			// only one receipt
+			String recipient = to.get(0).toString();
+		} else if (to.size() > 1) {
+			// there are more
+			// TODO send broadcast
+
+		}
 	}
 
 	/**
