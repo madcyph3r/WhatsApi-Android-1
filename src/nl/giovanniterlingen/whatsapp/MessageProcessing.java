@@ -1,5 +1,8 @@
 package nl.giovanniterlingen.whatsapp;
 
+import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
+import nl.giovanniterlingen.whatsapp.message.Message;
+import nl.giovanniterlingen.whatsapp.message.TextMessage;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,9 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
-import nl.giovanniterlingen.whatsapp.message.Message;
-import nl.giovanniterlingen.whatsapp.message.TextMessage;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -61,6 +61,9 @@ public class MessageProcessing implements MessageProcessor {
 				
 				Intent intent = new Intent(Conversations.SET_NOTIFY);
 				context.sendBroadcast(intent);
+				
+				Intent intent1 = new Intent(ConversationsList.SET_NOTIFY);
+				context.sendBroadcast(intent1);
 			} else {
 				// Private message
 
@@ -85,10 +88,14 @@ public class MessageProcessing implements MessageProcessor {
 				
 				Intent intent = new Intent(Conversations.SET_NOTIFY);
 				context.sendBroadcast(intent);
+				
+				Intent intent1 = new Intent(ConversationsList.SET_NOTIFY);
+				context.sendBroadcast(intent1);
 			}
 		}
 	}
 
+	@Override
 	public void processMessage(Message message) {
 		// TODO add all supported message types
 		switch (message.getType()) {

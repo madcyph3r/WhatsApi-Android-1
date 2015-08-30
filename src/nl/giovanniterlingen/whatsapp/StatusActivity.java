@@ -63,6 +63,7 @@ public class StatusActivity extends AppCompatActivity implements
 		}
 	}
 
+	@Override
 	protected void onResume() {
 		super.onResume();
 		Intent i = new Intent();
@@ -70,6 +71,7 @@ public class StatusActivity extends AppCompatActivity implements
 		sendBroadcast(i);
 	}
 
+	@Override
 	protected void onPause() {
 		super.onPause();
 		Intent i = new Intent();

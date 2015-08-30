@@ -4,22 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 import org.json.JSONException;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.IBinder;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.widget.Toast;
 
 /**
@@ -39,6 +35,7 @@ public class MessageService extends Service {
 	public static final String ACTION_GET_LAST_SEEN = "get_last_seen";
 	public static final String ACTION_SEND_READ = "send_read";
 	public static final String ACTION_SEND_IMAGE = "send_image";
+	public static final String ACTION_GET_AVATAR = "get_avatar";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -114,9 +111,17 @@ public class MessageService extends Service {
 					e.printStackTrace();
 				}
 			}
+			if (intent.getAction() == ACTION_GET_AVATAR) {
+				try {
+					wa.sendGetProfilePicture(intent.getStringExtra("to"), false);
+				} catch (WhatsAppException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	};
 
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_SEND_MSG);
@@ -128,6 +133,7 @@ public class MessageService extends Service {
 		filter.addAction(ACTION_GET_LAST_SEEN);
 		filter.addAction(ACTION_SEND_READ);
 		filter.addAction(ACTION_SEND_IMAGE);
+		filter.addAction(ACTION_GET_AVATAR);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;
@@ -155,6 +161,7 @@ public class MessageService extends Service {
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
 			wa.sendOfflineStatus();
+
 			return;
 
 		} catch (Exception e) {
@@ -167,6 +174,7 @@ public class MessageService extends Service {
 		}
 	}
 
+	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
 		return null;

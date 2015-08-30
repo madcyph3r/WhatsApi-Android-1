@@ -1,10 +1,10 @@
 package nl.giovanniterlingen.whatsapp;
 
-import nl.giovanniterlingen.whatsapp.tools.BinHex;
-import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
-
 import java.util.List;
 import java.util.Map;
+
+import nl.giovanniterlingen.whatsapp.tools.BinHex;
+import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https

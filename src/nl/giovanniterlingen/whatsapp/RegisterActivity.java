@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -35,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
 	EditText mVerify;
 	private WhatsApi wa;
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registeractivity);
@@ -50,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
 		mVerify = (EditText) findViewById(R.id.verficationcode_text);
 
 		mButton.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View view) {
 				try {
 					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
@@ -65,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
 		});
 
 		rButton.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View view) {
 
 				WhatsApi wa = null;
@@ -145,7 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
 			ArrayList<String> alContacts = new ArrayList<String>();
 			do {
 				String id = cursor.getString(cursor
-						.getColumnIndex(ContactsContract.Contacts._ID));
+						.getColumnIndex(BaseColumns._ID));
 
 				if (Integer
 						.parseInt(cursor.getString(cursor

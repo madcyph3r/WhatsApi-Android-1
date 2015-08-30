@@ -45,6 +45,7 @@ public abstract class AbstractEventManager implements EventManager {
 	/* (non-Javadoc)
 	 * @see nl.giovanniterlingen.whatsapp.EventManager#fireSendPong(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void fireSendPong(String phone, String msgid) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
 		eventData.put(PHONE_NUMBER, phone);
@@ -81,6 +82,7 @@ public abstract class AbstractEventManager implements EventManager {
 	/* (non-Javadoc)
 	 * @see nl.giovanniterlingen.whatsapp.EventManager#firePresence(java.lang.String, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void firePresence(String phone, String from) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
 		eventData.put(PHONE_NUMBER, phone);
@@ -88,6 +90,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_PRESENCE, eventData);
 	}
 	
+	@Override
 	public void firePresenceUnavailable(String phone, String from, String last) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
 		eventData.put(PHONE_NUMBER, phone);
@@ -104,6 +107,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("close", eventData);
 	}
 
+	@Override
 	public void fireCodeRegister(String phone, String login, String pw,
 			String type, String expiration, String kind, String price,
 			String cost, String currency, String price_expiration) {
@@ -114,6 +118,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("code_register", eventData);
 	}
 
+	@Override
 	public void fireCodeRegisterFailed(String phone, String status,
 			String reason, String retry_after) {
 		// TODO Auto-generated method stub
@@ -123,6 +128,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("code_register_failed", eventData);
 	}
 
+	@Override
 	public void fireCodeRequest(String phone, String method, String length) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -131,6 +137,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("code_request", eventData);
 	}
 
+	@Override
 	public void fireCodeRequestFailed(String phone, String method,
 			String reason, String value) {
 		// TODO Auto-generated method stub
@@ -140,6 +147,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("code_request_failed", eventData);
 	}
 
+	@Override
 	public void fireCodeRequestFailedTooRecent(String phone, String method,
 			String reason, String retry_after) {
 		// TODO Auto-generated method stub
@@ -149,6 +157,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("code_request_failed_too_recent", eventData);
 	}
 
+	@Override
 	public void fireConnect(String phone, String socket) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -157,6 +166,7 @@ public abstract class AbstractEventManager implements EventManager {
 		
 	}
 
+	@Override
 	public void fireConnectError(String phone, String socket) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -165,6 +175,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("connect_error", eventData);
 	}
 
+	@Override
 	public void fireCredentialsBad(String phone, String status, String reason) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -173,6 +184,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("credentials_bad", eventData);
 	}
 
+	@Override
 	public void fireCredentialsGood(String phone, String login, String pw,
 			String type, String expiration, String kind, String price,
 			String cost, String currency, String price_expiration) {
@@ -183,6 +195,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("credentials_good", eventData);
 	}
 
+	@Override
 	public void fireDisconnect(String phone, Socket socket) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -191,6 +204,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("disconnect", eventData);
 	}
 
+	@Override
 	public void fireDissectPhone(String phone, String country, String cc,
 			String mcc, String lc, String lg) {
 		// TODO Auto-generated method stub
@@ -200,6 +214,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("dissect_phone", eventData);
 	}
 
+	@Override
 	public void fireDissectPhoneFailed(String phone) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -208,6 +223,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("dissect_phone_failed", eventData);
 	}
 
+	@Override
 	public void fireGetAudio(String phone, String from, String msgid,
 			String type, String time, String name, String size, String url,
 			String file, String mimetype, String filehash, String duration,
@@ -219,6 +235,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_audio", eventData);
 	}
 
+	@Override
 	public void fireGetError(String phone, String id, String error) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -235,6 +252,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_groups_info", eventData);
 	}
 
+	@Override
 	public void fireGetGroupsSubject(String phone, String[] reset_from,
 			String time, String[] reset_author, String[] reset_author2,
 			String name, byte[] bs) {
@@ -245,6 +263,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_groups_subject", eventData);
 	}
 
+	@Override
 	public void fireGetImage(String phone, String from, String msgid,
 			String type, String time, String name, String size, String url,
 			String file, String mimetype, String filehash, String width,
@@ -256,6 +275,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_image", eventData);
 	}
 
+	@Override
 	public void fireGetLocation(String phone, String from, String msgid,
 			String type, String time, String name, String place_name,
 			String longitude, String latitude, String url, byte[] bs) {
@@ -266,6 +286,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_locations", eventData);
 	}
 
+	@Override
 	public void fireGetMessage(String phone, String from, String msgid,
 			String type, String time, String name, byte[] bs) {
 		// TODO Auto-generated method stub
@@ -275,6 +296,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_message", eventData);
 	}
 
+	@Override
 	public void fireGetGroupMessage(String phone, String from, String author,
 			String msgid, String type, String time, String name, byte[] bs) {
 		// TODO Auto-generated method stub
@@ -293,6 +315,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_group_participants", eventData);
 	}
 
+	@Override
 	public void fireGetPrivacyBlockedList(String phone, List<ProtocolNode> list) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -301,6 +324,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireGetProfilePicture(String phone, String from, String type,
 			byte[] bs) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -312,6 +336,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_GET_PROFILE_PICTURE, eventData);
 	}
 
+	@Override
 	public void fireGetServerProperties(String phone, String version,
 			Map<String,String> props) {
 		// TODO Auto-generated method stub
@@ -321,6 +346,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireGetStatus(String phone, String from, String type,
 			String id, String t, byte[] bs) {
 		// TODO Auto-generated method stub
@@ -330,6 +356,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("get_status", eventData);
 	}
 
+	@Override
 	public void fireGetvCard(String phone, String from, String msgid,
 			String type, String time, String name, String contact, byte[] bs) {
 		// TODO Auto-generated method stub
@@ -339,6 +366,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireGetVideo(String phone, String from, String msgid,
 			String type, String time, String name, String url, String file,
 			String size, String mimetype, String filehash, String duration,
@@ -366,6 +394,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireLogin(String phone) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -374,6 +403,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("login", eventData);
 	}
 
+	@Override
 	public void fireLoginFailed(String phone, String tag) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -382,6 +412,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("login_failed", eventData);
 	}
 
+	@Override
 	public void fireMediaMessageSent(String phone, String to, String id,
 			String filetype, String url, String filename, String filesize,
 			byte[] icon) {
@@ -392,6 +423,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireMediaUploadFailed(String phone, String id,
 			ProtocolNode node, Map<String, Object> messageNode, String reason) {
 		// TODO Auto-generated method stub
@@ -425,6 +457,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_MESSAGE_PAUSED, eventData);
 	}
 
+	@Override
 	public void fireMessageReceivedClient(String phone, String from,
 			String msgid, String type, String time) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -437,6 +470,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_MESSAGE_RECEIVED_CLIENT, eventData);
 	}
 
+	@Override
 	public void fireMessageReceivedServer(String phone, String from,
 			String msgid, String type, String time) {
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -449,6 +483,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_MESSAGE_RECEIVED_SERVER, eventData);
 	}
 
+	@Override
 	public void firePing(String phone, String msgid) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -457,6 +492,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("ping", eventData);
 	}
 
+	@Override
 	public void fireProfilePictureChanged(String phone, String from, String id,
 			String t) {
 		// TODO Auto-generated method stub
@@ -466,6 +502,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireProfilePictureDeleted(String phone, String from, String id,
 			String t) {
 		// TODO Auto-generated method stub
@@ -475,6 +512,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireSendMessage(String phone, String targets, String id,
 			ProtocolNode node) {
 		// TODO Auto-generated method stub
@@ -484,6 +522,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("send_message", eventData);
 	}
 
+	@Override
 	public void fireSendMessageReceived(String phone, String from, String type) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -492,6 +531,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent("send_message_received", eventData);
 	}
 
+	@Override
 	public void fireSendPresence(String phone, String type, String name) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -500,6 +540,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireSendStatusUpdate(String phone, String msg) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -508,6 +549,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireUploadFile(String phone, String name, String url) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -516,6 +558,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireUploadFileFailed(String phone, String name) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -524,6 +567,7 @@ public abstract class AbstractEventManager implements EventManager {
 		fireEvent(EVENT_UNKNOWN, eventData);
 	}
 
+	@Override
 	public void fireGetSyncResult(String result) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
@@ -532,6 +576,7 @@ public abstract class AbstractEventManager implements EventManager {
 		
 	}
 
+	@Override
 	public void fireGetReceipt(String from, String id, String offline,
 			String retry) {
 		// TODO Auto-generated method stub

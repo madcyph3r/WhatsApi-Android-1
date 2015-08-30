@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +61,7 @@ public class ChatAdapter extends CursorAdapter {
 			rightBubble.setBackgroundResource(R.drawable.balloon_outgoing_normal);
 			leftBubble.setBackgroundDrawable(null);
 			rightDate.setText(convert);
+			rightDate.setVisibility(View.VISIBLE);
 			leftDate.setVisibility(View.GONE);
 
 		}
@@ -73,14 +73,16 @@ public class ChatAdapter extends CursorAdapter {
 			leftBubble.setBackgroundResource(R.drawable.balloon_incoming_normal);
 			rightBubble.setBackgroundDrawable(null);
 			leftDate.setText(convert);
+			leftDate.setVisibility(View.VISIBLE);
 			rightDate.setVisibility(View.GONE);
 			
 			// send that I have read the message
-			Intent i = new Intent();
-			i.setAction(MessageService.ACTION_SEND_READ);
-			i.putExtra("to", from);
-			i.putExtra("id", id);
-			context.sendBroadcast(i);
+			// we should only do this once to prevent data load
+			//Intent i = new Intent();
+			//i.setAction(MessageService.ACTION_SEND_READ);
+			//i.putExtra("to", from);
+			//i.putExtra("id", id);
+			//context.sendBroadcast(i);
 
 		}
 	}

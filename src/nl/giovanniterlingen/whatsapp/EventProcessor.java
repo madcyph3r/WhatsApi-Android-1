@@ -9,12 +9,10 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Map;
 
+import nl.giovanniterlingen.whatsapp.events.Event;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
-import android.util.Log;
-import nl.giovanniterlingen.whatsapp.AbstractEventManager;
-import nl.giovanniterlingen.whatsapp.events.Event;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -54,21 +52,34 @@ public class EventProcessor extends AbstractEventManager {
 
 			if (eventData.get(TYPE).equals("preview")) {
 
-				String filename = "preview_" + eventData.get(FROM) + ".jpg";
-				String file = Environment.getExternalStorageDirectory()
-						.getAbsolutePath()
-						+ File.separator
-						+ "WhatsApi"
-						+ File.separator + filename;
+				String filename = eventData.get(FROM) + ".jpg";
+
+				File avatarDir = new File(context.getFilesDir().getParent()
+						+ File.separator + "Avatars");
+				if (!avatarDir.exists()) {
+					avatarDir.mkdir();
+				}
+
+				String file = context.getFilesDir().getParent()
+						+ File.separator + "Avatars" + File.separator
+						+ filename;
 
 				FileOutputStream out;
 				try {
 					out = new FileOutputStream(file);
 					if (out != null) {
 						byte[] content = serialize(eventData.get(DATA));
-						byte[] filteredByteArray = Arrays.copyOfRange(content, 27, content.length - 0);
+
+						byte[] filteredByteArray = Arrays.copyOfRange(content,
+								27, content.length - 0);
 						out.write(filteredByteArray);
 						out.close();
+						
+						Intent i = new Intent();
+						i.setAction(Conversations.SET_PROFILE_PICTURE);
+						i.putExtra("from", eventData.get(FROM).toString());
+						context.sendBroadcast(i);
+						
 					}
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -92,7 +103,8 @@ public class EventProcessor extends AbstractEventManager {
 					out = new FileOutputStream(file);
 					if (out != null) {
 						byte[] content = serialize(eventData.get(DATA));
-						byte[] filteredByteArray = Arrays.copyOfRange(content, 27, content.length - 0);
+						byte[] filteredByteArray = Arrays.copyOfRange(content,
+								27, content.length - 0);
 						out.write(filteredByteArray);
 						out.close();
 					}
@@ -112,20 +124,21 @@ public class EventProcessor extends AbstractEventManager {
 			i.putExtra("from", eventData.get(FROM).toString());
 			i.putExtra("sec", eventData.get(LAST).toString());
 			context.sendBroadcast(i);
-			
+
 		}
 	}
 
+	@Override
 	public void fireEvent(Event event) {
 		System.out.println(event.toString());
 
 	}
 
 	public static byte[] serialize(Object obj) throws IOException {
-	    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	    ObjectOutputStream os = new ObjectOutputStream(out);
-	    os.writeObject(obj);
-	    return out.toByteArray();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ObjectOutputStream os = new ObjectOutputStream(out);
+		os.writeObject(obj);
+		return out.toByteArray();
 	}
 
 }

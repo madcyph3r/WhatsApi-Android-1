@@ -1,15 +1,18 @@
 package nl.giovanniterlingen.whatsapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -35,7 +38,11 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
  */
 public class ConversationsList extends AppCompatActivity {
 
+	public static final String SET_NOTIFY = "set_notify";
+	public static final IntentFilter INTENT_FILTER = createIntentFilter();
+
 	FloatingActionButton cButton;
+	private setNotifyReceiver setNotifyReceiver = new setNotifyReceiver();
 	private DrawerLayout mDrawerLayout;
 	private LinearLayout searchContainer;
 	private EditText toolbarSearchView;
@@ -45,6 +52,7 @@ public class ConversationsList extends AppCompatActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.conversationslist);
+		registerReceiver(setNotifyReceiver, INTENT_FILTER);
 
 		Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
@@ -98,11 +106,13 @@ public class ConversationsList extends AppCompatActivity {
 		cButton = (FloatingActionButton) findViewById(R.id.contacts_button);
 
 		cButton.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View view) {
 
 				Intent intent = new Intent(ConversationsList.this,
 						Contacts.class);
-				startActivity(intent);;
+				startActivity(intent);
+				;
 
 			}
 		});
@@ -179,6 +189,38 @@ public class ConversationsList extends AppCompatActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void getMessages() {
+
+		DatabaseHelper dbHelper = new DatabaseHelper(
+				this.getApplicationContext());
+
+		SQLiteDatabase newDB = dbHelper.getWritableDatabase();
+
+		final ConversationsAdapter adapter = new ConversationsAdapter(
+				ConversationsList.this, DatabaseHelper.getContacts(newDB), 0);
+
+		ListView lv = (ListView) findViewById(R.id.conversationslist);
+
+		lv.setAdapter(adapter);
+
+	}
+
+	private static IntentFilter createIntentFilter() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(SET_NOTIFY);
+		return filter;
+	}
+
+	public class setNotifyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(SET_NOTIFY)) {
+				getMessages();
+			}
+		}
+	}
+
 	private void setupDrawerContent(NavigationView navigationView) {
 		navigationView
 				.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -205,6 +247,7 @@ public class ConversationsList extends AppCompatActivity {
 				});
 	}
 
+	@Override
 	protected void onResume() {
 		super.onResume();
 		Intent i = new Intent();
@@ -212,6 +255,7 @@ public class ConversationsList extends AppCompatActivity {
 		sendBroadcast(i);
 	}
 
+	@Override
 	protected void onPause() {
 		super.onPause();
 		Intent i = new Intent();

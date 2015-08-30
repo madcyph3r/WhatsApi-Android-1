@@ -5,10 +5,8 @@
 
 package nl.giovanniterlingen.whatsapp;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -24,6 +22,7 @@ import android.preference.PreferenceManager;
  */
 public class Main extends Activity {
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		SharedPreferences preferences = PreferenceManager
@@ -39,7 +38,7 @@ public class Main extends Activity {
 
 		} else {
 
-			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Main.CONNECTIVITY_SERVICE);
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo activeNetworkInfo = connectivityManager
 					.getActiveNetworkInfo();
 			if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {

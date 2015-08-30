@@ -1,10 +1,9 @@
 package nl.giovanniterlingen.whatsapp.message;
 
-import nl.giovanniterlingen.whatsapp.ProtocolNode;
-
-import android.util.Log;
-
 import java.util.Date;
+
+import nl.giovanniterlingen.whatsapp.ProtocolNode;
+import android.util.Log;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -36,15 +35,18 @@ public class BasicMessage implements Message {
         Log.d("DEBUG", "date = " + date);
     }
 
-    public MessageType getType() {
+    @Override
+	public MessageType getType() {
         return type;
     }
 
-    public ProtocolNode getProtocolNode() {
+    @Override
+	public ProtocolNode getProtocolNode() {
         return node;
     }
 
-    public String getFrom() {
+    @Override
+	public String getFrom() {
         return from;
     }
 
@@ -52,7 +54,8 @@ public class BasicMessage implements Message {
         return groupId;
     }
 
-    public Date getDate() {
+    @Override
+	public Date getDate() {
         return date;
     }
 

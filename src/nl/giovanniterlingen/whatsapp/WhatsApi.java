@@ -1,18 +1,52 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
 import nl.giovanniterlingen.whatsapp.events.Event;
 import nl.giovanniterlingen.whatsapp.events.EventType;
-import nl.giovanniterlingen.whatsapp.message.*;
+import nl.giovanniterlingen.whatsapp.message.AudioMessage;
+import nl.giovanniterlingen.whatsapp.message.BasicMessage;
+import nl.giovanniterlingen.whatsapp.message.ImageMessage;
+import nl.giovanniterlingen.whatsapp.message.LocationMessage;
+import nl.giovanniterlingen.whatsapp.message.Message;
+import nl.giovanniterlingen.whatsapp.message.MessageType;
+import nl.giovanniterlingen.whatsapp.message.TextMessage;
+import nl.giovanniterlingen.whatsapp.message.VideoMessage;
 import nl.giovanniterlingen.whatsapp.tools.BinHex;
 import nl.giovanniterlingen.whatsapp.tools.CharsetUtils;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.AssetManager;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Base64;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -24,16 +58,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.math.BigInteger;
-import java.net.*;
-import java.nio.ByteBuffer;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.util.*;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetManager;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Base64;
+import android.util.Log;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -1504,6 +1535,9 @@ public class WhatsApi {
 			
 			Intent intent = new Intent(Conversations.SET_NOTIFY);
 			mContext.sendBroadcast(intent);
+			
+			Intent intent1 = new Intent(ConversationsList.SET_NOTIFY);
+			mContext.sendBroadcast(intent1);
 
 			return id;
 		} catch (Exception e) {
@@ -2058,12 +2092,27 @@ public class WhatsApi {
 					ProtocolNode existing = sync.getChild("in");
 					ProtocolNode nonexisting = sync.getChild("out");
 
+					ContactsDatabaseHelper mDbHelper = new ContactsDatabaseHelper(
+							mContext);
+					SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
 					// process existing first
 					Map<String, String> existingUsers = new HashMap<String, String>();
 					if (existing != null) {
+						db.delete("contacts", null, null);
 						for (ProtocolNode eChild : existing.getChildren()) {
 							existingUsers.put(new String(eChild.getData()),
 									eChild.getAttribute("jid"));
+							// insert into the database
+							String query = "INSERT INTO contacts (name, number) VALUES ("
+									+ DatabaseUtils.sqlEscapeString(ContactsHelper
+											.getContactName(mContext,
+													eChild.getAttribute("jid")))
+									+ ","
+									+ DatabaseUtils.sqlEscapeString(eChild
+											.getAttribute("jid")) + ")";
+
+							db.execSQL(query);
 						}
 					}
 

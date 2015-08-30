@@ -1,5 +1,9 @@
 package com.getbase.floatingactionbutton;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import nl.giovanniterlingen.whatsapp.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -28,11 +32,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import nl.giovanniterlingen.whatsapp.R;
 
 public class FloatingActionButton extends ImageButton {
 

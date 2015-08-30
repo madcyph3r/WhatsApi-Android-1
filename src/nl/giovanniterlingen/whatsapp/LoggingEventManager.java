@@ -2,9 +2,8 @@ package nl.giovanniterlingen.whatsapp;
 
 import java.util.Map;
 
-import android.util.Log;
-
 import nl.giovanniterlingen.whatsapp.events.Event;
+import android.util.Log;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
@@ -32,6 +31,7 @@ public class LoggingEventManager extends AbstractEventManager {
 		Log.i("INFO", sb.toString());
 	}
 
+	@Override
 	public void fireEvent(Event event) {
 		Log.i("INFO", event.toString());
 	}

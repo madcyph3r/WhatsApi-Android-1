@@ -2,7 +2,6 @@ package nl.giovanniterlingen.whatsapp;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -12,32 +11,24 @@ import android.database.sqlite.SQLiteOpenHelper;
  * 
  * @author Giovanni Terlingen
  */
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class ContactsDatabaseHelper extends SQLiteOpenHelper {
 	// If you change the database schema, you must increment the database
 	// version.
 	public static final int DATABASE_VERSION = 1;
-	public static final String DATABASE_NAME = "msgstore.db";
+	public static final String DATABASE_NAME = "contactsstore.db";
 
-	public DatabaseHelper(Context context) {
+	public ContactsDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE messages (_id INTEGER PRIMARY KEY AUTOINCREMENT, `from` TEXT, `to` TEXT, message TEXT, id TEXT, t TEXT);");
-	}
-
-	public static Cursor getContacts(SQLiteDatabase db) {
-		// Select All Query
-		String selectQuery = "SELECT *, MAX(t) FROM messages GROUP BY MIN(`from`, `to`), MAX(`from`, `to`) ORDER BY t DESC;";
-		Cursor cursor = db.rawQuery(selectQuery, null);
-
-		return cursor;
+		db.execSQL("CREATE TABLE contacts (_id INTEGER PRIMARY KEY AUTOINCREMENT, name, number TEXT);");
 	}
 	
-	public static Cursor getMessages(SQLiteDatabase db, String number) {
+	public static Cursor getContacts(SQLiteDatabase db) {
 		// Select All Query
-		String selectQuery = "SELECT _id, `from`,`to`, id, message, t FROM messages WHERE `from` = " + DatabaseUtils.sqlEscapeString(number) + " OR `to` = " + DatabaseUtils.sqlEscapeString(number);
+		String selectQuery = "SELECT _id, name, number FROM contacts ORDER BY name ASC";
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		return cursor;

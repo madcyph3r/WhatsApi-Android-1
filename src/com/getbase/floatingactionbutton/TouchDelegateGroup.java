@@ -1,12 +1,12 @@
 package com.getbase.floatingactionbutton;
 
+import java.util.ArrayList;
+
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
-
-import java.util.ArrayList;
 
 public class TouchDelegateGroup extends TouchDelegate {
   private static final Rect USELESS_HACKY_RECT = new Rect();

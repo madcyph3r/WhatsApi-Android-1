@@ -38,7 +38,7 @@
         </activity>
         <activity
             android:name="Contacts"
-            android:label="Select Contacts"
+            android:label="Select Contact"
             android:launchMode="singleTask" >
         </activity>
         <activity

@@ -9,9 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import android.util.Log;
-
 import nl.giovanniterlingen.whatsapp.tools.BinHex;
+import android.util.Log;
 
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
