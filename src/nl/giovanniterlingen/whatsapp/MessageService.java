@@ -41,7 +41,6 @@ public class MessageService extends Service {
 	public static final String ACTION_SEND_READ = "send_read";
 	public static final String ACTION_SEND_IMAGE = "send_image";
 	public static final String ACTION_GET_AVATAR = "get_avatar";
-	public static final String ACTION_SYNC_CONTACTS = "sync_contacts";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -131,43 +130,6 @@ public class MessageService extends Service {
 					e.printStackTrace();
 				}
 			}
-			if (intent.getAction() == ACTION_SYNC_CONTACTS) {
-				ContentResolver cr = MessageService.this.getContentResolver();
-				Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI,
-						null, null, null, null);
-				if (cursor.moveToFirst()) {
-					ArrayList<String> alContacts = new ArrayList<String>();
-					do {
-						String id = cursor.getString(cursor
-								.getColumnIndex(BaseColumns._ID));
-
-						if (Integer
-								.parseInt(cursor.getString(cursor
-										.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-							Cursor mCursor = cr
-									.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-											null,
-											ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-													+ " = ?",
-											new String[] { id }, null);
-							while (mCursor.moveToNext()) {
-								String contactNumber = mCursor
-										.getString(mCursor
-												.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-								alContacts.add(contactNumber);
-								break;
-							}
-							mCursor.close();
-							try {
-								wa.sendSync(alContacts, null,
-										SyncType.DELTA_BACKGROUND, 0, true);
-							} catch (WhatsAppException e) {
-								e.printStackTrace();
-							}
-						}
-					} while (cursor.moveToNext());
-				}
-			}
 		}
 	};
 
@@ -184,7 +146,6 @@ public class MessageService extends Service {
 		filter.addAction(ACTION_SEND_READ);
 		filter.addAction(ACTION_SEND_IMAGE);
 		filter.addAction(ACTION_GET_AVATAR);
-		filter.addAction(ACTION_SYNC_CONTACTS);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;
@@ -212,6 +173,42 @@ public class MessageService extends Service {
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
 			wa.sendOfflineStatus();
+
+			ContentResolver cr = MessageService.this.getContentResolver();
+			Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI,
+					null, null, null, null);
+			if (cursor.moveToFirst()) {
+				ArrayList<String> alContacts = new ArrayList<String>();
+				do {
+					String id = cursor.getString(cursor
+							.getColumnIndex(BaseColumns._ID));
+
+					if (Integer
+							.parseInt(cursor.getString(cursor
+									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+						Cursor mCursor = cr
+								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+										null,
+										ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+												+ " = ?", new String[] { id },
+										null);
+						while (mCursor.moveToNext()) {
+							String contactNumber = mCursor
+									.getString(mCursor
+											.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+							alContacts.add(contactNumber);
+							break;
+						}
+						mCursor.close();
+						try {
+							wa.sendSync(alContacts, null,
+									SyncType.DELTA_BACKGROUND, 0, true);
+						} catch (WhatsAppException e) {
+							e.printStackTrace();
+						}
+					}
+				} while (cursor.moveToNext());
+			}
 
 			return;
 

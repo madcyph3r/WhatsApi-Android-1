@@ -141,13 +141,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 	private void startApp() throws WhatsAppException {
 
-		Intent service = new Intent(this, MessageService.class);
-		this.startService(service);
-		
-		Intent i = new Intent();
-		i.setAction(MessageService.ACTION_SYNC_CONTACTS);
-		sendBroadcast(i);
-
 		Intent intent = new Intent(this, Main.class);
 		startActivity(intent);
 		finish();
