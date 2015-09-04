@@ -1,11 +1,17 @@
 package nl.giovanniterlingen.whatsapp;
 
+import java.io.File;
+
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -32,8 +38,34 @@ public class ContactsAdapter extends CursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 
 		TextView name = (TextView) view.findViewById(R.id.display_name);
+		ImageView image = (ImageView) view.findViewById(R.id.account_photo);
+		String contact = cursor.getString(cursor
+				.getColumnIndexOrThrow("number"));
 		// Populate fields with extracted properties
 		name.setText(cursor.getString(cursor
 				.getColumnIndexOrThrow("name")));
+		
+		File file = new File(context.getFilesDir().getParent() + File.separator
+				+ "Avatars" + File.separator + contact + ".jpg");
+
+		if (!file.exists()) {
+
+			Intent i1 = new Intent();
+			i1.setAction(MessageService.ACTION_GET_AVATAR);
+			i1.putExtra("to", contact);
+			context.sendBroadcast(i1);
+
+		}
+
+		if (file.exists()) {
+
+			Bitmap avatar = BitmapHelper.getRoundedBitmap(BitmapFactory
+					.decodeFile(file.getAbsolutePath()));
+			image.setImageBitmap(avatar);
+
+		} else {
+			image.setImageDrawable(context.getResources().getDrawable(
+					R.drawable.contact_photo_sample));
+		}
 	}
 }

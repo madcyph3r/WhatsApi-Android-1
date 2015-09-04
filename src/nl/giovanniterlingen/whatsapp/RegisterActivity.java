@@ -1,20 +1,14 @@
 package nl.giovanniterlingen.whatsapp;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -34,6 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
 	EditText mEdit;
 	EditText mUser;
 	EditText mVerify;
+	EditText mCountryCode;
 	private WhatsApi wa;
 
 	@Override
@@ -50,13 +45,15 @@ public class RegisterActivity extends AppCompatActivity {
 		mEdit = (EditText) findViewById(R.id.number_text);
 		mUser = (EditText) findViewById(R.id.user_text);
 		mVerify = (EditText) findViewById(R.id.verficationcode_text);
+		mCountryCode = (EditText) findViewById(R.id.country_code);
 
 		mButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				try {
-					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
-							.toString(), "WhatsApi", mUser.getText().toString());
+					wa = new WhatsApi(RegisterActivity.this, mCountryCode
+							.getText().toString() + mEdit.getText().toString(),
+							"WhatsApi", mUser.getText().toString());
 					sendRequest(wa);
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this,
@@ -70,12 +67,10 @@ public class RegisterActivity extends AppCompatActivity {
 		rButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
-				WhatsApi wa = null;
-
 				try {
-					wa = new WhatsApi(RegisterActivity.this, mEdit.getText()
-							.toString(), "WhatsApi", mUser.getText().toString());
+					wa = new WhatsApi(RegisterActivity.this, mCountryCode
+							.getText().toString() + mEdit.getText().toString(),
+							"WhatsApi", mUser.getText().toString());
 					sendRegister(wa);
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this, e.getMessage(),
@@ -88,17 +83,19 @@ public class RegisterActivity extends AppCompatActivity {
 	}
 
 	private void sendRequest(WhatsApi wa) throws WhatsAppException,
-		JSONException, UnsupportedEncodingException {
+			JSONException, UnsupportedEncodingException {
 		JSONObject resp = wa.codeRequest("sms", null, null);
-		
+
 		if (resp.toString().contains("existing")) {
-			
+
 			String password = resp.getString("pw");
 			SharedPreferences preferences = PreferenceManager
 					.getDefaultSharedPreferences(this);
 			SharedPreferences.Editor editor = preferences.edit();
 			editor.putString("pw", password);
-			editor.putString("number", mEdit.getText().toString());
+			editor.putString("number", mCountryCode.getText().toString()
+					+ mEdit.getText().toString());
+			editor.putString("cc", mCountryCode.getText().toString());
 			editor.putString("username", mUser.getText().toString());
 
 			editor.apply();
@@ -131,7 +128,9 @@ public class RegisterActivity extends AppCompatActivity {
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString("pw", password);
-		editor.putString("number", mEdit.getText().toString());
+		editor.putString("number", mCountryCode.getText().toString()
+				+ mEdit.getText().toString());
+		editor.putString("cc", mCountryCode.getText().toString());
 		editor.putString("username", mUser.getText().toString());
 
 		editor.apply();
@@ -142,37 +141,12 @@ public class RegisterActivity extends AppCompatActivity {
 
 	private void startApp() throws WhatsAppException {
 
-		ContentResolver cr = RegisterActivity.this.getContentResolver();
-		Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
-				null, null, null);
-		if (cursor.moveToFirst()) {
-			ArrayList<String> alContacts = new ArrayList<String>();
-			do {
-				String id = cursor.getString(cursor
-						.getColumnIndex(BaseColumns._ID));
-
-				if (Integer
-						.parseInt(cursor.getString(cursor
-								.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-					Cursor mCursor = cr.query(
-							ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-							null,
-							ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-									+ " = ?", new String[] { id }, null);
-					while (mCursor.moveToNext()) {
-						String contactNumber = mCursor
-								.getString(mCursor
-										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-						alContacts.add(contactNumber);
-						break;
-					}
-					mCursor.close();
-					wa.sendSync(alContacts, null, SyncType.DELTA_BACKGROUND, 0,
-							true);
-				}
-
-			} while (cursor.moveToNext());
-		}
+		Intent service = new Intent(this, MessageService.class);
+		this.startService(service);
+		
+		Intent i = new Intent();
+		i.setAction(MessageService.ACTION_SYNC_CONTACTS);
+		sendBroadcast(i);
 
 		Intent intent = new Intent(this, Main.class);
 		startActivity(intent);

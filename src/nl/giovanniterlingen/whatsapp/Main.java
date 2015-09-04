@@ -6,11 +6,8 @@
 package nl.giovanniterlingen.whatsapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -38,15 +35,8 @@ public class Main extends Activity {
 
 		} else {
 
-			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo activeNetworkInfo = connectivityManager
-					.getActiveNetworkInfo();
-			if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-
-				Intent service = new Intent(this, MessageService.class);
-				this.startService(service);
-
-			}
+			Intent service = new Intent(this, MessageService.class);
+			this.startService(service);
 
 			Intent intent = new Intent(this, ConversationsList.class);
 			startActivity(intent);

@@ -4,18 +4,23 @@ import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.IBinder;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
+import android.provider.ContactsContract;
 import android.widget.Toast;
 
 /**
@@ -36,6 +41,7 @@ public class MessageService extends Service {
 	public static final String ACTION_SEND_READ = "send_read";
 	public static final String ACTION_SEND_IMAGE = "send_image";
 	public static final String ACTION_GET_AVATAR = "get_avatar";
+	public static final String ACTION_SYNC_CONTACTS = "sync_contacts";
 	private WhatsApi wa;
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -45,7 +51,11 @@ public class MessageService extends Service {
 				try {
 					wa.sendMessage(intent.getStringExtra("to"),
 							intent.getStringExtra("msg"));
-				} catch (WhatsAppException | InvalidKeyException | NoSuchAlgorithmException | IOException | IncompleteMessageException | InvalidMessageException | InvalidTokenException | JSONException | DecodeException e) {
+				} catch (WhatsAppException | InvalidKeyException
+						| NoSuchAlgorithmException | IOException
+						| IncompleteMessageException | InvalidMessageException
+						| InvalidTokenException | JSONException
+						| DecodeException e) {
 					Toast.makeText(MessageService.this,
 							"Caught exception: " + e.getMessage(),
 							Toast.LENGTH_SHORT).show();
@@ -97,7 +107,8 @@ public class MessageService extends Service {
 			}
 			if (intent.getAction() == ACTION_SEND_READ) {
 				try {
-					wa.sendMessageRead(intent.getStringExtra("to"), intent.getStringExtra("id"));
+					wa.sendMessageRead(intent.getStringExtra("to"),
+							intent.getStringExtra("id"));
 				} catch (WhatsAppException e) {
 					e.printStackTrace();
 				}
@@ -105,8 +116,10 @@ public class MessageService extends Service {
 			if (intent.getAction() == ACTION_SEND_IMAGE) {
 				try {
 					File image = new File(intent.getStringExtra("path"));
-					File preview = BitmapHelper.createIcon(image.getPath(), MessageService.this);
-					wa.sendMessageImage(intent.getStringExtra("to"), image, preview, "");
+					File preview = BitmapHelper.createIcon(image.getPath(),
+							MessageService.this);
+					wa.sendMessageImage(intent.getStringExtra("to"), image,
+							preview, "");
 				} catch (WhatsAppException | IOException e) {
 					e.printStackTrace();
 				}
@@ -116,6 +129,43 @@ public class MessageService extends Service {
 					wa.sendGetProfilePicture(intent.getStringExtra("to"), false);
 				} catch (WhatsAppException e) {
 					e.printStackTrace();
+				}
+			}
+			if (intent.getAction() == ACTION_SYNC_CONTACTS) {
+				ContentResolver cr = MessageService.this.getContentResolver();
+				Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI,
+						null, null, null, null);
+				if (cursor.moveToFirst()) {
+					ArrayList<String> alContacts = new ArrayList<String>();
+					do {
+						String id = cursor.getString(cursor
+								.getColumnIndex(BaseColumns._ID));
+
+						if (Integer
+								.parseInt(cursor.getString(cursor
+										.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+							Cursor mCursor = cr
+									.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+											null,
+											ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+													+ " = ?",
+											new String[] { id }, null);
+							while (mCursor.moveToNext()) {
+								String contactNumber = mCursor
+										.getString(mCursor
+												.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+								alContacts.add(contactNumber);
+								break;
+							}
+							mCursor.close();
+							try {
+								wa.sendSync(alContacts, null,
+										SyncType.DELTA_BACKGROUND, 0, true);
+							} catch (WhatsAppException e) {
+								e.printStackTrace();
+							}
+						}
+					} while (cursor.moveToNext());
 				}
 			}
 		}
@@ -134,6 +184,7 @@ public class MessageService extends Service {
 		filter.addAction(ACTION_SEND_READ);
 		filter.addAction(ACTION_SEND_IMAGE);
 		filter.addAction(ACTION_GET_AVATAR);
+		filter.addAction(ACTION_SYNC_CONTACTS);
 		registerReceiver(broadcastReceiver, filter);
 		startService();
 		return START_STICKY;
@@ -154,9 +205,9 @@ public class MessageService extends Service {
 
 			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
-			
+
 			EventManager eventManager = new EventProcessor(MessageService.this);
-			wa.setEventManager(eventManager );
+			wa.setEventManager(eventManager);
 
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
