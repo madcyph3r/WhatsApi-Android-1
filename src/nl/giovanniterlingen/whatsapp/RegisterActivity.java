@@ -1,14 +1,21 @@
 package nl.giovanniterlingen.whatsapp;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -83,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
 	}
 
 	private void sendRequest(WhatsApi wa) throws WhatsAppException,
-			JSONException, UnsupportedEncodingException {
+			JSONException, UnknownHostException, IOException {
 		JSONObject resp = wa.codeRequest("sms", null, null);
 
 		if (resp.toString().contains("existing")) {
@@ -100,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 			editor.apply();
 
-			startApp();
+			startApp(wa, password);
 
 		} else {
 
@@ -111,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
 	}
 
 	private void sendRegister(WhatsApi wa) throws JSONException,
-			WhatsAppException {
+			WhatsAppException, UnknownHostException, IOException {
 		String code = mVerify.getText().toString();
 		if (code == null || code.length() == 0) {
 			Toast.makeText(this, "No verification code was entered",
@@ -135,11 +142,50 @@ public class RegisterActivity extends AppCompatActivity {
 
 		editor.apply();
 
-		startApp();
+		startApp(wa, password);
 
 	}
 
-	private void startApp() throws WhatsAppException {
+	private void startApp(WhatsApi wa, String password)
+			throws WhatsAppException, UnknownHostException, IOException {
+
+		wa.connect();
+		wa.loginWithPassword(password);
+
+		ContentResolver cr = RegisterActivity.this.getContentResolver();
+		Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
+				null, null, null);
+		if (cursor.moveToFirst()) {
+			ArrayList<String> alContacts = new ArrayList<String>();
+			do {
+				String id = cursor.getString(cursor
+						.getColumnIndex(BaseColumns._ID));
+
+				if (Integer
+						.parseInt(cursor.getString(cursor
+								.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+					Cursor mCursor = cr.query(
+							ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+							null,
+							ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+									+ " = ?", new String[] { id }, null);
+					while (mCursor.moveToNext()) {
+						String contactNumber = mCursor
+								.getString(mCursor
+										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						alContacts.add(contactNumber);
+						break;
+					}
+					mCursor.close();
+					try {
+						wa.sendSync(alContacts, null,
+								SyncType.DELTA_BACKGROUND, 0, true);
+					} catch (WhatsAppException e) {
+						e.printStackTrace();
+					}
+				}
+			} while (cursor.moveToNext());
+		}
 
 		Intent intent = new Intent(this, Main.class);
 		startActivity(intent);

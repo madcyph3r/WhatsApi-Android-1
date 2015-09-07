@@ -2086,7 +2086,7 @@ public class WhatsApi {
 
 			addServerReceivedId(node.getAttribute("id"));
 
-				if (child.getTag().equals(ProtocolTag.SYNC.toString())) {
+				if (child.getTag().equals("sync")) {
 					// sync result
 					ProtocolNode sync = child;
 					ProtocolNode existing = sync.getChild("in");

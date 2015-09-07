@@ -4,23 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-
 import org.json.JSONException;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.IBinder;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
-import android.provider.ContactsContract;
 import android.widget.Toast;
 
 /**
@@ -173,43 +167,6 @@ public class MessageService extends Service {
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
 			wa.sendOfflineStatus();
-
-			ContentResolver cr = MessageService.this.getContentResolver();
-			Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI,
-					null, null, null, null);
-			if (cursor.moveToFirst()) {
-				ArrayList<String> alContacts = new ArrayList<String>();
-				do {
-					String id = cursor.getString(cursor
-							.getColumnIndex(BaseColumns._ID));
-
-					if (Integer
-							.parseInt(cursor.getString(cursor
-									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-						Cursor mCursor = cr
-								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-										null,
-										ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-												+ " = ?", new String[] { id },
-										null);
-						while (mCursor.moveToNext()) {
-							String contactNumber = mCursor
-									.getString(mCursor
-											.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-							alContacts.add(contactNumber);
-							break;
-						}
-						mCursor.close();
-						try {
-							wa.sendSync(alContacts, null,
-									SyncType.DELTA_BACKGROUND, 0, true);
-						} catch (WhatsAppException e) {
-							e.printStackTrace();
-						}
-					}
-				} while (cursor.moveToNext());
-			}
-
 			return;
 
 		} catch (Exception e) {
