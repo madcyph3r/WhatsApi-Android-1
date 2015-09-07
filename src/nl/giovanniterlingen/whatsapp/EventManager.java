@@ -324,6 +324,7 @@ public interface EventManager {
 
 	public abstract void fireSendMessageReceived(
 			String phone, // The user phone number including the country code.
+			String id, //The id from the message
 			String from, // The sender JID.
 			String type // Message type
 			);

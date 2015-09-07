@@ -523,7 +523,7 @@ public abstract class AbstractEventManager implements EventManager {
 	}
 
 	@Override
-	public void fireSendMessageReceived(String phone, String from, String type) {
+	public void fireSendMessageReceived(String phone, String id, String from, String type) {
 		// TODO Auto-generated method stub
 		Map<String,Object> eventData = new HashMap<String,Object>();
 		eventData.put(PHONE_NUMBER, phone);

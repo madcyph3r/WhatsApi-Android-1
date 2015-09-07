@@ -2689,12 +2689,12 @@ public class WhatsApi {
 			messageHash.put("type", "type");
 
 		messageHash.put("id", msg.getAttribute("id"));
-		messageHash.put("t", Long.toString(new Date().getTime()));
 		ProtocolNode messageNode = new ProtocolNode("receipt", messageHash,
 				null, null);
 		sendNode(messageNode);
 		eventManager.fireSendMessageReceived(phoneNumber,
-				msg.getAttribute("from"), messageHash.get("t"));
+				msg.getAttribute("id"), msg.getAttribute("from"),
+				msg.getAttribute("type"));
 	}
 
 	private byte[] readData() throws IOException {
