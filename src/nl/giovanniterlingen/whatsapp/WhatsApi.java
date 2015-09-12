@@ -1788,7 +1788,7 @@ public class WhatsApi {
 	}
 
 	byte[] base64_decode(String pwd) {
-		return Base64.decode(pwd.getBytes(), Base64.DEFAULT);
+		return Base64.decode(pwd.getBytes(), Base64.NO_WRAP);
 	}
 
 	private void processInboundData(byte[] readData)
