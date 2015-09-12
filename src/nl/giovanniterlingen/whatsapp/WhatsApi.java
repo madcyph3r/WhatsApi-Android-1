@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,8 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
-import nl.giovanniterlingen.whatsapp.events.Event;
-import nl.giovanniterlingen.whatsapp.events.EventType;
 import nl.giovanniterlingen.whatsapp.message.AudioMessage;
 import nl.giovanniterlingen.whatsapp.message.BasicMessage;
 import nl.giovanniterlingen.whatsapp.message.ImageMessage;
@@ -63,6 +62,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
@@ -105,7 +105,6 @@ public class WhatsApi {
 	private List<ProtocolNode> messageQueue = new LinkedList<ProtocolNode>();
 	private String lastId;
 	private List<ProtocolNode> outQueue = new LinkedList<ProtocolNode>();
-	private EventManager eventManager = new LoggingEventManager();
 	private int messageCounter = 0;
 	private final List<Country> countries;
 	private Map<String, Map<String, Object>> mediaQueue = new HashMap<String, Map<String, Object>>();
@@ -197,19 +196,19 @@ public class WhatsApi {
 		JSONObject response = getResponse(host, query);
 		Log.d("DEBUG", response.toString(1));
 		if (!response.getString("status").equals("ok")) {
-			eventManager.fireCodeRegisterFailed(phoneNumber,
-					response.getString("status"), response.getString("reason"),
-					"");// response.getString("retry_after"));
+			// eventManager.fireCodeRegisterFailed(phoneNumber,
+					// response.getString("status"), response.getString("reason"),
+					// "");// response.getString("retry_after"));
 			throw new WhatsAppException(
 					"An error occurred registering the registration code from WhatsApp.");
 		} else {
-			eventManager.fireCodeRegister(phoneNumber,
-					response.getString("login"), response.getString("pw"),
-					response.getString("type"),
-					response.getString("expiration"),
-					response.getString("kind"), response.getString("price"),
-					response.getString("cost"), response.getString("currency"),
-					response.getString("price_expiration"));
+			// eventManager.fireCodeRegister(phoneNumber,
+					// response.getString("login"), response.getString("pw"),
+					// response.getString("type"),
+					// response.getString("expiration"),
+					// response.getString("kind"), response.getString("price"),
+					// response.getString("cost"), response.getString("currency"),
+					// response.getString("price_expiration"));
 		}
 
 		return response;
@@ -284,36 +283,36 @@ public class WhatsApi {
 		Log.d("DEBUG", response.toString(1));
 		if (!response.getString("status").equals("ok")) {
 			if (response.getString("status").equals("sent")) {
-				eventManager.fireCodeRequest(phoneNumber, method,
-						response.getString("length"));
+				// eventManager.fireCodeRequest(phoneNumber, method,
+						// response.getString("length"));
 			} else {
 				if (!response.isNull("reason")
 						&& response.getString("reason").equals("too_recent")) {
 					String retry_after = (response.has("retry_after") ? response
 							.getString("retry_after") : null);
-					eventManager.fireCodeRequestFailedTooRecent(phoneNumber,
-							method, response.getString("reason"), retry_after);
+					// eventManager.fireCodeRequestFailedTooRecent(phoneNumber,
+							// method, response.getString("reason"), retry_after);
 					throw new WhatsAppException(
 							"Code already sent. Retry after " + retry_after
 									+ " seconds");
 				} else {
-					eventManager.fireCodeRequestFailed(phoneNumber, method,
-							response.getString("reason"), (response
-									.has("param") ? response.getString("param")
-									: null));
+					// eventManager.fireCodeRequestFailed(phoneNumber, method,
+							// response.getString("reason"), (response
+									// .has("param") ? response.getString("param")
+									// : null));
 					throw new WhatsAppException(
 							"There was a problem trying to request the code. Status="
 									+ response.getString("status"));
 				}
 			}
 		} else {
-			eventManager.fireCodeRegister(phoneNumber,
-					response.getString("login"), response.getString("pw"),
-					response.getString("type"),
-					response.getString("expiration"),
-					response.getString("kind"), response.getString("price"),
-					response.getString("cost"), response.getString("currency"),
-					response.getString("price_expiration"));
+			// eventManager.fireCodeRegister(phoneNumber,
+					// response.getString("login"), response.getString("pw"),
+					// response.getString("type"),
+					// response.getString("expiration"),
+					// response.getString("kind"), response.getString("price"),
+					// response.getString("cost"), response.getString("currency"),
+					// response.getString("price_expiration"));
 		}
 		return response;
 	}
@@ -378,7 +377,7 @@ public class WhatsApi {
 				Log.e("ERROR", "Exception while disconnecting", e);
 			}
 		}
-		eventManager.fireDisconnect(phoneNumber, socket);
+		// eventManager.fireDisconnect(phoneNumber, socket);
 	}
 
 	/**
@@ -1390,7 +1389,7 @@ public class WhatsApi {
 		ProtocolNode node = new ProtocolNode("iq", map, nodes, null);
 		try {
 			sendNode(node);
-			eventManager.fireSendStatusUpdate(phoneNumber, txt);
+			// eventManager.fireSendStatusUpdate(phoneNumber, txt);
 		} catch (Exception e) {
 			throw new WhatsAppException("Failed to update status");
 		}
@@ -1664,7 +1663,7 @@ public class WhatsApi {
 		presence.put("name", name);
 		ProtocolNode node = new ProtocolNode("presence", presence, null, null);
 		sendNode(node);
-		eventManager.fireSendPresence(phoneNumber, type, presence.get("name"));
+		// eventManager.fireSendPresence(phoneNumber, type, presence.get("name"));
 	}
 
 	/**
@@ -1909,16 +1908,16 @@ public class WhatsApi {
 			from = parseJID(node.getAttribute("participant"));
 		}
 		if (node.hasChild("composing")) {
-			Event event = new Event(EventType.MESSAGE_COMPOSING, phoneNumber);
-			event.setGroupId(groupId);
-			event.setFrom(from);
-			eventManager.fireEvent(event);
+			// Event event = new Event(EventType.MESSAGE_COMPOSING, phoneNumber);
+			// event.setGroupId(groupId);
+			// event.setFrom(from);
+			// eventManager.fireEvent(event);
 		}
 		if (node.hasChild("paused")) {
-			Event event = new Event(EventType.MESSAGE_PAUSED, phoneNumber);
-			event.setGroupId(groupId);
-			event.setFrom(from);
-			eventManager.fireEvent(event);
+			// Event event = new Event(EventType.MESSAGE_PAUSED, phoneNumber);
+			// event.setGroupId(groupId);
+			// event.setFrom(from);
+			// eventManager.fireEvent(event);
 		}
 	}
 
@@ -1944,22 +1943,22 @@ public class WhatsApi {
 			String groupId = parseJID(node.getAttribute("from"));
 
 			if (node.hasChild("create")) {
-				Event event = new Event(EventType.GROUP_CREATE, phoneNumber);
-				event.setData(groupList);
-				event.setGroupId(groupId);
-				eventManager.fireEvent(event);
+				// Event event = new Event(EventType.GROUP_CREATE, phoneNumber);
+				// event.setData(groupList);
+				// event.setGroupId(groupId);
+				// eventManager.fireEvent(event);
 			}
 			if (node.hasChild("add")) {
-				Event event = new Event(EventType.GROUP_ADD, phoneNumber);
-				event.setData(groupList);
-				event.setGroupId(groupId);
-				eventManager.fireEvent(event);
+				// Event event = new Event(EventType.GROUP_ADD, phoneNumber);
+				// event.setData(groupList);
+				// event.setGroupId(groupId);
+				// eventManager.fireEvent(event);
 			}
 			if (node.hasChild("remove")) {
-				Event event = new Event(EventType.GROUP_REMOVE, phoneNumber);
-				event.setData(groupList);
-				event.setGroupId(groupId);
-				eventManager.fireEvent(event);
+				// Event event = new Event(EventType.GROUP_REMOVE, phoneNumber);
+				// event.setData(groupList);
+				// event.setGroupId(groupId);
+				// eventManager.fireEvent(event);
 			}
 			if (node.hasChild("participant")) {
 
@@ -2011,12 +2010,12 @@ public class WhatsApi {
 	private void processReceipt(ProtocolNode node) throws WhatsAppException {
 		Log.d("DEBUG", "Processing RECEIPT");
 		addServerReceivedId(node.getAttribute("id"));
-		eventManager.fireMessageReceivedClient(
-				phoneNumber,
-				node.getAttribute("from"),
-				node.getAttribute("id"),
-				(node.getAttribute("type") == null ? "" : node
-						.getAttribute("type")), node.getAttribute("t"));
+		// eventManager.fireMessageReceivedClient(
+				// phoneNumber,
+				// node.getAttribute("from"),
+				// node.getAttribute("id"),
+				// (node.getAttribute("type") == null ? "" : node
+						//.getAttribute("type")), node.getAttribute("t"));
 
 		sendAck(node, "receipt");
 	}
@@ -2075,7 +2074,7 @@ public class WhatsApi {
 
 		if (node.getAttribute("type").equals("get")
 				&& node.getAttribute("xmlns").equals("urn:xmpp:ping")) {
-			eventManager.firePing(phoneNumber, node.getAttribute("id"));
+			// eventManager.firePing(phoneNumber, node.getAttribute("id"));
 			sendPong(node.getAttribute("id"));
 		}
 		if (node.getAttribute("type").equals("result")) {
@@ -2130,17 +2129,17 @@ public class WhatsApi {
 							sync.getAttribute("sid"), existingUsers,
 							failedNumbers);
 					Log.d("DEBUG", "Sync result: " + result.toString());
-					Event event = new Event(EventType.SYNC_RESULTS, phoneNumber);
-					event.setEventSpecificData(result);
+					// Event event = new Event(EventType.SYNC_RESULTS, phoneNumber);
+					// event.setEventSpecificData(result);
 
-					eventManager.fireEvent(event);
+					// eventManager.fireEvent(event);
 				}
 				if (child.getTag().equals(ProtocolTag.GROUP.toString())) {
-					Event event = new Event(EventType.GET_GROUPINFO,
-							phoneNumber);
-					event.setData(node.getChildren());
-					event.setGroupId(child.getAttribute("id"));
-					eventManager.fireEvent(event);
+					// Event event = new Event(EventType.GET_GROUPINFO,
+							// phoneNumber);
+					// event.setData(node.getChildren());
+					// event.setGroupId(child.getAttribute("id"));
+					// eventManager.fireEvent(event);
 
 				}
 				messageQueue.add(node);
@@ -2151,14 +2150,78 @@ public class WhatsApi {
 				for (ProtocolNode c : child.getChildren()) {
 					props.put(c.getAttribute("name"), c.getAttribute("value"));
 				}
-				eventManager.fireGetServerProperties(phoneNumber,
-						child.getAttribute("version"), props);
+				// eventManager.fireGetServerProperties(phoneNumber,
+						// child.getAttribute("version"), props);
 			}
 			if (child != null && child.getTag().equals("picture")) {
-				eventManager.fireGetProfilePicture(phoneNumber,
-						node.getAttribute("from"), child.getAttribute("type"),
-						child.getData());
+				// eventManager.fireGetProfilePicture(phoneNumber,
+				// node.getAttribute("from"), child.getAttribute("type"),
+				// child.getData());
+
+				if (node.getAttribute("type").equals("preview")) {
+
+					String filename = node.getAttribute("from") + ".jpg";
+
+					File avatarDir = new File(mContext.getFilesDir().getParent()
+							+ File.separator + "Avatars");
+					if (!avatarDir.exists()) {
+						avatarDir.mkdir();
+					}
+
+					String file = mContext.getFilesDir().getParent()
+							+ File.separator + "Avatars" + File.separator
+							+ filename;
+
+					FileOutputStream out;
+					try {
+						out = new FileOutputStream(file);
+						if (out != null) {
+
+							byte[] content = Arrays.copyOfRange(child.getData(),
+									27, child.getData().length - 0);
+							out.write(content);
+							out.close();
+
+							Intent i = new Intent();
+							i.setAction(Conversations.SET_PROFILE_PICTURE);
+							i.putExtra("from", node.getAttribute("from"));
+							mContext.sendBroadcast(i);
+
+						}
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				else {
+
+					String filename = node.getAttribute("from") + ".jpg";
+					String file = Environment.getExternalStorageDirectory()
+							.getAbsolutePath()
+							+ File.separator
+							+ "WhatsApi"
+							+ File.separator + filename;
+					FileOutputStream out;
+					try {
+						out = new FileOutputStream(file);
+						byte[] content = Arrays.copyOfRange(child.getData(), 27,
+								child.getData().length - 0);
+						out.write(content);
+						out.close();
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
+			
 			if (child != null && child.getTag().equals("media")) {
 				processUploadResponse(node);
 			}
@@ -2176,36 +2239,36 @@ public class WhatsApi {
 				}
 				if (node.nodeIdContains("creategroup")) {
 					groupId = child.getAttribute("id");
-					Event event = new Event(EventType.GROUP_CREATE, phoneNumber);
-					event.setData(groupList);
-					event.setGroupId(groupId);
-					eventManager.fireEvent(event);
+					// Event event = new Event(EventType.GROUP_CREATE, phoneNumber);
+					// event.setData(groupList);
+					// event.setGroupId(groupId);
+					// eventManager.fireEvent(event);
 				}
 				if (node.nodeIdContains("endgroup")) {
 					groupId = child.getChild(0).getAttribute("id");
-					Event event = new Event(EventType.GROUP_END, phoneNumber);
-					event.setData(groupList);
-					event.setGroupId(groupId);
-					eventManager.fireEvent(event);
+					// Event event = new Event(EventType.GROUP_END, phoneNumber);
+					// event.setData(groupList);
+					// event.setGroupId(groupId);
+					// eventManager.fireEvent(event);
 				}
 				if (node.nodeIdContains("getgroups")) {
-					Event event = new Event(EventType.GET_GROUPS, phoneNumber);
-					event.setData(groupList);
-					eventManager.fireEvent(event);
+					// Event event = new Event(EventType.GET_GROUPS, phoneNumber);
+					// event.setData(groupList);
+					// eventManager.fireEvent(event);
 
 				}
 				if (node.nodeIdContains("getgroupinfo")) {
-					Event event = new Event(EventType.GET_GROUPINFO,
-							phoneNumber);
-					event.setData(groupList);
-					eventManager.fireEvent(event);
+					// Event event = new Event(EventType.GET_GROUPINFO,
+							// phoneNumber);
+					// event.setData(groupList);
+					// eventManager.fireEvent(event);
 				}
 				if (node.nodeIdContains("getgroupparticipants")) {
 					groupId = parseJID(node.getAttribute("from"));
-					Event event = new Event(EventType.GET_GROUPS, phoneNumber);
-					event.setData(groupList);
-					event.setGroupId(groupId);
-					eventManager.fireEvent(event);
+					// Event event = new Event(EventType.GET_GROUPS, phoneNumber);
+					// event.setData(groupList);
+					// event.setGroupId(groupId);
+					// eventManager.fireEvent(event);
 				}
 
 			}
@@ -2249,8 +2312,8 @@ public class WhatsApi {
 		Map<String, Object> messageNode = mediaQueue.get(id);
 		if (messageNode == null) {
 			// message not found, can't send!
-			eventManager.fireMediaUploadFailed(phoneNumber, id, node,
-					messageNode, "Message node not found in queue");
+			// eventManager.fireMediaUploadFailed(phoneNumber, id, node,
+					// messageNode, "Message node not found in queue");
 			return false;
 		}
 
@@ -2270,8 +2333,8 @@ public class WhatsApi {
 
 			if (json == null) {
 				// failed upload
-				eventManager.fireMediaUploadFailed(phoneNumber, id, node,
-						messageNode, "Failed to push file to server");
+				// eventManager.fireMediaUploadFailed(phoneNumber, id, node,
+						// messageNode, "Failed to push file to server");
 				return false;
 			}
 
@@ -2317,8 +2380,8 @@ public class WhatsApi {
 		// $this->sendMessageNode($to, $mediaNode);
 		// }
 		sendMessageNode(to, mediaNode, null);
-		eventManager.fireMediaMessageSent(phoneNumber, to, id, filetype, url,
-				filename, filesize, icon);
+		// eventManager.fireMediaMessageSent(phoneNumber, to, id, filetype, url,
+				// filename, filesize, icon);
 		return true;
 	}
 
@@ -2348,7 +2411,7 @@ public class WhatsApi {
 		ProtocolNode messageNode = new ProtocolNode("iq", messageHash, null,
 				null);
 		sendNode(messageNode);
-		eventManager.fireSendPong(phoneNumber, msgid);
+		// eventManager.fireSendPong(phoneNumber, msgid);
 	}
 
 	private void file_put_contents(String string, Object challengeData2) {
@@ -2380,9 +2443,14 @@ public class WhatsApi {
 		String last = node.getAttribute("last");
 		if (from != null && type != null) {
 			if (from.startsWith(phoneNumber) && !from.contains("-")) {
-				eventManager.firePresence(phoneNumber, from);
+				// eventManager.firePresence(phoneNumber, from);
 			} else {
-				eventManager.firePresenceUnavailable(phoneNumber, from, last);
+				// eventManager.firePresenceUnavailable(phoneNumber, from, last);
+				Intent i = new Intent();
+				i.setAction(Conversations.SET_LAST_SEEN);
+				i.putExtra("from", from);
+				i.putExtra("sec", last);
+				mContext.sendBroadcast(i);
 			}
 		}
 	}
@@ -2429,9 +2497,9 @@ public class WhatsApi {
 		String[] foo = node.getAttribute("from").split("@");
 		if (foo.length > 1 && foo[1].equals("s.us")
 				&& node.getChild("body") != null) {
-			eventManager.fireGetStatus(phoneNumber, node.getAttribute("from"),
-					node.getAttribute("type"), node.getAttribute("id"),
-					node.getAttribute("t"), node.getChild("body").getData());
+			// eventManager.fireGetStatus(phoneNumber, node.getAttribute("from"),
+					// node.getAttribute("type"), node.getAttribute("id"),
+					// node.getAttribute("t"), node.getChild("body").getData());
 		}
 		if (node.hasChild("x") && lastId.equals(node.getAttribute("id"))) {
 			sendNextMessage();
@@ -2450,95 +2518,95 @@ public class WhatsApi {
 			String author = node.getAttribute("author");
 			if (author == null || author.length() < 1) {
 				// private chat message
-				eventManager.fireGetMessage(phoneNumber, node
-						.getAttribute("from"), node.getAttribute("id"), node
-						.getAttribute("type"), node.getAttribute("t"), node
-						.getChild("notify").getAttribute("name"), node
-						.getChild("body").getData());
+				// eventManager.fireGetMessage(phoneNumber, node
+						// .getAttribute("from"), node.getAttribute("id"), node
+						// .getAttribute("type"), node.getAttribute("t"), node
+						// .getChild("notify").getAttribute("name"), node
+						// .getChild("body").getData());
 			} else {
 				// group chat message
-				eventManager.fireGetGroupMessage(phoneNumber, node
-						.getAttribute("from"), author, node.getAttribute("id"),
-						node.getAttribute("type"), node.getAttribute("t"), node
-								.getChild("notify").getAttribute("name"), node
-								.getChild("body").getData());
+				// eventManager.fireGetGroupMessage(phoneNumber, node
+						// .getAttribute("from"), author, node.getAttribute("id"),
+						// node.getAttribute("type"), node.getAttribute("t"), node
+								// .getChild("notify").getAttribute("name"), node
+								// .getChild("body").getData());
 			}
 		}
 		if (node.hasChild("notification")
 				&& node.getChild("notification").getAttribute("type")
 						.equals("picture")) {
 			if (node.getChild("notification").hasChild("set")) {
-				eventManager.fireProfilePictureChanged(phoneNumber,
-						node.getAttribute("from"), node.getAttribute("id"),
-						node.getAttribute("t"));
+				// eventManager.fireProfilePictureChanged(phoneNumber,
+						// node.getAttribute("from"), node.getAttribute("id"),
+						// node.getAttribute("t"));
 			} else if (node.getChild("notification").hasChild("delete")) {
-				eventManager.fireProfilePictureDeleted(phoneNumber,
-						node.getAttribute("from"), node.getAttribute("id"),
-						node.getAttribute("t"));
+				// eventManager.fireProfilePictureDeleted(phoneNumber,
+						// node.getAttribute("from"), node.getAttribute("id"),
+						// node.getAttribute("t"));
 			}
 		}
 		if (node.getChild("notify") != null
 				&& node.getChild(0).getAttribute("name") != null
 				&& node.getChild("media") != null) {
 			if (node.getChild(2).getAttribute("type") == "image") {
-				eventManager.fireGetImage(phoneNumber, node
-						.getAttribute("from"), node.getAttribute("id"), node
-						.getAttribute("type"), node.getAttribute("t"), node
-						.getChild(0).getAttribute("name"), node.getChild(2)
-						.getAttribute("size"),
-						node.getChild(2).getAttribute("url"), node.getChild(2)
-								.getAttribute("file"), node.getChild(2)
-								.getAttribute("mimetype"), node.getChild(2)
-								.getAttribute("filehash"), node.getChild(2)
-								.getAttribute("width"), node.getChild(2)
-								.getAttribute("height"), node.getChild(2)
-								.getData());
+				// eventManager.fireGetImage(phoneNumber, node
+						// .getAttribute("from"), node.getAttribute("id"), node
+						// .getAttribute("type"), node.getAttribute("t"), node
+						// .getChild(0).getAttribute("name"), node.getChild(2)
+						// .getAttribute("size"),
+						// node.getChild(2).getAttribute("url"), node.getChild(2)
+								// .getAttribute("file"), node.getChild(2)
+								// .getAttribute("mimetype"), node.getChild(2)
+								// .getAttribute("filehash"), node.getChild(2)
+								// .getAttribute("width"), node.getChild(2)
+								// .getAttribute("height"), node.getChild(2)
+								// .getData());
 			}
 			if (node.getChild(2).getAttribute("type") == "video") {
-				eventManager.fireGetVideo(phoneNumber, node
-						.getAttribute("from"), node.getAttribute("id"), node
-						.getAttribute("type"), node.getAttribute("t"), node
-						.getChild(0).getAttribute("name"), node.getChild(2)
-						.getAttribute("url"),
-						node.getChild(2).getAttribute("file"), node.getChild(2)
-								.getAttribute("size"), node.getChild(2)
-								.getAttribute("mimetype"), node.getChild(2)
-								.getAttribute("filehash"), node.getChild(2)
-								.getAttribute("duration"), node.getChild(2)
-								.getAttribute("vcodec"), node.getChild(2)
-								.getAttribute("acodec"), node.getChild(2)
-								.getData());
+				// eventManager.fireGetVideo(phoneNumber, node
+						// .getAttribute("from"), node.getAttribute("id"), node
+						// .getAttribute("type"), node.getAttribute("t"), node
+						// .getChild(0).getAttribute("name"), node.getChild(2)
+						// .getAttribute("url"),
+						// node.getChild(2).getAttribute("file"), node.getChild(2)
+								// .getAttribute("size"), node.getChild(2)
+								// .getAttribute("mimetype"), node.getChild(2)
+								// .getAttribute("filehash"), node.getChild(2)
+								// .getAttribute("duration"), node.getChild(2)
+								// .getAttribute("vcodec"), node.getChild(2)
+								// .getAttribute("acodec"), node.getChild(2)
+								// .getData());
 			} else if (node.getChild(2).getAttribute("type") == "audio") {
-				eventManager.fireGetAudio(phoneNumber, node
-						.getAttribute("from"), node.getAttribute("id"), node
-						.getAttribute("type"), node.getAttribute("t"), node
-						.getChild(0).getAttribute("name"), node.getChild(2)
-						.getAttribute("size"),
-						node.getChild(2).getAttribute("url"), node.getChild(2)
-								.getAttribute("file"), node.getChild(2)
-								.getAttribute("mimetype"), node.getChild(2)
-								.getAttribute("filehash"), node.getChild(2)
-								.getAttribute("duration"), node.getChild(2)
-								.getAttribute("acodec"));
+				// eventManager.fireGetAudio(phoneNumber, node
+						// .getAttribute("from"), node.getAttribute("id"), node
+						// .getAttribute("type"), node.getAttribute("t"), node
+						// .getChild(0).getAttribute("name"), node.getChild(2)
+						// .getAttribute("size"),
+						// node.getChild(2).getAttribute("url"), node.getChild(2)
+								// .getAttribute("file"), node.getChild(2)
+								// .getAttribute("mimetype"), node.getChild(2)
+								// .getAttribute("filehash"), node.getChild(2)
+								// .getAttribute("duration"), node.getChild(2)
+								// .getAttribute("acodec"));
 			}
 			if (node.getChild(2).getAttribute("type") == "vcard") {
-				eventManager.fireGetvCard(phoneNumber, node
-						.getAttribute("from"), node.getAttribute("id"), node
-						.getAttribute("type"), node.getAttribute("t"), node
-						.getChild(0).getAttribute("name"), node.getChild(2)
-						.getChild(0).getAttribute("name"), node.getChild(2)
-						.getChild(0).getData());
+				// eventManager.fireGetvCard(phoneNumber, node
+						// .getAttribute("from"), node.getAttribute("id"), node
+						// .getAttribute("type"), node.getAttribute("t"), node
+						// .getChild(0).getAttribute("name"), node.getChild(2)
+						// .getChild(0).getAttribute("name"), node.getChild(2)
+						// .getChild(0).getData());
 			}
 			if (node.getChild(2).getAttribute("type") == "location") {
 				String url = node.getChild(2).getAttribute("url");
 				String name = node.getChild(2).getAttribute("name");
-				eventManager.fireGetLocation(phoneNumber, node
-						.getAttribute("from"), node.getAttribute("id"), node
-						.getAttribute("type"), node.getAttribute("t"), node
-						.getChild(0).getAttribute("name"), name,
-						node.getChild(2).getAttribute("longitude"), node
-								.getChild(2).getAttribute("latitude"), url,
-						node.getChild(2).getData());
+				// eventManager.fireGetLocation(phoneNumber, node
+						// .getAttribute("from"), node.getAttribute("id"), node
+						// .getAttribute("type"), node.getAttribute("t"), node
+						// .getChild(0).getAttribute("name"), name,
+						// node.getChild(2).getAttribute("longitude"), node
+								// .getChild(2).getAttribute("latitude"), url,
+						// node.getChild(2).getData());
 			}
 		}
 		if (node.getChild("x") != null) {
@@ -2548,23 +2616,23 @@ public class WhatsApi {
 							+ node.getAttribute("id"));
 
 			addServerReceivedId(node.getAttribute("id"));
-			eventManager.fireMessageReceivedServer(phoneNumber,
-					node.getAttribute("from"), node.getAttribute("id"),
-					node.getAttribute("type"), node.getAttribute("t"));
+			// eventManager.fireMessageReceivedServer(phoneNumber,
+					// node.getAttribute("from"), node.getAttribute("id"),
+					// node.getAttribute("type"), node.getAttribute("t"));
 		}
 		if (node.getChild("received") != null) {
-			eventManager.fireMessageReceivedClient(phoneNumber,
-					node.getAttribute("from"), node.getAttribute("id"),
-					node.getAttribute("type"), node.getAttribute("t"));
+			// eventManager.fireMessageReceivedClient(phoneNumber,
+					// node.getAttribute("from"), node.getAttribute("id"),
+					// node.getAttribute("type"), node.getAttribute("t"));
 		}
 		if (node.getAttribute("type").equals("subject")) {
 			Log.d("DEBUG", node.toString());
 			String[] reset_from = node.getAttribute("from").split("@");
 			String[] reset_author = node.getAttribute("author").split("@");
-			eventManager.fireGetGroupsSubject(phoneNumber, reset_from, node
-					.getAttribute("t"), reset_author, reset_author, node
-					.getChild(0).getAttribute("name"), node.getChild(2)
-					.getData());
+			// eventManager.fireGetGroupsSubject(phoneNumber, reset_from, node
+					// .getAttribute("t"), reset_author, reset_author, node
+					// .getChild(0).getAttribute("name"), node.getChild(2)
+					// .getData());
 		}
 	}
 
@@ -2692,9 +2760,9 @@ public class WhatsApi {
 		ProtocolNode messageNode = new ProtocolNode("receipt", messageHash,
 				null, null);
 		sendNode(messageNode);
-		eventManager.fireSendMessageReceived(phoneNumber,
-				msg.getAttribute("id"), msg.getAttribute("from"),
-				msg.getAttribute("type"));
+		// eventManager.fireSendMessageReceived(phoneNumber,
+				// msg.getAttribute("id"), msg.getAttribute("from"),
+				// msg.getAttribute("type"));
 	}
 
 	private byte[] readData() throws IOException {
@@ -2971,8 +3039,8 @@ public class WhatsApi {
 		ProtocolNode messageNode = new ProtocolNode("message", messageHash,
 				list, null);
 		sendNode(messageNode);
-		eventManager.fireSendMessage(phoneNumber, getJID(to),
-				messageHash.get("id"), node);
+		// eventManager.fireSendMessage(phoneNumber, getJID(to),
+				// messageHash.get("id"), node);
 		return lastSendMsgId = messageHash.get("id");
 	}
 
@@ -3075,14 +3143,6 @@ public class WhatsApi {
 
 	public String getPhoneNumber() {
 		return phoneNumber;
-	}
-
-	public EventManager getEventManager() {
-		return eventManager;
-	}
-
-	public void setEventManager(EventManager eventManager) {
-		this.eventManager = eventManager;
 	}
 
 	public void setChallengeData(String challenge) {

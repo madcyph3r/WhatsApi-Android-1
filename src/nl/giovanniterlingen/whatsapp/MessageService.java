@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+
 import org.json.JSONException;
 
 import android.app.Service;
@@ -160,9 +161,6 @@ public class MessageService extends Service {
 
 			MessageProcessor mp = new MessageProcessing(MessageService.this);
 			wa.setNewMessageBind(mp);
-
-			EventManager eventManager = new EventProcessor(MessageService.this);
-			wa.setEventManager(eventManager);
 
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
