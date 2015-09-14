@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
+import android.widget.ImageView;
 
 public class InfoActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -15,7 +13,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info);
 
-        FloatingActionButton mChangelogFAB = (FloatingActionButton) findViewById(R.id.changelogFAB);
+        ImageView mChangelogFAB = (ImageView) findViewById(R.id.changelogFAB);
         mChangelogFAB.setOnClickListener(this);
         mChangelogFAB.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

@@ -28,8 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
 /**
  * Android adaptation from the PHP WhatsAPI by WHAnonymous {@link https
  * ://github.com/WHAnonymous/Chat-API/}
@@ -41,7 +39,7 @@ public class ConversationsList extends AppCompatActivity {
 	public static final String SET_NOTIFY = "set_notify";
 	public static final IntentFilter INTENT_FILTER = createIntentFilter();
 
-	FloatingActionButton cButton;
+	ImageView cButton;
 	private setNotifyReceiver setNotifyReceiver = new setNotifyReceiver();
 	private DrawerLayout mDrawerLayout;
 	private LinearLayout searchContainer;
@@ -103,8 +101,7 @@ public class ConversationsList extends AppCompatActivity {
 		TextView mUsername = (TextView) findViewById(R.id.username);
 		mUsername.setText(preferences.getString("username", ""));
 
-		cButton = (FloatingActionButton) findViewById(R.id.contacts_button);
-
+		cButton = (ImageView) findViewById(R.id.contacts_button);
 		cButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -112,7 +109,6 @@ public class ConversationsList extends AppCompatActivity {
 				Intent intent = new Intent(ConversationsList.this,
 						Contacts.class);
 				startActivity(intent);
-				;
 
 			}
 		});
