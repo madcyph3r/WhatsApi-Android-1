@@ -42,20 +42,10 @@ public class ContactsAdapter extends CursorAdapter {
 		String contact = cursor.getString(cursor
 				.getColumnIndexOrThrow("number"));
 		// Populate fields with extracted properties
-		name.setText(cursor.getString(cursor
-				.getColumnIndexOrThrow("name")));
-		
+		name.setText(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+
 		File file = new File(context.getFilesDir().getParent() + File.separator
 				+ "Avatars" + File.separator + contact + ".jpg");
-
-		if (!file.exists()) {
-
-			Intent i1 = new Intent();
-			i1.setAction(MessageService.ACTION_GET_AVATAR);
-			i1.putExtra("to", contact);
-			context.sendBroadcast(i1);
-
-		}
 
 		if (file.exists()) {
 
@@ -66,6 +56,11 @@ public class ContactsAdapter extends CursorAdapter {
 		} else {
 			image.setImageDrawable(context.getResources().getDrawable(
 					R.drawable.contact_photo_sample));
+
+			Intent i = new Intent();
+			i.setAction(MessageService.ACTION_GET_AVATAR);
+			i.putExtra("to", contact);
+			context.sendBroadcast(i);
 		}
 	}
 }

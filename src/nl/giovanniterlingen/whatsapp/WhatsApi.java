@@ -135,6 +135,7 @@ public class WhatsApi {
 			throw new WhatsAppException(e);
 		}
 		this.loginStatus = LoginStatus.DISCONNECTED_STATUS;
+		this.processor = new MessageProcessing(mContext);
 		countries = readCountries();
 	}
 
@@ -1407,16 +1408,6 @@ public class WhatsApi {
 	}
 
 	/**
-	 * Sets the bind of the new message.
-	 * 
-	 * @throws WhatsAppException
-	 */
-	public void setNewMessageBind(MessageProcessor processor)
-			throws WhatsAppException {
-		this.processor = processor;
-	}
-
-	/**
 	 * Upload file to WhatsApp servers.
 	 * 
 	 * @return String Return the remote url or null on failure.
@@ -2157,10 +2148,6 @@ public class WhatsApi {
 				// eventManager.fireGetProfilePicture(phoneNumber,
 				// node.getAttribute("from"), child.getAttribute("type"),
 				// child.getData());
-
-				String filename = node.getAttribute("from") + ".jpg";
-
-				if (node.getAttribute("type").equals("preview")) {
 					File avatarDir = new File(mContext.getFilesDir().getParent()
 							+ File.separator + "Avatars");
 					if (!avatarDir.exists()) {
@@ -2168,7 +2155,7 @@ public class WhatsApi {
 					}
 					String file = mContext.getFilesDir().getParent()
 							+ File.separator + "Avatars" + File.separator
-							+ filename;
+							+ node.getAttribute("from") + ".jpg";
 					FileOutputStream out;
 					try {
 						out = new FileOutputStream(file);
@@ -2188,33 +2175,6 @@ public class WhatsApi {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				} else {
-					File externalDir = new File(Environment
-							.getExternalStorageDirectory().getAbsolutePath()
-							+ File.separator + "WhatsApi");
-					if (!externalDir.exists()) {
-						externalDir.mkdir();
-					}
-					String file = Environment.getExternalStorageDirectory()
-							.getAbsolutePath()
-							+ File.separator
-							+ "WhatsApi"
-							+ File.separator + filename;
-					FileOutputStream out;
-					try {
-						out = new FileOutputStream(file);
-						if (out != null) {
-							out.write(child.getData());
-							out.close();
-						}
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
 			}
 			if (child != null && child.getTag().equals("media")) {
 				processUploadResponse(node);
@@ -2474,11 +2434,11 @@ public class WhatsApi {
 		sendNode(node);
 	}
 
-	private void processMessage(final ProtocolNode node) throws IOException,
+	private void processMessage(ProtocolNode node) throws IOException,
 			WhatsAppException {
 		Log.d("DEBUG", "processMessage:");
 		messageQueue.add(node);
-		
+
 		// do not send received confirmation if sender is yourself
 		if (node.getAttribute("type").equals("text")) {
 			sendMessageReceived(node, "read");
@@ -2533,10 +2493,18 @@ public class WhatsApi {
 				// eventManager.fireProfilePictureChanged(phoneNumber,
 						// node.getAttribute("from"), node.getAttribute("id"),
 						// node.getAttribute("t"));
+				Intent i = new Intent();
+				i.setAction(MessageService.ACTION_GET_AVATAR);
+				i.putExtra("to", node.getAttribute("from"));
+				mContext.sendBroadcast(i);
 			} else if (node.getChild("notification").hasChild("delete")) {
 				// eventManager.fireProfilePictureDeleted(phoneNumber,
 						// node.getAttribute("from"), node.getAttribute("id"),
 						// node.getAttribute("t"));
+				File preview = new File(mContext.getFilesDir().getParent()
+						+ File.separator + "Avatars" + File.separator
+						+ node.getAttribute("from") + ".jpg");
+				preview.delete();
 			}
 		}
 		if (node.getChild("notify") != null

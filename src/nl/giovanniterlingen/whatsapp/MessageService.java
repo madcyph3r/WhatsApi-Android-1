@@ -159,13 +159,9 @@ public class MessageService extends Service {
 					"number", ""), "WhatsApi", preferences.getString(
 					"username", ""));
 
-			MessageProcessor mp = new MessageProcessing(MessageService.this);
-			wa.setNewMessageBind(mp);
-
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));
 			wa.sendOfflineStatus();
-			return;
 
 		} catch (Exception e) {
 			Toast.makeText(MessageService.this,
@@ -173,7 +169,6 @@ public class MessageService extends Service {
 					.show();
 			e.printStackTrace();
 			wa.disconnect();
-			return;
 		}
 	}
 
