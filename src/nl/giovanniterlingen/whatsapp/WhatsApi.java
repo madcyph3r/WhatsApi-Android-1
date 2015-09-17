@@ -2158,35 +2158,54 @@ public class WhatsApi {
 				// node.getAttribute("from"), child.getAttribute("type"),
 				// child.getData());
 
+				String filename = node.getAttribute("from") + ".jpg";
+
 				if (node.getAttribute("type").equals("preview")) {
-
-					String filename = node.getAttribute("from") + ".jpg";
-
 					File avatarDir = new File(mContext.getFilesDir().getParent()
 							+ File.separator + "Avatars");
 					if (!avatarDir.exists()) {
 						avatarDir.mkdir();
 					}
-
 					String file = mContext.getFilesDir().getParent()
 							+ File.separator + "Avatars" + File.separator
 							+ filename;
-
 					FileOutputStream out;
 					try {
 						out = new FileOutputStream(file);
 						if (out != null) {
-
-							byte[] content = Arrays.copyOfRange(child.getData(),
-									27, child.getData().length - 0);
-							out.write(content);
+							out.write(child.getData());
 							out.close();
 
 							Intent i = new Intent();
 							i.setAction(Conversations.SET_PROFILE_PICTURE);
 							i.putExtra("from", node.getAttribute("from"));
 							mContext.sendBroadcast(i);
-
+						}
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					File externalDir = new File(Environment
+							.getExternalStorageDirectory().getAbsolutePath()
+							+ File.separator + "WhatsApi");
+					if (!externalDir.exists()) {
+						externalDir.mkdir();
+					}
+					String file = Environment.getExternalStorageDirectory()
+							.getAbsolutePath()
+							+ File.separator
+							+ "WhatsApi"
+							+ File.separator + filename;
+					FileOutputStream out;
+					try {
+						out = new FileOutputStream(file);
+						if (out != null) {
+							out.write(child.getData());
+							out.close();
 						}
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -2196,32 +2215,7 @@ public class WhatsApi {
 						e.printStackTrace();
 					}
 				}
-
-				else {
-
-					String filename = node.getAttribute("from") + ".jpg";
-					String file = Environment.getExternalStorageDirectory()
-							.getAbsolutePath()
-							+ File.separator
-							+ "WhatsApi"
-							+ File.separator + filename;
-					FileOutputStream out;
-					try {
-						out = new FileOutputStream(file);
-						byte[] content = Arrays.copyOfRange(child.getData(), 27,
-								child.getData().length - 0);
-						out.write(content);
-						out.close();
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
 			}
-			
 			if (child != null && child.getTag().equals("media")) {
 				processUploadResponse(node);
 			}
@@ -2480,11 +2474,11 @@ public class WhatsApi {
 		sendNode(node);
 	}
 
-	private void processMessage(ProtocolNode node) throws IOException,
+	private void processMessage(final ProtocolNode node) throws IOException,
 			WhatsAppException {
 		Log.d("DEBUG", "processMessage:");
 		messageQueue.add(node);
-
+		
 		// do not send received confirmation if sender is yourself
 		if (node.getAttribute("type").equals("text")) {
 			sendMessageReceived(node, "read");

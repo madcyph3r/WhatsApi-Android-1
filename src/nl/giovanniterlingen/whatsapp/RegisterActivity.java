@@ -179,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
 					mCursor.close();
 					try {
 						wa.sendSync(alContacts, null,
-								SyncType.DELTA_BACKGROUND, 0, true);
+								SyncType.FULL_REGISTRATION, 0, true);
 					} catch (WhatsAppException e) {
 						e.printStackTrace();
 					}
