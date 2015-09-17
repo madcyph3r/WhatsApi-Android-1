@@ -113,44 +113,7 @@ public class ConversationsList extends AppCompatActivity {
 			}
 		});
 
-		DatabaseHelper dbHelper = new DatabaseHelper(
-				this.getApplicationContext());
-
-		SQLiteDatabase newDB = dbHelper.getWritableDatabase();
-
-		final ConversationsAdapter adapter = new ConversationsAdapter(
-				ConversationsList.this, DatabaseHelper.getContacts(newDB), 0);
-
-		ListView lv = (ListView) findViewById(R.id.conversationslist);
-
-		lv.setAdapter(adapter);
-
-		OnItemClickListener listener = new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long arg3) {
-				Cursor cur = (Cursor) adapter.getItem(position);
-				cur.moveToPosition(position);
-				String to = cur.getString(cur.getColumnIndexOrThrow("to"));
-				String from = cur.getString(cur.getColumnIndexOrThrow("from"));
-
-				Intent i = new Intent(ConversationsList.this,
-						Conversations.class);
-				if (to.equals("me")) {
-					i.putExtra("numberpass", from);
-				}
-				if (from.equals("me")) {
-					i.putExtra("numberpass", to);
-				}
-				startActivity(i);
-			}
-
-		};
-
-		lv.setOnItemClickListener(listener);
-
-		lv.setItemsCanFocus(true);
+		getMessages();
 
 	}
 
@@ -198,6 +161,33 @@ public class ConversationsList extends AppCompatActivity {
 		ListView lv = (ListView) findViewById(R.id.conversationslist);
 
 		lv.setAdapter(adapter);
+		
+		OnItemClickListener listener = new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long arg3) {
+				Cursor cur = (Cursor) adapter.getItem(position);
+				cur.moveToPosition(position);
+				String to = cur.getString(cur.getColumnIndexOrThrow("to"));
+				String from = cur.getString(cur.getColumnIndexOrThrow("from"));
+
+				Intent i = new Intent(ConversationsList.this,
+						Conversations.class);
+				if (to.equals("me")) {
+					i.putExtra("numberpass", from);
+				}
+				if (from.equals("me")) {
+					i.putExtra("numberpass", to);
+				}
+				startActivity(i);
+			}
+
+		};
+
+		lv.setOnItemClickListener(listener);
+
+		lv.setItemsCanFocus(true);
 
 	}
 
