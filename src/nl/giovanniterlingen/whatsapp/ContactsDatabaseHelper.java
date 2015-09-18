@@ -23,7 +23,7 @@ public class ContactsDatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE contacts (_id INTEGER PRIMARY KEY AUTOINCREMENT, name, number TEXT);");
+		db.execSQL("CREATE TABLE contacts (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, number TEXT);");
 	}
 	
 	public static Cursor getContacts(SQLiteDatabase db) {

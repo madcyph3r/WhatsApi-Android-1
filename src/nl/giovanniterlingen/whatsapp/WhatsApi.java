@@ -690,7 +690,37 @@ public class WhatsApi {
 		// TODO implement this
 		throw new WhatsAppException("Not yet implemented");
 	}
+	
+    /**
+     * Get the current status message of a specific user.
+     *
+     * @param mixed $jids The users' JIDs
+     */
+    public void sendGetStatuses(ArrayList<String> jids) throws WhatsAppException {
+		String msgId = createMsgId("getstatuses");
 
+		List<ProtocolNode> nodes = new LinkedList<ProtocolNode>();
+		for (String jid : jids) {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("jid", getJID(jid));
+			ProtocolNode node = new ProtocolNode("user", params, null, null);
+			nodes.add(node);
+		}
+
+		Map<String, String> params = new HashMap<String, String>();
+		ProtocolNode status = new ProtocolNode("status", params, nodes, null);
+		
+		params = new HashMap<String, String>();
+		params.put("to", WHATSAPP_SERVER);
+		params.put("type", "get");
+		params.put("xmlns", "status");
+		params.put("id", msgId);
+		List<ProtocolNode> list = new LinkedList<ProtocolNode>();
+		list.add(status);
+		ProtocolNode node = new ProtocolNode("iq", params, list, null);
+		
+		sendNode(node);
+	}
 	/**
 	 * Create a group chat.
 	 * 
@@ -2104,6 +2134,7 @@ public class WhatsApi {
 
 							db.execSQL(query);
 						}
+						db.close();
 					}
 
 					// now process failed numbers
@@ -2176,6 +2207,9 @@ public class WhatsApi {
 						e.printStackTrace();
 					}
 			}
+			if (node.getChild("status") != null) {
+               // process status here
+            }
 			if (child != null && child.getTag().equals("media")) {
 				processUploadResponse(node);
 			}
@@ -2485,6 +2519,11 @@ public class WhatsApi {
 								// .getChild("notify").getAttribute("name"), node
 								// .getChild("body").getData());
 			}
+		}
+		if (node.hasChild("notification")
+				&& node.getChild("notification").getAttribute("type")
+						.equals("status")) {
+			// process status here
 		}
 		if (node.hasChild("notification")
 				&& node.getChild("notification").getAttribute("type")
