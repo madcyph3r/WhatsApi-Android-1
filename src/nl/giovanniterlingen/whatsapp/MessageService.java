@@ -156,8 +156,7 @@ public class MessageService extends Service {
 				.getDefaultSharedPreferences(MessageService.this);
 		try {
 			wa = new WhatsApi(MessageService.this, preferences.getString(
-					"number", ""), "WhatsApi", preferences.getString(
-					"username", ""));
+					"number", ""), preferences.getString("username", ""));
 
 			wa.connect();
 			wa.loginWithPassword(preferences.getString("pw", ""));

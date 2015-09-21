@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import nl.giovanniterlingen.whatsapp.DatabaseContract.DbEntries;
 import nl.giovanniterlingen.whatsapp.message.AudioMessage;
@@ -59,10 +60,12 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
@@ -117,23 +120,15 @@ public class WhatsApi {
 	private int iqCounter;
 	private Context mContext;
 
-	public WhatsApi(Context context, String username, String identity,
-			String nickname) throws NoSuchAlgorithmException,
-			WhatsAppException, ClientProtocolException, IOException {
+	public WhatsApi(Context context, String username, String nickname)
+			throws NoSuchAlgorithmException, WhatsAppException,
+			ClientProtocolException, IOException {
 		writer = new BinTreeNodeWriter();
 		reader = new BinTreeNodeReader();
 		this.name = nickname;
 		this.mContext = context;
 		this.phoneNumber = username;
-		try {
-			if (!checkIdentity(identity)) {
-				this.identity = buildIdentity(identity);
-			} else {
-				this.identity = identity;
-			}
-		} catch (UnsupportedEncodingException e) {
-			throw new WhatsAppException(e);
-		}
+		this.identity = buildIdentity();
 		this.loginStatus = LoginStatus.DISCONNECTED_STATUS;
 		this.processor = new MessageProcessing(mContext);
 		countries = readCountries();
@@ -1616,22 +1611,34 @@ public class WhatsApi {
 		return countries;
 	}
 
-	protected String buildIdentity(String id) throws NoSuchAlgorithmException,
-			UnsupportedEncodingException {
-		byte[] hash = hash("SHA-1", id.getBytes());
-		String hashString = new String(hash, "iso-8859-1");
-		String newId = URLEncoder.encode(hashString, "iso-8859-1")
-				.toLowerCase();
-		Log.d("DEBUG", "ID: " + newId);
+	protected String buildIdentity() throws NoSuchAlgorithmException,
+		UnsupportedEncodingException {
 
-		return newId;
-	}
+		// first check if there was already a identity built
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		SharedPreferences.Editor editor = preferences.edit();
 
-	protected boolean checkIdentity(String id)
-			throws UnsupportedEncodingException {
-		if (id != null)
-			return (URLDecoder.decode(id, "iso-8859-1").length() == 20);
-		return false;
+		String savedHash = preferences.getString("identity", "");
+
+		if (savedHash != null && !savedHash.isEmpty()) {
+			Log.d("DEBUG", "ID: " + savedHash);
+			return savedHash;
+		} else {
+
+			byte[] hash = new byte[20];
+			new Random().nextBytes(hash);
+
+			String hashString = new String(hash, "iso-8859-1");
+			String newId = URLEncoder.encode(hashString, "iso-8859-1")
+					.toLowerCase();
+
+			editor.putString("identity", newId);
+			editor.apply();
+
+			Log.d("DEBUG", "ID: " + newId);
+			return newId;
+		}
 	}
 
 	private void doLogin() throws InvalidKeyException,

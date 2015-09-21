@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
 				try {
 					wa = new WhatsApi(RegisterActivity.this, mCountryCode
 							.getText().toString() + mEdit.getText().toString(),
-							"WhatsApi", mUser.getText().toString());
+							mUser.getText().toString());
 					sendRequest(wa);
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this,
@@ -77,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
 				try {
 					wa = new WhatsApi(RegisterActivity.this, mCountryCode
 							.getText().toString() + mEdit.getText().toString(),
-							"WhatsApi", mUser.getText().toString());
+							mUser.getText().toString());
 					sendRegister(wa);
 				} catch (Exception e) {
 					Toast.makeText(RegisterActivity.this, e.getMessage(),
