@@ -31,20 +31,15 @@ public class Main extends Activity {
 			startActivity(intent);
 			super.onCreate(savedInstanceState);
 			finish();
-			return;
 
 		} else {
-
-			Intent service = new Intent(this, MessageService.class);
-			this.startService(service);
 
 			Intent intent = new Intent(this, ConversationsList.class);
 			startActivity(intent);
 			super.onCreate(savedInstanceState);
+			ApplicationLoader.startPushService();
 			finish();
-			return;
 		}
 
 	}
-
 }

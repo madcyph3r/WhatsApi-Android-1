@@ -11,12 +11,12 @@ import android.content.Intent;
  * @author Giovanni Terlingen
  */
 public class BootReceiver extends BroadcastReceiver {
-
-	@Override
 	public void onReceive(Context context, Intent intent) {
-
-		Intent service = new Intent(context, MessageService.class);
-		context.startService(service);
-
+		ApplicationLoader.runOnUIThread(new Runnable() {
+			@Override
+			public void run() {
+				ApplicationLoader.startPushService();
+			}
+		});
 	}
 }
